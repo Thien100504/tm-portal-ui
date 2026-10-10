@@ -1,0 +1,23 @@
+<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="48" height="48" rx="12" fill="url(#g)"/>
+
+  <!-- Bar 1: pending task -->
+  <rect x="7" y="7" width="22" height="6" rx="3" fill="rgba(255,255,255,0.38)"/>
+
+  <!-- Bar 2: in-progress task -->
+  <rect x="7" y="21" width="30" height="6" rx="3" fill="rgba(255,255,255,0.68)"/>
+
+  <!-- Bar 3: nearly done task -->
+  <rect x="7" y="35" width="26" height="6" rx="3" fill="rgba(255,255,255,0.9)"/>
+
+  <!-- Completion indicator: circle check top-right -->
+  <circle cx="38" cy="10" r="6" stroke="white" stroke-width="2"/>
+  <path d="M35.5 10.2 L37.3 12.2 L40.8 7.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6D28D9"/>
+      <stop offset="1" stop-color="#1D4ED8"/>
+    </linearGradient>
+  </defs>
+</svg>

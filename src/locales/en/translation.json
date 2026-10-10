@@ -1,0 +1,1034 @@
+{
+  "common": {
+    "add": "Add",
+    "create": "Create",
+    "save_changes": "Save Changes",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "action_cannot_undo": "This action cannot be undone. Type ",
+    "to_confirm": " to confirm.",
+    "edit": "Edit",
+    "save": "Save",
+    "search": "Search...",
+    "user": "User",
+    "role": "Role",
+    "member": "Member",
+    "error": "Error",
+    "active": "Running",
+    "all_caught_up": "All caught up",
+    "view_now": "View now",
+    "overview": "Overview",
+    "manager": "Manager",
+    "yesterday": "Yesterday",
+    "select": "Select",
+    "noData": "Nodata",
+    "mark_all_read": "Mark all read",
+    "success": "Success",
+    "loading": "Loading",
+    "today": "Today",
+    "unknown_user": "User",
+    "joined": "Joined",
+    "error_occurred": "An error occurred",
+    "action_cannot_undo": "This action cannot be undone. Type ",
+    "to_confirm": " to confirm."
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "projects": "Projects",
+    "sprints": "Sprints",
+    "kanban": "Kanban Board",
+    "tasks": "Tasks",
+    "automation": "Automation",
+    "reports": "Reports",
+    "notifications": "Notifications",
+    "logout": "Logout",
+    "overview": "Overview",
+    "group_workspace": "Group Workspace",
+    "group_intelligence": "Group Intelligence",
+    "group_system": "Group System",
+    "admin": "Admin",
+    "settings": "Settings",
+    "ai_platform": "Ai platform",
+    "create_workspace": "Create workspace",
+    "search": "Search",
+    "roadmap": "Roadmap",
+    "timeline": "Timeline",
+    "workspaceSettings": "Workspace Settings",
+    "workspaces_title": "Workspaces"
+  },
+  "auth": {
+    "login_title": "TaskFlow AI",
+    "login_subtitle": "Log in to manage your projects intelligently",
+    "email": "Email",
+    "email_placeholder": "you@example.com",
+    "password": "Password",
+    "password_placeholder": "••••••••",
+    "forgot_password": "Forgot password?",
+    "login_button": "Log in",
+    "no_account": "Don't have an account?",
+    "register_now": "Register now",
+    "register_title": "Create an account",
+    "register_subtitle": "Join TaskFlow AI to manage your work efficiently",
+    "fullname": "Full name",
+    "fullname_placeholder": "John Doe",
+    "confirm_password": "Confirm password",
+    "register_button": "Create account",
+    "has_account": "Back to login",
+    "not_permitted": "You do not have permission to perform this action.",
+    "only_pm_override": "Only Project Managers can override task dependencies.",
+    "email_exists": "This email is already registered.",
+    "invalid_credentials": "Invalid email or password.",
+    "inactive_user": "Your account has been deactivated.",
+    "invalid_token": "Invalid or expired token. Please log in again.",
+    "user_inactive": "User not found or account is inactive.",
+    "insufficient_privileges": "Insufficient privileges.",
+    "login_success_title": "Welcome back!",
+    "password_uppercase": "Password must contain an uppercase letter",
+    "login_success_desc": "Logged in successfully.",
+    "login_error_fallback": "Login failed. Please try again.",
+    "fullname_min": "Full name must be at least 2 characters",
+    "password_min_8": "Password must be at least 8 characters",
+    "password_min": "Password too short",
+    "password_number": "Password must contain a number",
+    "register_error_fallback": "Registration failed. Please try again.",
+    "register_success_msg": "Registered successfully!",
+    "invalid_email": "Invalid email",
+    "password_mismatch": "Password mismatch"
+  },
+  "password": {
+    "requires_uppercase": "Password must contain at least one uppercase letter.",
+    "requires_number": "Password must contain at least one number."
+  },
+  "project": {
+    "not_found": "Project not found.",
+    "permission_denied": "You don't have access to this project.",
+    "manager_only": "Only Project Managers can perform this action.",
+    "owner_only": "Only the project owner can perform this action.",
+    "member_exists": "This user is already a project member.",
+    "member_not_found": "Member not found.",
+    "edit_title": "Project Settings",
+    "name": "Project Name *",
+    "name_placeholder": "e.g., TaskManager AI",
+    "name_required": "Please enter a project name",
+    "description": "Description",
+    "description_placeholder": "A brief description of the project...",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "status": "Status",
+    "status_active": "Active",
+    "status_archived": "Archived",
+    "telegram_id": "Telegram Group Chat ID (Optional)",
+    "telegram_id_placeholder": "e.g., -5171357396",
+    "telegram_hint_1": "Invite Bot",
+    "telegram_hint_2": "to the group and send /start to receive automated notifications.",
+    "remove_member_confirm": "{{name}} will be removed from the project and cannot access tasks anymore."
+  },
+  "user": {
+    "not_found": "User not found."
+  },
+  "task": {
+    "not_found": "Task not found.",
+    "parent_not_found": "Parent task not found.",
+    "subtask_depth_limit": "Sub-tasks support a maximum depth of 1 level.",
+    "error_subtask_deadline": "Sub-task deadline cannot be later than parent task deadline.",
+    "error_subtask_deadline_later_than_parent": "Sub-task deadline must be before or equal to the parent task deadline.",
+    "error_parent_deadline_earlier_than_subtask": "Parent task deadline cannot be earlier than sub-task deadlines.",
+    "error_subtasks_not_done": "Cannot mark as Done: some sub-tasks are still incomplete.",
+    "error_dependencies_not_done": "Blocked by dependencies: dependent tasks are not yet done. Only a PM can override.",
+    "error_self_dependency": "A task cannot depend on itself.",
+    "error_circular_dependency": "Circular dependency detected (A → B → A).",
+    "error_assignee_not_member": "The assignee is not a member of this project."
+  },
+  "sprint": {
+    "not_found": "Sprint not found.",
+    "error_not_in_planning": "Sprint must be in 'Planning' state to start.",
+    "error_already_active": "Another sprint is already active in this project.",
+    "error_not_active": "Sprint is not currently active.",
+    "error_no_target_sprint": "A target sprint must be specified for incomplete tasks.",
+    "error_invalid_target_sprint": "Target sprint not found or is no longer available.",
+    "error_not_completed": "Sprint has not been completed yet.",
+    "error_cannot_delete_active": "Cannot delete an active or completed sprint."
+  },
+  "automation": {
+    "invalid_trigger": "Invalid automation trigger type.",
+    "invalid_action": "Invalid automation action type.",
+    "not_found": "Automation rule not found.",
+    "template": {
+      "task_done_priority": "Task done → Lower priority",
+      "task_assigned_progress": "Task assigned → Move to In Progress",
+      "task_created_sprint": "Task created → Remove from sprint",
+      "high_priority_review": "High priority → Move to Review"
+    },
+    "error": {
+      "select_trigger_value": "Select a trigger value",
+      "select_action_value": "Select an action value"
+    }
+  },
+  "admin": {
+    "stats_forbidden": "Only admins can access system-wide statistics.",
+    "access_forbidden": "Administrator access required.",
+    "role_updated_success": "Role updated successfully!",
+    "role_update_failed": "Failed to update role!",
+    "user_unblocked_success": "Account unblocked!",
+    "user_blocked_success": "Account blocked!",
+    "status_update_failed": "Failed to update status!",
+    "cannot_demote_self": "You cannot demote your own role!",
+    "cannot_block_self": "You cannot block your own account!",
+    "title": "System Administration",
+    "subtitle": "Manage users, workspaces, and monitor system performance.",
+    "tab_stats": "System",
+    "tab_users": "Users",
+    "tab_workspaces": "Workspaces & Projects",
+    "active_users": "active",
+    "total": "total",
+    "completed_this_week": "completed this week",
+    "system_status": "Server Status",
+    "task_distribution": "Task Status Distribution",
+    "recent_registrations": "Recently Registered Users",
+    "no_users_yet": "No users found.",
+    "search_placeholder": "Search name or email...",
+    "column_name": "Member",
+    "column_role": "System Role",
+    "column_status": "Status",
+    "column_joined": "Joined",
+    "column_actions": "Actions",
+    "no_users_found": "No matching users found.",
+    "no_workspaces_found": "No workspaces in the system yet."
+  },
+  "notification": {
+    "not_found": "Notification not found.",
+    "task": {
+      "assigned": {
+        "title": "👤 New task assigned",
+        "message": "You have been assigned to task \"{{title}}\"."
+      },
+      "updated": {
+        "title": "🔄 Task updated",
+        "message": "Task \"{{title}}\" has been updated."
+      },
+      "completed": {
+        "title": "✅ Task completed",
+        "message": "Task \"{{title}}\" has been marked as done!"
+      },
+      "commented": {
+        "title": "💬 New comment",
+        "message": "{{actor_name}} commented on task \"{{title}}\"."
+      }
+    },
+    "project": {
+      "member_added": {
+        "title": "👋 New member",
+        "message": "You have been added to project \"{{project_name}}\"."
+      }
+    },
+    "system": {
+      "alert": {
+        "title": "🔔 System Alert",
+        "message": "{{message}}"
+      }
+    },
+    "task": {
+      "created": "📋 New task: {{title}}",
+      "created_by": "Created by {{actor}}",
+      "updated": "✏️ Task updated: {{title}}",
+      "updated_by": "Updated by {{actor}}",
+      "completed": "✅ Completed: {{title}}",
+      "completed_by": "Marked done by {{actor}}",
+      "assigned": "👤 Assigned to you: {{title}}",
+      "assigned_by": "Assigned by {{actor}}",
+      "commented": "💬 {{actor}} commented",
+      "commented_on": "{{title}}",
+      "unblocked": "🚀 Task unblocked: {{title}}",
+      "unblocked_message": "All dependencies are done. You can start now!",
+      "generic": "📋 {{title}}"
+    },
+    "sprint": {
+      "started": "🏃 Sprint started: {{name}}",
+      "started_by": "Started by {{actor}}",
+      "completed": "🏁 Sprint completed: {{name}}",
+      "completed_by": "Completed by {{actor}}",
+      "reopened": "🔄 Sprint reopened: {{name}}",
+      "reopened_by": "Reopened by {{actor}}",
+      "created": "📋 New sprint: {{name}}",
+      "created_by": "Created by {{actor}}",
+      "generic": "🏃 {{name}}"
+    },
+    "project": {
+      "member_added": "📥 Added to project: {{name}}",
+      "added_by": "Added by {{actor}}",
+      "member_removed": "📤 Removed from project: {{name}}",
+      "removed_by": "Removed by {{actor}}"
+    },
+    "automation": {
+      "assigned_by_rule": "Auto-assigned by rule: {{rule}}",
+      "custom": "🔔 {{rule}}",
+      "custom_message": "{{message}}"
+    }
+  },
+  "kanban": {
+    "title": "Project Progress",
+    "subtitle": "Kanban Board",
+    "tasks_title": "Tasks",
+    "tasks_subtitle": "Manage your tasks",
+    "view_board": "Board",
+    "view_list": "List",
+    "view_calendar": "Calendar",
+    "filter": "Filter",
+    "team": "Team",
+    "addTask": "Add task",
+    "noTask": "No tasks yet",
+    "error_title": "Permission Denied",
+    "updateError": "Unable to update status. You might not have permission.",
+    "selectProject": "Please select a project.",
+    "columns": {
+      "todo": "To Do",
+      "in_progress": "In Progress",
+      "review": "In Review",
+      "done": "Done"
+    },
+    "card": {
+      "priority": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      },
+      "overdue": "Overdue",
+      "subtasks": "Sub-tasks",
+      "assigned": "Assigned",
+      "unassigned": "Unassigned",
+      "estimated_hours": "Estimated hours"
+    },
+    "status_todo": "To Do",
+    "status_in_progress": "In Progress",
+    "status_review": "In Review",
+    "status_done": "Done",
+    "priority_high": "High",
+    "priority_medium": "Medium",
+    "priority_low": "Low",
+    "filter_title": "Kanban Filter",
+    "clear_all": "Clear filters",
+    "search": "Search",
+    "search_placeholder": "Search...",
+    "priority": "Priority",
+    "assignee": "Assignee",
+    "unassigned": "Unassigned",
+    "backlog_filter": "Backlog (No Sprint)",
+    "deadline": "Deadline",
+    "overdue": "Overdue",
+    "current_members": "Team members",
+    "added": "Added",
+    "no_users_found": "No users found",
+    "search_results": "Search results"
+  },
+  "taskDetail": {
+    "title": "Details",
+    "subtasks": "Sub-tasks",
+    "comments": "Comments",
+    "description": "Description",
+    "no_description": "No description...",
+    "status": "Status",
+    "auto_start": "Auto-start",
+    "auto_start_desc": "Automatically move to \"In Progress\" when dependencies are done.",
+    "priority": "Priority",
+    "deadline": "Deadline",
+    "ai_regen_title": "Regenerate Subtasks (AI)",
+    "ai_regen_desc": "This action will delete current Todo subtasks and recreate them from scratch. Done subtasks will be kept.",
+    "ai_regen_confirm_btn": "Regenerate",
+    "ai_regen": "Regenerate (AI)",
+    "ai_breakdown": "AI Breakdown",
+    "delete_title": "Delete Task",
+    "delete_desc": "Task \"{{title}}\" and all its subtasks, comments will be permanently deleted.",
+    "assignee": "Assignee",
+    "unassigned": "Unassigned",
+    "estimated_hours": "Est. Hours",
+    "not_set": "Not set",
+    "dependencies": "Dependencies",
+    "add_dependency": "Add dependency...",
+    "no_subtasks": "No sub-tasks yet",
+    "add_subtask": "+ Add sub-task...",
+    "no_comments": "No comments yet",
+    "add_comment": "Add a comment...",
+    "delete_task": "Delete task",
+    "close": "Close",
+    "edit": "Edit",
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "status_todo": "To Do",
+    "status_in_progress": "In Progress",
+    "status_review": "In Review",
+    "status_done": "Done",
+    "priority_low": "Low",
+    "priority_medium": "Medium",
+    "priority_high": "High",
+    "ai_breakdown_started": "AI is analyzing and generating sub-tasks...",
+    "ai_estimate_started": "AI is estimating story points...",
+    "ai_error": "Unable to call AI",
+    "name_placeholder": "Enter task name...",
+    "ai_estimate_title": "AI Auto-estimate (Fibonacci)",
+    "ai_processing": "AI processing...",
+    "ai_breakdown_btn": "AI Breakdown",
+    "remove_dep": "Remove dependency",
+    "no_deps": "No dependencies."
+  },
+  "automationPage": {
+    "title": "Automation",
+    "subtitle": "Set up smart rules to automate your workflow",
+    "templates": "Suggested Templates",
+    "my_rules": "My Rules",
+    "create_rule": "Create New Rule",
+    "no_rules": "No rules created yet",
+    "no_rules_desc": "Start automating tasks to save time and boost productivity",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "turn_on": "Turn on",
+      "turn_off": "Turn off"
+    },
+    "trigger": "Condition (IF)",
+    "action": "Action (THEN)",
+    "rule_name": "Automation Name",
+    "save": "Save Changes",
+    "create": "Create Rule",
+    "edit": "Edit Rule",
+    "triggers": {
+      "task.created": "When task is created",
+      "task.status_changed": "When status changes to",
+      "task.assigned": "When task is assigned",
+      "task.priority_changed": "When priority changes to",
+      "task.unblocked": "When unblocked",
+      "task.due_soon": "When due soon (24h)",
+      "task.overdue": "When task is overdue",
+      "task.stale": "When task is stale (5 days)"
+    },
+    "actions": {
+      "set_status": "Set status to",
+      "set_priority": "Set priority to",
+      "assign_to_sprint": "Assign to sprint",
+      "remove_from_sprint": "Remove from sprint",
+      "add_comment": "Auto Comment",
+      "reassign": "Reassign to",
+      "ai_generate_subtasks": "AI: Generate sub-tasks",
+      "ai_auto_estimate": "AI: Auto estimate story points",
+      "set_deadline": "Extend deadline by (days)",
+      "send_custom_notification": "Send notification"
+    },
+    "how_it_works": "How it works",
+    "step_1_title": "Trigger",
+    "step_1_desc": "Event on the task (created, status changed, assigned…)",
+    "step_2_title": "Condition",
+    "step_2_desc": "Filter: specific status/priority, only apply when matched",
+    "step_3_title": "Action",
+    "step_3_desc": "Auto update status, priority, or assign to sprint",
+    "total_rules": "Total rules",
+    "edit_rule": "Edit rule"
+  },
+  "ai_insights": {
+    "no_data": "No insights available",
+    "no_data_desc": "Click Re-analyze to let AI evaluate the project.",
+    "analyze_btn": "Analyze now",
+    "cards": {
+      "no_tasks": {
+        "title": "No Tasks",
+        "description": "There are currently no tasks in this project."
+      },
+      "completion_good": {
+        "title": "Good",
+        "description": "Task completion progress is stable."
+      },
+      "completion_low": {
+        "title": "Low Completion",
+        "description": "Task completion rate is low."
+      },
+      "overdue": {
+        "title": "Overdue Tasks",
+        "description": "There are some overdue tasks."
+      },
+      "no_overdue": {
+        "title": "Good",
+        "description": "No tasks are overdue."
+      },
+      "blocked": {
+        "title": "Blocked Tasks",
+        "description": "There are tasks currently blocked."
+      },
+      "no_sprint": {
+        "title": "Info",
+        "description": "No active sprint currently running."
+      },
+      "sprint_behind": {
+        "title": "Sprint Behind",
+        "description": "The current sprint is falling behind."
+      },
+      "sprint_ending": {
+        "title": "Sprint Ending",
+        "description": "The current sprint is ending soon."
+      },
+      "sprint_on_track": {
+        "title": "Sprint On Track",
+        "description": "The current sprint is on track."
+      },
+      "overloaded_member": {
+        "title": "Overloaded Members",
+        "description": "{{names}} and {{count}} member(s) have too many tasks assigned."
+      },
+      "member_overdue": {
+        "title": "Member With Overdue Tasks",
+        "description": "{{name}} has {{count}} overdue task(s) that need attention."
+      }
+    },
+    "health_label": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "at_risk": "At Risk",
+      "warning": "Warning",
+      "critical": "Critical"
+    },
+    "insight_labels": {
+      "success": "Good",
+      "warning": "Warning",
+      "risk": "Risk",
+      "info": "Info"
+    }
+  },
+  "endSprint": {
+    "title": "End Sprint",
+    "success": "Sprint \"{{name}}\" has ended!",
+    "success_desc": "{{done}}/{{total}} tasks completed · {{incomplete}} tasks moved {{action}}.",
+    "to_backlog": "to Backlog",
+    "to_next": "to new Sprint",
+    "sprint_label": "Sprint",
+    "stats": {
+      "total": "Total tasks",
+      "done": "Completed",
+      "incomplete": "Incomplete"
+    },
+    "action_prompt": "{{count}} incomplete tasks — what do you want to do?",
+    "actions": {
+      "backlog": {
+        "title": "Move to Backlog",
+        "desc": "Tasks will not belong to any sprint, you can assign them later."
+      },
+      "next_sprint": {
+        "title": "Move to another Sprint",
+        "select": "— Select Sprint —"
+      }
+    },
+    "status": {
+      "active": "Active",
+      "planning": "Planning"
+    },
+    "completion_rate": "Completion rate",
+    "actual_days": "Actual duration",
+    "days_unit": "days",
+    "buttons": {
+      "cancel": "Cancel",
+      "confirm": "Confirm End",
+      "processing": "Processing..."
+    }
+  },
+  "sprintBoard": {
+    "title": "Sprint Management",
+    "management": "Sprint Management",
+    "create_new": "Create new Sprint",
+    "create_success": "Sprint created successfully!",
+    "update_success": "Sprint updated successfully!",
+    "start_success": "Sprint started!",
+    "already_active": "An active sprint already exists in this project.",
+    "reopen_success": "Sprint reopened!",
+    "reopen_error": "An active sprint already exists. End it first.",
+    "delete_tasks_success": "Deleted {{count}} tasks",
+    "no_project": "Please select a project.",
+    "form": {
+      "name_placeholder": "Sprint name (e.g. Sprint 1)",
+      "goal_placeholder": "Goal (optional)",
+      "plan": "Plan",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "headers": {
+      "task": "Task",
+      "deadline": "Due",
+      "who": "Who",
+      "status": "Status"
+    },
+    "status": {
+      "planning": "Planning",
+      "active": "Active",
+      "completed": "Completed"
+    },
+    "actions": {
+      "start": "Start",
+      "end": "End",
+      "report": "Report",
+      "reopen": "Reopen",
+      "reopen_hint": "Reopen sprint (tasks moved out will not return automatically)",
+      "add_task": "Add Task"
+    },
+    "empty": {
+      "completed": "Sprint has ended.",
+      "drag_here": "Drag tasks from Backlog here",
+      "backlog": "No tasks in Backlog 🎉"
+    },
+    "hidden_subtasks": "{{count}} subtasks hidden",
+    "unassigned": "Unassigned",
+    "move_error": "Move error",
+    "delete_error": "Delete error",
+    "bulk": {
+      "clear": "Clear",
+      "delete": "Delete",
+      "selected": "Selected"
+    },
+    "burndown": {
+      "title": "Sprint Report: {{name}}",
+      "subtitle": "Burndown Chart (Remaining estimated hours)",
+      "no_data": "No report data available or an error occurred.",
+      "ideal": "Planned (Ideal)",
+      "actual": "Actual"
+    }
+  },
+  "projectOverview": {
+    "title": "Project Overview",
+    "active_status": "Active",
+    "active": "Active",
+    "loading": "Loading...",
+    "updated_at": "Updated {{time}}",
+    "reanalyze": "Re-analyze",
+    "settings": "Settings",
+    "select_project": "Select a project to view AI analysis",
+    "no_data": "No insights available",
+    "no_data_desc": "Click Re-analyze to let AI evaluate the project.",
+    "risk_banner_both": "Detected {{riskCount}} risks and {{warningCount}} warnings — review immediately",
+    "risk_banner_warnings": "Detected {{warningCount}} warnings to pay attention to",
+    "health_score": "Project Health",
+    "based_on": "Based on {{tasks}} tasks · {{members}} members",
+    "total_tasks": "Total Tasks",
+    "completion_rate": "{{rate}}% completed",
+    "done_tasks": "Done",
+    "in_progress": "processing",
+    "overdue_tasks": "Overdue",
+    "needs_action": "Needs action now",
+    "all_on_time": "All on time",
+    "blocked_tasks": "Blocked",
+    "dependency_not_done": "Dependency not done",
+    "no_blocked": "No blocked tasks",
+    "status_dist": "Status Distribution",
+    "active_sprint": "Current Sprint",
+    "no_active_sprint": "No active sprint",
+    "team_workload": "Team Workload",
+    "members": "members",
+    "no_members": "No members yet",
+    "insight_details": "Insight Details",
+    "analyzed_at": "Analyzed at {{time}}",
+    "ai_narrative": "AI narrative: NVIDIA AI",
+    "health_desc": "Based on {{total}} tasks · {{members}} members",
+    "stats": {
+      "completion_rate": "{{rate}}% completed",
+      "in_progress": "{{count}} in progress",
+      "total_tasks": "Total Tasks",
+      "completed": "Done",
+      "overdue": "Overdue",
+      "blocked": "Blocked",
+      "needs_action": "Needs action",
+      "all_on_track": "All on track",
+      "dependency_not_done": "Dependency incomplete",
+      "no_blocked": "No blocked tasks"
+    },
+    "details": {
+      "title": "Insight Details",
+      "risk_count": "{{count}} risks",
+      "warning_count": "{{count}} warnings",
+      "banner_risks": "Detected {{riskCount}} risks {{andWarning}}",
+      "and_warnings": "and {{warningCount}} warnings",
+      "banner_warnings": "Detected {{warningCount}} warnings"
+    },
+    "sprint": {
+      "current": "Current Sprint",
+      "no_sprint": "No active sprint",
+      "on_track": "On track",
+      "needs_speed": "Needs speed",
+      "completed": "completed",
+      "task_done": "task done",
+      "days_remaining": "days remaining",
+      "no_active": "No active sprint"
+    },
+    "team": {
+      "workload": "Team Workload",
+      "members_count": "{{count}} members",
+      "no_members": "No members yet",
+      "overdue_count": "{{count}} overdue",
+      "workload_desc": "{{active}} tasks · {{in_progress}} in progress"
+    },
+    "workload_levels": {
+      "low": "Low",
+      "normal": "Normal",
+      "high": "High",
+      "critical": "Critical"
+    },
+    "ai_analysis": {
+      "title": "AI Analysis",
+      "powered_by": "Powered by LLM · NVIDIA AI",
+      "ai_generated": "AI Generated",
+      "recommendations": "Recommendations",
+      "configure_api": "Please configure AI API"
+    },
+    "insight_labels": {
+      "success": "Good",
+      "warning": "Warning",
+      "risk": "Risk",
+      "info": "Info"
+    },
+    "status_distribution": "Status Distribution"
+  },
+  "settings": {
+    "title": "System Settings",
+    "subtitle": "Customize interface, blur options, motion effects and colors.",
+    "appearance": "Appearance",
+    "themeMode": {
+      "title": "Theme mode",
+      "hint": "Light, Dark, or follow your System.",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "themeStyle": {
+      "title": "Theme style",
+      "hint": "Standard solid surfaces or Apple-inspired Liquid Glass.",
+      "standard": "Standard",
+      "glass": "Liquid Glass"
+    },
+    "transparency": {
+      "title": "Transparency",
+      "hint": "How see-through glass surfaces feel."
+    },
+    "blur": {
+      "title": "Blur intensity",
+      "hint": "Depth of the frosted blur behind glass."
+    },
+    "motion": {
+      "title": "Motion intensity",
+      "hint": "Spring liveliness for hovers and panels."
+    },
+    "motionToggle": {
+      "title": "Motion effects",
+      "hint": "Master switch for transitions and live indicators."
+    },
+    "mouseGlow": {
+      "title": "Mouse cursor glow",
+      "hint": "Display a radial glow tracking your cursor across the system."
+    },
+    "bgGrid": {
+      "title": "Background grid",
+      "hint": "Show a subtle grid pattern behind all pages."
+    },
+    "accent": {
+      "title": "Accent color",
+      "hint": "Drives AI highlights, primary actions, and focus rings."
+    },
+    "preview": {
+      "title": "Live preview",
+      "sidebar": "Sidebar surface",
+      "sidebarDesc": "Floating glass panel",
+      "modal": "Modal / dropdown",
+      "modalDesc": "Frosted, adaptive tint, soft highlight.",
+      "card": "Task card",
+      "cardDesc": "Solid — unchanged for readability.",
+      "primary": "Primary",
+      "secondary": "Secondary"
+    }
+  },
+  "dashboard": {
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
+    "admin_subtitle": "System overview and your personal tasks.",
+    "user_subtitle": "Your task overview for today, across all projects.",
+    "system_stats": "System Statistics",
+    "users": "Users",
+    "active_users": "active",
+    "active_projects": "Active Projects",
+    "total_projects": "total",
+    "total_tasks": "Total Tasks",
+    "done_this_week": "Done This Week",
+    "system_wide": "System-wide",
+    "status_distribution": "Task Status Distribution",
+    "status": {
+      "todo": "To Do",
+      "in_progress": "In Progress",
+      "review": "In Review",
+      "done": "Done"
+    },
+    "deadline": {
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "days_left": "In {{count}} days"
+    },
+    "recent_users": "Recently Registered Users",
+    "admin_badge": "Admin",
+    "personal_tasks": "Personal Tasks",
+    "my_tasks_label": "Your Tasks",
+    "overdue": "Overdue",
+    "upcoming_tasks": "Upcoming (Next 7 days)",
+    "view_all": "View All",
+    "no_upcoming": "No upcoming tasks. Great job! 🎉",
+    "all": "All",
+    "no_projects": "Not participating in any project",
+    "no_assigned_tasks": "No tasks assigned to you",
+    "team_management": "Team Management",
+    "team_workload": "Team Workload",
+    "no_team_members": "No members in your managed projects yet",
+    "blocked_tasks": "Blocked Tasks (pending dependencies)",
+    "no_blocked": "No blocked tasks 🎉",
+    "blocked_count": "blocked",
+    "ai": {
+      "overdue_msg_1": "You have ",
+      "overdue_msg_2": " overdue tasks",
+      "overdue_msg_3": ". Please update progress or adjust deadlines soon.",
+      "in_progress_msg_1": "You are working on ",
+      "in_progress_msg_2": " tasks",
+      "in_progress_msg_3": ". Great! Keep up the pace and don't forget to update status.",
+      "clear_msg_1": "Inbox clear! ",
+      "clear_msg_2": "No overdue tasks",
+      "clear_msg_3": ". You are managing your work very well 🚀"
+    },
+    "tab_overview": "Overview",
+    "tab_my_day": "My Day",
+    "update_success": "Updated!",
+    "my_day": {
+      "empty": "Nothing planned for today",
+      "empty_desc": "Tasks assigned or due today will appear here.",
+      "personal_project": "Personal",
+      "title": "My Day",
+      "project_label": "Project"
+    },
+    "my_day_subtitle": "Your focus for today"
+  },
+  "projectList": {
+    "title": "My Projects",
+    "active_count": "{{count}} active projects",
+    "create_new": "Create new project",
+    "no_projects": "No projects yet",
+    "no_projects_desc": "Create your first project to start managing work!",
+    "create_now": "Create project now",
+    "no_description": "No description",
+    "create": {
+      "title": "Create new project",
+      "name_label": "Project Name *",
+      "name_placeholder": "e.g., TaskManager AI",
+      "name_required": "Please enter a project name",
+      "desc_label": "Description",
+      "desc_placeholder": "A short description of the project...",
+      "start_date": "Start Date",
+      "end_date": "End Date",
+      "telegram_label": "Telegram Group Chat ID (Optional)",
+      "telegram_hint": "Invite Bot @TM_1005_BOT to the group and use /start to receive notifications.",
+      "cancel": "Cancel",
+      "submit": "Create Project"
+    },
+    "member_count": "{{count}} members"
+  },
+  "workspace": {
+    "roles_title": "Roles & Permissions",
+    "roles_subtitle": "Manage access levels across workspaces and projects",
+    "new_role": "New Role",
+    "permissions": "Permissions",
+    "members": "Members",
+    "members_desc": "Manage people who have access to this workspace.",
+    "invite_member": "Invite Member",
+    "edit_member": "Edit Member",
+    "role": "Role",
+    "owner": "Owner",
+    "confirm_remove_member": "Are you sure you want to remove this member from the workspace?",
+    "member_removed": "Member removed from workspace.",
+    "invitation_sent": "Invitation sent successfully.",
+    "member_updated": "Member updated.",
+    "send_invite": "Send Invite",
+    "no_members": "No members yet.",
+    "settings_desc": "Manage members, roles, and permissions.",
+    "features_title": "Features",
+    "features_desc": "Enable or disable feature modules for this workspace. Changes take effect immediately.",
+    "feature_enable_sprint": "Sprints",
+    "feature_enable_sprint_desc": "Enable sprint planning and timeline views",
+    "feature_enable_epics": "Epics & Roadmap",
+    "feature_enable_epics_desc": "Enable epics and roadmap planning",
+    "feature_enable_story_points": "Story Points",
+    "feature_enable_story_points_desc": "Enable story point estimation on tasks",
+    "feature_enable_workload": "Workload",
+    "feature_enable_workload_desc": "Enable workload view and capacity planning",
+    "feature_enable_automation": "Automation",
+    "feature_enable_automation_desc": "Enable workflow automation rules",
+    "feature_enable_ai": "AI Assistant",
+    "feature_enable_ai_desc": "Enable AI-powered features and suggestions",
+    "feature_enable_time_tracking": "Time Tracking",
+    "feature_enable_time_tracking_desc": "Enable time tracking on tasks",
+    "feature_enable_calendar": "Calendar",
+    "feature_enable_calendar_desc": "Enable calendar view for deadlines",
+    "sys_role": "SYSTEM",
+    "type_desc": {
+      "personal": "Personal",
+      "team": "Team"
+    },
+    "btn_cancel": "Cancel",
+    "type": {
+      "personal": "Personal",
+      "team": "Team"
+    },
+    "name_placeholder": "e.g., My Team",
+    "type_label": "Type",
+    "btn_create": "Create Workspace",
+    "create_title": "Create new Workspace",
+    "create_failed": "Failed to create workspace!",
+    "name_label": "Workspace Name",
+    "created_success": "Workspace created!",
+    "not_found": "Workspace not found.",
+    "access_denied": "You do not have access to this workspace.",
+    "owner_or_admin_required": "Only the workspace owner or an admin can perform this action.",
+    "member_already_exists": "User is already a member of this workspace.",
+    "member_not_found": "Member not found in this workspace.",
+    "invitation_not_found": "Invitation not found."
+  },
+  "server": {
+    "notification_unavailable": "Notification service is currently unavailable. Please try again later.",
+    "db_unavailable": "Database is temporarily unavailable. Please try again later.",
+    "conflict_error": "A conflict occurred. The resource may already exist."
+  },
+  "role": {
+    "project_owner": "Project Owner",
+    "project_manager": "Project Manager"
+  },
+  "pomodoro": {
+    "sounds": {
+      "rain": "Rain",
+      "none": "None",
+      "white": "White",
+      "wind": "Wind"
+    },
+    "completed_sessions": "Completed sessions",
+    "btn_pause": "Pause",
+    "btn_start": "Start",
+    "sound_label": "Ambient sound",
+    "no_task": "No task selected",
+    "focus_tip_title": "Focus tip",
+    "exit_fullscreen": "Exit fullscreen",
+    "current_goal": "Current goal",
+    "toast": {
+      "break_done": "Break done",
+      "focus_done": "Focus done"
+    },
+    "focus": "Focus",
+    "btn_fullscreen": "Fullscreen",
+    "timer": "Timer",
+    "break": "Break",
+    "select_task": "Select task",
+    "sessions_today": "Sessions today",
+    "btn_reset": "Reset",
+    "focus_tip_desc": "Eliminate distractions: close tabs, silence your phone, and commit fully for 25 minutes."
+  },
+  "timeline": {
+    "legend": {
+      "today": "Today",
+      "task_deadline": "Task deadline",
+      "completed": "Completed",
+      "active": "Active",
+      "planning": "Planning"
+    },
+    "no_sprints": "No sprints",
+    "title": "Project Timeline",
+    "no_sprints_desc": "Create a sprint to start planning your timeline.",
+    "footer_hint": "Drag or click to navigate the timeline.",
+    "go_to_sprints": "Go to Sprints",
+    "no_dates": "No dates set",
+    "due": "Due",
+    "stats": {
+      "total_tasks": "Total tasks",
+      "overdue_tasks": "Overdue tasks",
+      "total_sprints": "Total sprints",
+      "active": "Active"
+    },
+    "sprint_col": "Sprint",
+    "sprint_board": "Sprint Board",
+    "subtitle": "Visual overview of sprints and task deadlines."
+  },
+  "notifications": {
+    "automation": "Automation",
+    "no_unread": "No unread notifications",
+    "no_notifs": "No notifications yet",
+    "info": "Info",
+    "mark_read": "Mark as read",
+    "all": "All",
+    "will_let_you_know": "We'll notify you when something happens.",
+    "showing_last_notifs": "Showing last 50 notifications",
+    "unread": "Unread",
+    "unread_notifs": "Unread notifications",
+    "assignment": "Assignment",
+    "filter_task": "Tasks",
+    "filter_sprint": "Sprints",
+    "filter_project": "Projects"
+  },
+  "roadmap": {
+    "title": "Project Roadmap",
+    "subtitle": "Plan long-term goals, group tasks into Epics and track overall progress.",
+    "create_epic": "Create New Epic",
+    "delete_success": "Epic deleted successfully!",
+    "delete_error": "Failed to delete Epic!",
+    "delete_confirm": "Are you sure you want to delete this Epic? All related tasks will be unlinked.",
+    "empty_title": "No Epics in Roadmap yet",
+    "empty_desc": "Create your first Epic to start planning the roadmap.",
+    "create_now": "Create now",
+    "no_description": "No description.",
+    "due_date": "Due: {{date}}",
+    "linked_tasks": "Linked tasks ({{count}})",
+    "no_linked_tasks": "No tasks linked to this Epic yet."
+  },
+  "createTask": {
+    "title": "Create new task",
+    "name_label": "Task name",
+    "name_placeholder": "Enter task name...",
+    "desc_label": "Description",
+    "desc_placeholder": "Detailed description..."
+  },
+  "profile": {
+    "title": "Personal Profile",
+    "subtitle": "Manage your personal information and security",
+    "basic_info": "Basic Information",
+    "full_name": "Full Name",
+    "email": "Email Address",
+    "email_hint": "Email cannot be changed.",
+    "security": "Security",
+    "new_password": "New Password",
+    "password_hint": "Leave blank to keep current password.",
+    "confirm_password": "Confirm New Password",
+    "password_mismatch": "Passwords do not match",
+    "update_success": "Profile updated successfully",
+    "update_error": "Failed to update profile"
+  },
+  "ai_metrics": {
+    "title": "AI Evaluation Metrics",
+    "no_data": "No AI metrics yet. Use AI Breakdown or Estimate to start tracking.",
+    "total_calls": "Total AI Calls",
+    "acceptance": "Acceptance Rate",
+    "avg_response": "Avg Response",
+    "tokens_used": "Tokens Used",
+    "by_feature": "By Feature",
+    "recent": "Recent AI Calls"
+  },
+  "reports": {
+    "subtitle": "Personal productivity & project health",
+    "done_this_week": "Done This Week",
+    "in_progress": "In Progress",
+    "overdue": "Overdue",
+    "my_projects": "My Projects",
+    "task_breakdown": "Task Breakdown",
+    "no_tasks": "No tasks assigned yet",
+    "project_progress": "Project Progress",
+    "no_projects": "No projects yet",
+    "upcoming_deadlines": "Upcoming Deadlines",
+    "team_workload": "Team Workload",
+    "blocked_tasks": "Blocked Tasks",
+    "blocking_deps": "blocking dep(s)",
+    "tasks_completed": "completed this week",
+    "needs_attention": "needs attention",
+    "all_on_track": "all on track"
+  }
+}

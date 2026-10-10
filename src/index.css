@@ -1,0 +1,730 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-ai: var(--ai);
+  --color-ai-soft: var(--ai-soft);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --font-sans: 'Inter Tight', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+:root {
+  --radius: 0.75rem;
+  /* Layout geometry — used by h-[calc(100vh-var(--layout-offset))] */
+  --topbar-height: 3rem;        /* h-12 = 48px */
+  --content-padding-y: 1rem;    /* py-4 = 16px */
+  --layout-offset: 5rem;        /* topbar (3rem) + vertical padding (2×1rem) */
+  /* Light mode: warm white, soft neutrals, indigo-violet AI accent */
+  --background: oklch(0.985 0.003 240);
+  --foreground: oklch(0.18 0.02 265);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.02 265);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.02 265);
+  --primary: oklch(0.55 0.22 280);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.96 0.005 240);
+  --secondary-foreground: oklch(0.25 0.02 265);
+  --muted: oklch(0.955 0.005 240);
+  --muted-foreground: oklch(0.5 0.02 260);
+  --accent: oklch(0.95 0.02 280);
+  --accent-foreground: oklch(0.3 0.1 280);
+  --destructive: oklch(0.6 0.22 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.91 0.005 250);
+  --input: oklch(0.93 0.005 250);
+  --ring: oklch(0.55 0.22 280);
+  --ai: oklch(0.58 0.22 285);
+  --ai-soft: oklch(0.72 0.16 285);
+  --success: oklch(0.65 0.16 155);
+  --warning: oklch(0.75 0.16 75);
+  --chart-1: oklch(0.58 0.22 285);
+  --chart-2: oklch(0.65 0.18 220);
+  --chart-3: oklch(0.7 0.16 155);
+  --chart-4: oklch(0.78 0.16 75);
+  --chart-5: oklch(0.65 0.22 15);
+  --sidebar: oklch(0.98 0.003 240);
+  --sidebar-foreground: oklch(0.3 0.02 265);
+  --sidebar-primary: oklch(0.55 0.22 280);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.94 0.01 280);
+  --sidebar-accent-foreground: oklch(0.3 0.1 280);
+  --sidebar-border: oklch(0.91 0.005 250);
+  --sidebar-ring: oklch(0.55 0.22 280);
+  
+  /* Global Motion Variables */
+  --motion-level: 70;
+  --ease-out-apple: cubic-bezier(0.16, 1, 0.3, 1);
+  --spring-overshoot: calc(1 + (var(--motion-level) / 100) * 0.8);
+  --ease-spring: cubic-bezier(0.34, var(--spring-overshoot), 0.64, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-hover: calc(120ms + (var(--motion-level) / 100) * 80ms);
+  --dur-panel: calc(220ms + (var(--motion-level) / 100) * 130ms);
+  --dur-modal: calc(280ms + (var(--motion-level) / 100) * 170ms);
+  --dur-theme: calc(420ms + (var(--motion-level) / 100) * 280ms);
+}
+
+.dark {
+  /* Dark mode: graphite/navy base, soft violet accents */
+  --background: oklch(0.16 0.012 260);
+  --foreground: oklch(0.97 0.003 250);
+  --card: oklch(0.205 0.012 260);
+  --card-foreground: oklch(0.97 0.003 250);
+  --popover: oklch(0.21 0.014 260);
+  --popover-foreground: oklch(0.97 0.003 250);
+  --primary: oklch(0.7 0.18 285);
+  --primary-foreground: oklch(0.15 0.02 270);
+  --secondary: oklch(0.24 0.014 260);
+  --secondary-foreground: oklch(0.95 0.005 250);
+  --muted: oklch(0.23 0.012 260);
+  --muted-foreground: oklch(0.65 0.015 255);
+  --accent: oklch(0.28 0.04 285);
+  --accent-foreground: oklch(0.92 0.04 285);
+  --destructive: oklch(0.65 0.22 22);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.7 0.18 285);
+  --ai: oklch(0.72 0.2 285);
+  --ai-soft: oklch(0.78 0.14 285);
+  --success: oklch(0.72 0.16 155);
+  --warning: oklch(0.78 0.16 75);
+  --chart-1: oklch(0.72 0.2 285);
+  --chart-2: oklch(0.7 0.18 220);
+  --chart-3: oklch(0.72 0.16 155);
+  --chart-4: oklch(0.8 0.16 75);
+  --chart-5: oklch(0.7 0.22 15);
+  --sidebar: oklch(0.17 0.012 260);
+  --sidebar-foreground: oklch(0.85 0.008 255);
+  --sidebar-primary: oklch(0.72 0.2 285);
+  --sidebar-primary-foreground: oklch(0.15 0.02 270);
+  --sidebar-accent: oklch(0.24 0.02 285);
+  --sidebar-accent-foreground: oklch(0.92 0.04 285);
+  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-ring: oklch(0.72 0.2 285);
+}
+
+.theme-sketch {
+  /* Minimalist sketch/architectural theme */
+  --background: oklch(0.98 0 0); /* Off-white paper */
+  --foreground: oklch(0.1 0 0); /* Black ink */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.1 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.1 0 0);
+  --primary: oklch(0.1 0 0);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.9 0 0);
+  --secondary-foreground: oklch(0.1 0 0);
+  --muted: oklch(0.95 0 0);
+  --muted-foreground: oklch(0.4 0 0);
+  --accent: oklch(0.9 0 0);
+  --accent-foreground: oklch(0.1 0 0);
+  --destructive: oklch(0.6 0.22 25);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.1 0 0); /* Black sharp borders */
+  --input: oklch(0.1 0 0);
+  --ring: oklch(0.1 0 0);
+  --sidebar: oklch(0.98 0 0);
+  --sidebar-foreground: oklch(0.1 0 0);
+  --sidebar-primary: oklch(0.1 0 0);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.9 0 0);
+  --sidebar-accent-foreground: oklch(0.1 0 0);
+  --sidebar-border: oklch(0.1 0 0);
+  --sidebar-ring: oklch(0.1 0 0);
+}
+
+.dark.theme-sketch {
+  /* Dark mode sketch/chalkboard theme */
+  --background: oklch(0.12 0 0); /* Dark chalkboard */
+  --foreground: oklch(0.98 0 0); /* White chalk */
+  --card: oklch(0.1 0 0);
+  --card-foreground: oklch(0.98 0 0);
+  --popover: oklch(0.1 0 0);
+  --popover-foreground: oklch(0.98 0 0);
+  --primary: oklch(0.98 0 0);
+  --primary-foreground: oklch(0.12 0 0);
+  --secondary: oklch(0.2 0 0);
+  --secondary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.15 0 0);
+  --muted-foreground: oklch(0.7 0 0);
+  --accent: oklch(0.2 0 0);
+  --accent-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.6 0.22 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.98 0 0); /* White sharp borders */
+  --input: oklch(0.98 0 0);
+  --ring: oklch(0.98 0 0);
+  --sidebar: oklch(0.12 0 0);
+  --sidebar-foreground: oklch(0.98 0 0);
+  --sidebar-primary: oklch(0.98 0 0);
+  --sidebar-primary-foreground: oklch(0.12 0 0);
+  --sidebar-accent: oklch(0.2 0 0);
+  --sidebar-accent-foreground: oklch(0.98 0 0);
+  --sidebar-border: oklch(0.98 0 0);
+  --sidebar-ring: oklch(0.98 0 0);
+}
+
+/* Background paper grid pattern */
+.theme-sketch body {
+  background-image: radial-gradient(oklch(0.8 0 0) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.dark.theme-sketch body {
+  background-image: radial-gradient(oklch(0.3 0 0) 1px, transparent 1px);
+}
+
+/* Sketchy hand-drawn border radiuses */
+.theme-sketch .rounded,
+.theme-sketch .rounded-sm,
+.theme-sketch .rounded-md,
+.theme-sketch .rounded-lg,
+.theme-sketch .rounded-xl,
+.theme-sketch .rounded-2xl,
+.theme-sketch .rounded-3xl {
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px !important;
+}
+
+/* Thick borders for sketch feel */
+.theme-sketch .border {
+  border-width: 2px !important;
+}
+.theme-sketch .border-t { border-top-width: 2px !important; }
+.theme-sketch .border-b { border-bottom-width: 2px !important; }
+.theme-sketch .border-l { border-left-width: 2px !important; }
+.theme-sketch .border-r { border-right-width: 2px !important; }
+
+/* Solid stark shadows */
+.theme-sketch .shadow-sm,
+.theme-sketch .shadow,
+.theme-sketch .shadow-md,
+.theme-sketch .shadow-lg,
+.theme-sketch .shadow-xl {
+  box-shadow: 4px 4px 0px 0px oklch(0.1 0 0) !important;
+}
+.dark.theme-sketch .shadow-sm,
+.dark.theme-sketch .shadow,
+.dark.theme-sketch .shadow-md,
+.dark.theme-sketch .shadow-lg,
+.dark.theme-sketch .shadow-xl {
+  box-shadow: 4px 4px 0px 0px oklch(0.98 0 0) !important;
+}
+
+.theme-sketch button,
+.theme-sketch input,
+.theme-sketch select,
+.theme-sketch textarea {
+  border-width: 2px !important;
+  border-color: oklch(0.1 0 0) !important;
+}
+.dark.theme-sketch button,
+.dark.theme-sketch input,
+.dark.theme-sketch select,
+.dark.theme-sketch textarea {
+  border-color: oklch(0.98 0 0) !important;
+}
+
+.theme-sketch .bg-muted {
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 4px, oklch(0.9 0 0) 4px, oklch(0.9 0 0) 8px) !important;
+  background-color: transparent !important;
+}
+.dark.theme-sketch .bg-muted {
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 4px, oklch(0.25 0 0) 4px, oklch(0.25 0 0) 8px) !important;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    color-scheme: light dark;
+  }
+
+  /* Epic Circle Reveal for Theme Transitions */
+  html.is-transitioning,
+  html.is-transitioning * {
+    transition: none !important;
+  }
+  
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+  
+  /* Gentle Fade for Theme Transitions */
+  ::view-transition-old(root) {
+    z-index: 1;
+  }
+  ::view-transition-new(root) {
+    z-index: 9999;
+    animation: theme-fade 0.4s ease forwards;
+  }
+
+  @keyframes theme-fade {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  /* Global sleek scrollbar */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: color-mix(in oklab, var(--color-border) 80%, transparent);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in oklab, var(--color-foreground) 40%, transparent);
+  }
+}
+
+/* AI gradient border utility */
+@utility ai-border {
+  position: relative;
+  background:
+    linear-gradient(var(--color-card), var(--color-card)) padding-box,
+    linear-gradient(135deg, color-mix(in oklab, var(--color-ai) 50%, transparent), color-mix(in oklab, var(--color-ai) 8%, transparent) 60%, color-mix(in oklab, var(--color-ai-soft) 25%, transparent)) border-box;
+  border: 1px solid transparent;
+}
+
+@utility ai-glow {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-ai) 18%, transparent),
+              0 8px 40px -12px color-mix(in oklab, var(--color-ai) 35%, transparent);
+}
+
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-pulse-soft { animation: pulse-soft 2.4s ease-in-out infinite; }
+.animate-fade-up { animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@layer utilities {
+  .glass {
+    @apply bg-background/70 backdrop-blur-md border border-border shadow-sm;
+  }
+  
+  .glass-dark {
+    @apply bg-background/70 backdrop-blur-md border border-border shadow-sm;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-ai;
+  }
+
+  .bg-gradient-animated {
+    background: linear-gradient(-45deg, var(--color-background), var(--color-secondary), var(--color-card), var(--color-muted));
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+  }
+}
+
+/* =========================================================================
+   Liquid Glass theme system
+   Activated via `.theme-glass` on <html>. Standard mode is unaffected.
+   ========================================================================= */
+
+:root.theme-glass {
+  --card: oklch(1 0 0 / 25%);
+  --popover: oklch(1 0 0 / 30%);
+}
+
+:root.dark.theme-glass {
+  --card: oklch(0.1 0.01 260 / 45%);
+  --popover: oklch(0.1 0.01 260 / 50%);
+}
+
+:root.theme-glass, :root.dark.theme-glass {
+  --layout-offset: calc(5rem + 42px);
+
+  /* User-tunable knobs (driven by Appearance sliders). Range 0–100. */
+  --glass-transparency: 55;  /* higher = more see-through */
+
+  /* Derived values */
+  --glass-blur: calc(2px + (var(--glass-blur-level, 60) / 100) * 46px);
+  --glass-saturate: 170%;
+  --glass-border: 16%;
+  --glass-highlight: 22%;
+
+  /* Per-surface opacity (% of solid color). Lower = more transparent. */
+  --glass-op-sidebar:  calc((100 - var(--glass-transparency) * 0.88) * 1%);
+  --glass-op-floating: calc((95  - var(--glass-transparency) * 0.85) * 1%);
+  --glass-op-dropdown: calc((90  - var(--glass-transparency) * 0.82) * 1%);
+  --glass-op-modal:    calc((100 - var(--glass-transparency) * 0.7) * 1%);
+}
+
+/* Accent presets — override AI / primary tokens cohesively */
+:root[data-accent="violet"] { --ai: oklch(0.58 0.22 285); --ai-soft: oklch(0.72 0.16 285); --primary: oklch(0.55 0.22 285); --ring: oklch(0.55 0.22 285); }
+:root[data-accent="indigo"] { --ai: oklch(0.55 0.2 265);  --ai-soft: oklch(0.7 0.15 265);  --primary: oklch(0.52 0.2 265);  --ring: oklch(0.52 0.2 265); }
+:root[data-accent="blue"]   { --ai: oklch(0.58 0.2 240);  --ai-soft: oklch(0.72 0.14 240); --primary: oklch(0.55 0.2 240);  --ring: oklch(0.55 0.2 240); }
+:root[data-accent="teal"]   { --ai: oklch(0.62 0.13 195); --ai-soft: oklch(0.75 0.1 195);  --primary: oklch(0.6 0.13 195);  --ring: oklch(0.6 0.13 195); }
+:root[data-accent="rose"]   { --ai: oklch(0.62 0.22 12);  --ai-soft: oklch(0.76 0.16 12);  --primary: oklch(0.6 0.22 12);   --ring: oklch(0.6 0.22 12); }
+:root[data-accent="amber"]  { --ai: oklch(0.72 0.17 65);  --ai-soft: oklch(0.82 0.13 65);  --primary: oklch(0.68 0.17 65);  --ring: oklch(0.68 0.17 65); }
+.dark[data-accent="violet"] { --ai: oklch(0.72 0.2 285);  --ai-soft: oklch(0.78 0.14 285); --primary: oklch(0.7 0.18 285); --ring: oklch(0.7 0.18 285); }
+.dark[data-accent="indigo"] { --ai: oklch(0.7 0.18 265);  --ai-soft: oklch(0.78 0.13 265); --primary: oklch(0.68 0.18 265); --ring: oklch(0.68 0.18 265); }
+.dark[data-accent="blue"]   { --ai: oklch(0.72 0.17 240); --ai-soft: oklch(0.8 0.12 240);  --primary: oklch(0.7 0.17 240);  --ring: oklch(0.7 0.17 240); }
+.dark[data-accent="teal"]   { --ai: oklch(0.75 0.12 195); --ai-soft: oklch(0.83 0.09 195); --primary: oklch(0.72 0.12 195); --ring: oklch(0.72 0.12 195); }
+.dark[data-accent="rose"]   { --ai: oklch(0.72 0.2 12);   --ai-soft: oklch(0.8 0.15 12);   --primary: oklch(0.7 0.2 12);    --ring: oklch(0.7 0.2 12); }
+.dark[data-accent="amber"]  { --ai: oklch(0.82 0.15 65);  --ai-soft: oklch(0.88 0.11 65);  --primary: oklch(0.8 0.15 65);   --ring: oklch(0.8 0.15 65); }
+
+/* glass-surface: no-op in standard mode; frosted Apple-like surface in glass mode */
+@utility glass-surface {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Floating sheet of glass: light tint, soft inner highlight, layered shadow. */
+.theme-glass .glass-surface {
+  background:
+    linear-gradient(180deg,
+      color-mix(in oklab, var(--card) calc(var(--glass-op-dropdown) + 15%), transparent),
+      color-mix(in oklab, var(--card) var(--glass-op-dropdown), transparent)) !important;
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) !important;
+  border: 1px solid color-mix(in oklab, var(--foreground) var(--glass-border), transparent);
+  box-shadow:
+    /* edge lighting */
+    inset 0 1px 0 0 color-mix(in oklab, white var(--glass-highlight), transparent),
+    inset 0 -1px 0 0 color-mix(in oklab, black 10%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, white 5%, transparent),
+    /* ambient + contact layered shadows */
+    0 1px 2px -1px color-mix(in oklab, black 30%, transparent),
+    0 8px 24px -12px color-mix(in oklab, black 40%, transparent),
+    0 30px 70px -28px color-mix(in oklab, black 55%, transparent);
+  transition:
+    background var(--dur-theme) var(--ease-out-apple),
+    border-color var(--dur-theme) var(--ease-out-apple),
+    box-shadow var(--dur-panel) var(--ease-out-apple),
+    backdrop-filter var(--dur-theme) var(--ease-out-apple);
+}
+
+/* Specular reflection sweep + soft accent wash */
+.theme-glass .glass-surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    /* top specular highlight */
+    linear-gradient(180deg,
+      color-mix(in oklab, white 14%, transparent) 0%,
+      color-mix(in oklab, white 4%, transparent) 18%,
+      transparent 40%),
+    /* accent wash */
+    radial-gradient(120% 70% at 12% -10%,
+      color-mix(in oklab, var(--ai) 10%, transparent),
+      transparent 55%),
+    radial-gradient(90% 60% at 110% 0%,
+      color-mix(in oklab, white 6%, transparent),
+      transparent 60%);
+  z-index: -1;
+}
+
+/* Floating sidebar — dock-like detached pane */
+.theme-glass [data-app-sidebar] {
+  margin: 14px 0 14px 14px;
+  height: calc(100vh - 28px);
+  border-radius: 22px;
+  border: none !important;
+  background:
+    linear-gradient(180deg,
+      color-mix(in oklab, var(--card) calc(var(--glass-op-sidebar) + 4%), transparent),
+      color-mix(in oklab, var(--card) var(--glass-op-sidebar), transparent)) !important;
+  box-shadow:
+    inset 0 1px 0 0 color-mix(in oklab, white calc(var(--glass-highlight) + 4%), transparent),
+    inset 0 -1px 0 0 color-mix(in oklab, black 14%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, white 6%, transparent),
+    0 2px 4px -2px color-mix(in oklab, black 30%, transparent),
+    0 18px 50px -18px color-mix(in oklab, black 55%, transparent),
+    0 40px 90px -30px color-mix(in oklab, var(--ai) 18%, transparent) !important;
+}
+.theme-glass #app-main-area {
+  margin: 14px;
+  border-radius: 22px;
+}
+.theme-glass [data-app-topbar] {
+  margin: 14px 14px 0 14px;
+  border-radius: 22px;
+  border: none !important;
+  background:
+    linear-gradient(180deg,
+      color-mix(in oklab, var(--card) calc(var(--glass-op-floating) + 4%), transparent),
+      color-mix(in oklab, var(--card) var(--glass-op-floating), transparent)) !important;
+  box-shadow:
+    inset 0 1px 0 0 color-mix(in oklab, white calc(var(--glass-highlight) + 4%), transparent),
+    inset 0 -1px 0 0 color-mix(in oklab, black 14%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, white 6%, transparent),
+    0 2px 4px -2px color-mix(in oklab, black 30%, transparent),
+    0 18px 50px -18px color-mix(in oklab, black 55%, transparent),
+    0 40px 90px -30px color-mix(in oklab, var(--ai) 18%, transparent) !important;
+}
+
+
+/* Dropdown / popover / menu / tooltip — light frost */
+.theme-glass [role="menu"],
+.theme-glass [role="listbox"],
+.theme-glass [role="tooltip"],
+.theme-glass [data-radix-popper-content-wrapper] > * {
+  background:
+    linear-gradient(180deg,
+      color-mix(in oklab, var(--popover) calc(var(--glass-op-dropdown) + 4%), transparent),
+      color-mix(in oklab, var(--popover) var(--glass-op-dropdown), transparent)) !important;
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) !important;
+  border-color: color-mix(in oklab, var(--foreground) var(--glass-border), transparent) !important;
+  box-shadow:
+    inset 0 1px 0 0 color-mix(in oklab, white var(--glass-highlight), transparent),
+    inset 0 0 0 1px color-mix(in oklab, white 4%, transparent),
+    0 2px 6px -2px color-mix(in oklab, black 30%, transparent),
+    0 24px 60px -16px color-mix(in oklab, black 50%, transparent) !important;
+}
+
+/* Modal / dialog — slightly more opaque for content legibility, stronger blur */
+.theme-glass [role="dialog"],
+.theme-glass [role="alertdialog"] {
+  background:
+    linear-gradient(180deg,
+      color-mix(in oklab, var(--popover) calc(var(--glass-op-modal) + 6%), transparent),
+      color-mix(in oklab, var(--popover) var(--glass-op-modal), transparent)) !important;
+  backdrop-filter: blur(calc(var(--glass-blur) + 10px)) saturate(var(--glass-saturate)) !important;
+  border-color: color-mix(in oklab, var(--foreground) var(--glass-border), transparent) !important;
+  box-shadow:
+    inset 0 1px 0 0 color-mix(in oklab, white calc(var(--glass-highlight) + 4%), transparent),
+    inset 0 0 0 1px color-mix(in oklab, white 5%, transparent),
+    0 30px 90px -20px color-mix(in oklab, black 60%, transparent),
+    0 60px 140px -30px color-mix(in oklab, var(--ai) 16%, transparent) !important;
+}
+
+/* Centered modals only — side panels use data-side-panel and must NOT get this transform */
+.theme-glass [role="dialog"]:not([data-side-panel]),
+.theme-glass [role="alertdialog"] {
+  animation: glass-modal-in var(--dur-modal) var(--ease-spring) both;
+}
+
+/* Side panel slide-in (no centering transform) */
+.theme-glass [role="dialog"][data-side-panel] {
+  animation: glass-panel-in var(--dur-modal) var(--ease-spring) both;
+}
+
+@keyframes glass-modal-in {
+  0%   { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes glass-panel-in {
+  0%   { opacity: 0; transform: translateX(24px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* Sidebar liquid capsule — active nav item */
+.theme-glass [data-app-sidebar] a[data-active="true"]:not([data-is-child="true"]) {
+  position: relative;
+  background:
+    linear-gradient(180deg,
+      color-mix(in oklab, var(--ai) 22%, transparent),
+      color-mix(in oklab, var(--ai) 10%, transparent)) !important;
+  box-shadow:
+    inset 0 1px 0 0 color-mix(in oklab, white 25%, transparent),
+    inset 0 -1px 0 0 color-mix(in oklab, black 12%, transparent),
+    0 1px 2px -1px color-mix(in oklab, black 30%, transparent),
+    0 8px 20px -8px color-mix(in oklab, var(--ai) 40%, transparent);
+  border-radius: 10px;
+}
+
+/* Smooth, springy hover lift for sidebar nav items in glass mode */
+.theme-glass [data-app-sidebar] a {
+  transition:
+    background-color var(--dur-hover) var(--ease-out-apple),
+    transform var(--dur-hover) var(--ease-spring),
+    box-shadow var(--dur-hover) var(--ease-out-apple),
+    color var(--dur-hover) var(--ease-out-apple);
+}
+.theme-glass [data-app-sidebar] a:hover {
+  transform: translateY(calc(-1px - (var(--motion-level) / 100) * 1.5px));
+  background: color-mix(in oklab, white 6%, transparent);
+  box-shadow:
+    inset 0 1px 0 0 color-mix(in oklab, white 14%, transparent),
+    0 6px 16px -8px color-mix(in oklab, black 35%, transparent);
+}
+
+/* Glass-mode hover for cards/panels — proximity feel (transparency + brightness + lift) */
+.theme-glass .glass-surface {
+  will-change: transform, box-shadow, background;
+}
+.theme-glass .glass-surface:hover {
+  transform: translateY(calc(-1px - (var(--motion-level) / 100) * 2px));
+  background:
+    linear-gradient(180deg,
+      color-mix(in oklab, var(--card) calc(var(--glass-op-floating) - 4%), transparent),
+      color-mix(in oklab, var(--card) calc(var(--glass-op-floating) - 8%), transparent)),
+    linear-gradient(180deg, color-mix(in oklab, white 4%, transparent), transparent);
+  box-shadow:
+    inset 0 1px 0 0 color-mix(in oklab, white calc(var(--glass-highlight) + 6%), transparent),
+    inset 0 0 0 1px color-mix(in oklab, white 8%, transparent),
+    0 2px 6px -2px color-mix(in oklab, black 30%, transparent),
+    0 14px 36px -14px color-mix(in oklab, black 45%, transparent),
+    0 40px 90px -30px color-mix(in oklab, var(--ai) 22%, transparent);
+}
+
+/* Fluid theme switching — animate the global color palette */
+html, body,
+[data-app-shell],
+[data-app-sidebar],
+[data-app-topbar] {
+  transition:
+    background-color var(--dur-theme) var(--ease-out-apple),
+    background var(--dur-theme) var(--ease-out-apple),
+    color var(--dur-theme) var(--ease-out-apple),
+    border-color var(--dur-theme) var(--ease-out-apple),
+    box-shadow var(--dur-theme) var(--ease-out-apple);
+}
+
+/* Honor motion toggle */
+.motion-reduced *:not([role="switch"]):not([role="switch"] *),
+.motion-reduced *:not([role="switch"]):not([role="switch"] *)::before,
+.motion-reduced *:not([role="switch"]):not([role="switch"] *)::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+
+.motion-reduced .glass-surface:hover,
+.motion-reduced [data-app-sidebar] a:hover {
+  transform: none !important;
+  box-shadow: inherit !important;
+}
+
+/* Thick frosted dropdowns (Notifications, Menus) */
+.theme-glass [data-app-dropdown] {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--background) 85%, transparent), color-mix(in oklab, var(--background) 75%, transparent)) !important;
+  backdrop-filter: blur(40px) saturate(200%) !important;
+  border: 1px solid color-mix(in oklab, var(--foreground) var(--glass-border), transparent) !important;
+  box-shadow:
+    inset 0 1px 0 0 color-mix(in oklab, white var(--glass-highlight), transparent),
+    inset 0 -1px 0 0 color-mix(in oklab, black 10%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, white 5%, transparent),
+    0 8px 30px -4px color-mix(in oklab, black 40%, transparent),
+    0 30px 80px -15px color-mix(in oklab, black 50%, transparent) !important;
+}
+
+/* ── Native <select> premium styling ──────────────────────────────────────── */
+/* Apply .select-styled to any native <select> for consistent, themed look.   */
+.select-styled,
+select.select-styled {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;           /* rounded-lg */
+  padding: 0.375rem 2rem 0.375rem 0.625rem;
+  font-size: 0.8125rem;            /* text-[13px] */
+  line-height: 1.5;
+  outline: none;
+  width: 100%;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  /* Custom chevron arrow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+}
+
+.select-styled:hover {
+  border-color: color-mix(in oklab, var(--color-ai) 50%, var(--border));
+}
+
+.select-styled:focus {
+  border-color: var(--color-ai);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-ai) 25%, transparent);
+}
+
+/* Dark mode: option background */
+.dark .select-styled option {
+  background-color: var(--card);
+  color: var(--foreground);
+}

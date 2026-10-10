@@ -1,0 +1,1034 @@
+{
+  "common": {
+    "add": "Thêm",
+    "create": "Tạo mới",
+    "save_changes": "Lưu thay đổi",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "action_cannot_undo": "Hành động này không thể hoàn tác. Nhập ",
+    "to_confirm": " để xác nhận.",
+    "edit": "Sửa",
+    "save": "Lưu",
+    "search": "Tìm kiếm...",
+    "user": "Người dùng",
+    "role": "Vai trò",
+    "member": "Thành viên",
+    "error": "Lỗi",
+    "active": "Đang chạy",
+    "all_caught_up": "Bạn đã xem hết",
+    "view_now": "Xem ngay",
+    "overview": "Tổng quan",
+    "manager": "Quản lý",
+    "yesterday": "Hôm qua",
+    "select": "Chọn",
+    "noData": "Không có dữ liệu",
+    "mark_all_read": "Đánh dấu đã đọc tất cả",
+    "success": "Thành công",
+    "loading": "Đang tải...",
+    "today": "Hôm nay",
+    "unknown_user": "Người dùng",
+    "joined": "Ngày tham gia",
+    "error_occurred": "Đã xảy ra lỗi",
+    "action_cannot_undo": "Hành động này không thể hoàn tác. Nhập ",
+    "to_confirm": " để xác nhận."
+  },
+  "sidebar": {
+    "dashboard": "Tổng quan",
+    "projects": "Dự án",
+    "sprints": "Sprints",
+    "kanban": "Kanban",
+    "tasks": "Công việc",
+    "automation": "Tự động hóa",
+    "reports": "Báo cáo",
+    "notifications": "Thông báo",
+    "logout": "Đăng xuất",
+    "overview": "Tổng quan",
+    "group_workspace": "Workspace",
+    "group_intelligence": "Trí tuệ nhân tạo",
+    "group_system": "Hệ thống",
+    "admin": "Quản trị hệ thống",
+    "settings": "Cài đặt",
+    "ai_platform": "Trí tuệ nhân tạo",
+    "create_workspace": "Tạo Workspace",
+    "search": "Tìm kiếm",
+    "roadmap": "Roadmap",
+    "timeline": "Timeline",
+    "workspaceSettings": "Cài đặt Workspace",
+    "workspaces_title": "Danh sách Workspace"
+  },
+  "auth": {
+    "login_title": "TaskFlow AI",
+    "login_subtitle": "Đăng nhập để quản lý dự án thông minh",
+    "email": "Email",
+    "email_placeholder": "you@example.com",
+    "password": "Mật khẩu",
+    "password_placeholder": "••••••••",
+    "forgot_password": "Quên mật khẩu?",
+    "login_button": "Đăng nhập",
+    "no_account": "Chưa có tài khoản?",
+    "register_now": "Đăng ký ngay",
+    "register_title": "Tạo tài khoản",
+    "register_subtitle": "Tham gia TaskFlow AI để quản lý công việc hiệu quả",
+    "fullname": "Họ và tên",
+    "fullname_placeholder": "Nguyễn Văn A",
+    "confirm_password": "Xác nhận mật khẩu",
+    "register_button": "Đăng ký tài khoản",
+    "has_account": "Quay lại đăng nhập",
+    "not_permitted": "Bạn không có quyền thực hiện thao tác này.",
+    "only_pm_override": "Chỉ có Project Manager mới được phép bỏ qua điều kiện ràng buộc.",
+    "email_exists": "Email này đã được đăng ký.",
+    "invalid_credentials": "Email hoặc mật khẩu không đúng.",
+    "inactive_user": "Tài khoản của bạn đã bị vô hiệu hóa.",
+    "invalid_token": "Token không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.",
+    "user_inactive": "Không tìm thấy người dùng hoặc tài khoản không hoạt động.",
+    "insufficient_privileges": "Không đủ quyền truy cập.",
+    "login_success_title": "Đăng nhập thành công",
+    "password_uppercase": "Mật khẩu phải có chữ hoa",
+    "login_success_desc": "Chào mừng trở lại!",
+    "login_error_fallback": "Đăng nhập thất bại",
+    "fullname_min": "Tên phải có ít nhất 2 ký tự",
+    "password_min_8": "Mật khẩu phải có ít nhất 8 ký tự",
+    "password_min": "Mật khẩu quá ngắn",
+    "password_number": "Mật khẩu phải có số",
+    "register_error_fallback": "Đăng ký thất bại",
+    "register_success_msg": "Đăng ký thành công",
+    "invalid_email": "Email không hợp lệ",
+    "password_mismatch": "Mật khẩu không khớp"
+  },
+  "password": {
+    "requires_uppercase": "Mật khẩu phải chứa ít nhất một chữ hoa.",
+    "requires_number": "Mật khẩu phải chứa ít nhất một chữ số."
+  },
+  "project": {
+    "not_found": "Không tìm thấy dự án.",
+    "permission_denied": "Bạn không có quyền truy cập dự án này.",
+    "manager_only": "Chỉ Project Manager mới có quyền thực hiện.",
+    "owner_only": "Chỉ chủ dự án mới có quyền thực hiện.",
+    "member_exists": "Người dùng này đã là thành viên dự án.",
+    "member_not_found": "Không tìm thấy thành viên.",
+    "edit_title": "Cài đặt Dự án",
+    "name": "Tên dự án *",
+    "name_placeholder": "VD: TaskManager AI",
+    "name_required": "Vui lòng nhập tên dự án",
+    "description": "Mô tả",
+    "description_placeholder": "Mô tả ngắn về dự án...",
+    "start_date": "Ngày bắt đầu",
+    "end_date": "Ngày kết thúc",
+    "status": "Trạng thái",
+    "status_active": "Đang hoạt động (Active)",
+    "status_archived": "Lưu trữ (Archived)",
+    "telegram_id": "Telegram Group Chat ID (Tùy chọn)",
+    "telegram_id_placeholder": "VD: -5171357396",
+    "telegram_hint_1": "Mời Bot",
+    "telegram_hint_2": "vào nhóm và dùng lệnh /start để nhận thông báo tự động.",
+    "remove_member_confirm": "{{name}} sẽ bị xóa khỏi project và không thể truy cập task nữa."
+  },
+  "user": {
+    "not_found": "Không tìm thấy người dùng."
+  },
+  "task": {
+    "not_found": "Không tìm thấy task.",
+    "parent_not_found": "Không tìm thấy task cha.",
+    "subtask_depth_limit": "Hệ thống chỉ hỗ trợ sub-task tối đa 1 cấp.",
+    "error_subtask_deadline": "Deadline sub-task không được muộn hơn deadline task cha.",
+    "error_subtask_deadline_later_than_parent": "Deadline sub-task phải nhỏ hơn hoặc bằng deadline task cha.",
+    "error_parent_deadline_earlier_than_subtask": "Deadline task cha không thể sớm hơn deadline các sub-task.",
+    "error_subtasks_not_done": "Không thể chuyển sang 'Hoàn thành'. Vẫn còn sub-task chưa hoàn tất!",
+    "error_dependencies_not_done": "Vướng Dependency: Các task liên quan chưa hoàn thành. Chỉ PM mới có thể bỏ qua điều kiện này.",
+    "error_self_dependency": "Task không thể phụ thuộc vào chính nó.",
+    "error_circular_dependency": "Lỗi vòng lặp: Task này đã tạo thành một vòng lặp phụ thuộc (A→B→A).",
+    "error_assignee_not_member": "Người được giao không thuộc dự án này."
+  },
+  "sprint": {
+    "not_found": "Không tìm thấy sprint.",
+    "error_not_in_planning": "Sprint phải ở trạng thái 'Lập kế hoạch' để bắt đầu.",
+    "error_already_active": "Đã có một sprint đang hoạt động trong dự án này.",
+    "error_not_active": "Sprint hiện không ở trạng thái hoạt động.",
+    "error_no_target_sprint": "Cần chỉ định sprint đích cho các task chưa hoàn thành.",
+    "error_invalid_target_sprint": "Sprint đích không tồn tại hoặc không còn khả dụng.",
+    "error_not_completed": "Sprint chưa được hoàn thành.",
+    "error_cannot_delete_active": "Không thể xóa sprint đang hoạt động hoặc đã hoàn thành."
+  },
+  "automation": {
+    "invalid_trigger": "Loại trigger không hợp lệ.",
+    "invalid_action": "Loại action không hợp lệ.",
+    "not_found": "Không tìm thấy quy tắc tự động hóa.",
+    "template": {
+      "task_done_priority": "Task hoàn thành → Giảm priority",
+      "task_assigned_progress": "Task được giao → Chuyển In Progress",
+      "task_created_sprint": "Task mới tạo → Xóa khỏi sprint",
+      "high_priority_review": "Priority Cao → Chuyển Review"
+    },
+    "error": {
+      "select_trigger_value": "Chọn giá trị trigger",
+      "select_action_value": "Chọn giá trị action"
+    }
+  },
+  "admin": {
+    "stats_forbidden": "Chỉ admin mới có quyền truy cập thống kê hệ thống.",
+    "access_forbidden": "Yêu cầu quyền quản trị viên.",
+    "role_updated_success": "Cập nhật vai trò thành công!",
+    "role_update_failed": "Cập nhật vai trò thất bại!",
+    "user_unblocked_success": "Đã mở khóa tài khoản!",
+    "user_blocked_success": "Đã khóa tài khoản!",
+    "status_update_failed": "Cập nhật trạng thái thất bại!",
+    "cannot_demote_self": "Không thể tự hạ quyền của chính mình!",
+    "cannot_block_self": "Không thể tự khóa tài khoản của chính mình!",
+    "title": "System Administration",
+    "subtitle": "Quản trị hệ thống, quản lý người dùng và giám sát hiệu suất hoạt động.",
+    "tab_stats": "Hệ Thống",
+    "tab_users": "Người Dùng",
+    "tab_workspaces": "Workspace & Dự Án",
+    "active_users": "đang hoạt động",
+    "total": "tổng số",
+    "completed_this_week": "hoàn thành tuần này",
+    "system_status": "Trạng Thái Máy Chủ",
+    "task_distribution": "Phân Bổ Trạng Thái Công Việc",
+    "recent_registrations": "Người Dùng Mới Đăng Ký",
+    "no_users_yet": "Chưa có người dùng nào.",
+    "search_placeholder": "Tìm kiếm tên hoặc email...",
+    "column_name": "Thành Viên",
+    "column_role": "Vai Trò Hệ Thống",
+    "column_status": "Trạng Thái",
+    "column_joined": "Ngày Tham Gia",
+    "column_actions": "Hành Động",
+    "no_users_found": "Không tìm thấy người dùng phù hợp.",
+    "no_workspaces_found": "Chưa có workspace nào trong hệ thống."
+  },
+  "notification": {
+    "not_found": "Không tìm thấy thông báo.",
+    "task": {
+      "assigned": {
+        "title": "👤 Việc mới cho bạn",
+        "message": "Bạn được giao task \"{{title}}\"."
+      },
+      "updated": {
+        "title": "🔄 Cập nhật Task",
+        "message": "Task \"{{title}}\" vừa được cập nhật."
+      },
+      "completed": {
+        "title": "✅ Task hoàn thành",
+        "message": "Task \"{{title}}\" đã được đánh dấu xong!"
+      },
+      "commented": {
+        "title": "💬 Bình luận mới",
+        "message": "{{actor_name}} đã bình luận: \"{{content}}\""
+      }
+    },
+    "project": {
+      "member_added": {
+        "title": "👋 Chào mừng",
+        "message": "Bạn đã được thêm vào dự án \"{{project_name}}\"."
+      }
+    },
+    "system": {
+      "alert": {
+        "title": "🔔 Thông báo hệ thống",
+        "message": "{{message}}"
+      }
+    },
+    "task": {
+      "created": "📋 Task mới: {{title}}",
+      "created_by": "Được tạo bởi {{actor}}",
+      "updated": "✏️ Task cập nhật: {{title}}",
+      "updated_by": "Cập nhật bởi {{actor}}",
+      "completed": "✅ Hoàn thành: {{title}}",
+      "completed_by": "Đã hoàn thành bởi {{actor}}",
+      "assigned": "👤 Phân công: {{title}}",
+      "assigned_by": "Được giao bởi {{actor}}",
+      "commented": "💬 {{actor}} đã bình luận",
+      "commented_on": "{{title}}",
+      "unblocked": "🚀 Task mở khóa: {{title}}",
+      "unblocked_message": "Tất cả task phụ thuộc đã hoàn thành. Bạn có thể bắt đầu làm!",
+      "generic": "📋 {{title}}"
+    },
+    "sprint": {
+      "started": "🏃 Sprint bắt đầu: {{name}}",
+      "started_by": "Bắt đầu bởi {{actor}}",
+      "completed": "🏁 Sprint kết thúc: {{name}}",
+      "completed_by": "Kết thúc bởi {{actor}}",
+      "reopened": "🔄 Sprint mở lại: {{name}}",
+      "reopened_by": "Mở lại bởi {{actor}}",
+      "created": "📋 Sprint mới: {{name}}",
+      "created_by": "Tạo bởi {{actor}}",
+      "generic": "🏃 {{name}}"
+    },
+    "project": {
+      "member_added": "📥 Bạn được thêm vào project: {{name}}",
+      "added_by": "Thêm bởi {{actor}}",
+      "member_removed": "📤 Bạn bị xóa khỏi project: {{name}}",
+      "removed_by": "Xóa bởi {{actor}}"
+    },
+    "automation": {
+      "assigned_by_rule": "Tự động phân công bởi rule: {{rule}}",
+      "custom": "🔔 {{rule}}",
+      "custom_message": "{{message}}"
+    }
+  },
+  "kanban": {
+    "title": "Tiến độ dự án",
+    "subtitle": "Kanban Board",
+    "tasks_title": "Công việc",
+    "tasks_subtitle": "Quản lý công việc",
+    "view_board": "Bảng",
+    "view_list": "Danh sách",
+    "view_calendar": "Lịch",
+    "filter": "Bộ lọc",
+    "team": "Đội ngũ",
+    "addTask": "Thêm task",
+    "noTask": "Chưa có task nào",
+    "error_title": "Lỗi phân quyền",
+    "updateError": "Không thể cập nhật trạng thái. Có thể bạn không có quyền.",
+    "selectProject": "Vui lòng chọn một dự án.",
+    "columns": {
+      "todo": "Việc cần làm",
+      "in_progress": "Đang làm",
+      "review": "Đang review",
+      "done": "Hoàn thành"
+    },
+    "card": {
+      "priority": {
+        "high": "Cao",
+        "medium": "Trung bình",
+        "low": "Thấp"
+      },
+      "overdue": "Quá hạn",
+      "subtasks": "Sub-tasks",
+      "assigned": "Đã giao",
+      "unassigned": "Chưa giao",
+      "estimated_hours": "Giờ dự kiến"
+    },
+    "status_todo": "Cần làm",
+    "status_in_progress": "Đang làm",
+    "status_review": "Đang chờ duyệt",
+    "status_done": "Đã xong",
+    "priority_high": "Cao",
+    "priority_medium": "Trung bình",
+    "priority_low": "Thấp",
+    "filter_title": "Bộ lọc Kanban",
+    "clear_all": "Xóa bộ lọc",
+    "search": "Tìm kiếm",
+    "search_placeholder": "Search...",
+    "priority": "Độ ưu tiên",
+    "assignee": "Người thực hiện",
+    "unassigned": "Chưa giao",
+    "backlog_filter": "Backlog (Chưa có Sprint)",
+    "deadline": "Hạn chót",
+    "overdue": "Quá hạn",
+    "current_members": "Danh sách thành viên",
+    "added": "Đã thêm",
+    "no_users_found": "Không tìm thấy người dùng",
+    "search_results": "Kết quả tìm kiếm"
+  },
+  "taskDetail": {
+    "title": "Chi tiết",
+    "subtasks": "Sub-tasks",
+    "comments": "Bình luận",
+    "description": "Mô tả",
+    "no_description": "Chưa có mô tả...",
+    "status": "Trạng thái",
+    "auto_start": "Tự động bắt đầu (Auto-start)",
+    "auto_start_desc": "Tự động kéo sang \"Đang làm\" khi các task phụ thuộc đã hoàn thành.",
+    "priority": "Ưu tiên",
+    "deadline": "Hạn chót",
+    "ai_regen_title": "Tạo lại Subtasks (AI)",
+    "ai_regen_desc": "Hành động này sẽ xóa các subtask Todo hiện tại và tạo mới hoàn toàn. Các subtask Đã xong (Done) vẫn được giữ lại.",
+    "ai_regen_confirm_btn": "Tạo lại",
+    "ai_regen": "Tạo lại (AI)",
+    "ai_breakdown": "AI Phân rã",
+    "delete_title": "Xóa task",
+    "delete_desc": "Task \"{{title}}\" và tất cả subtask, comment sẽ bị xóa vĩnh viễn.",
+    "assignee": "Người làm",
+    "unassigned": "Chưa giao",
+    "estimated_hours": "Ước tính (Giờ)",
+    "not_set": "Chưa đặt",
+    "dependencies": "Phụ thuộc vào",
+    "add_dependency": "Thêm phụ thuộc...",
+    "no_subtasks": "Chưa có sub-task nào",
+    "add_subtask": "+ Thêm sub-task...",
+    "no_comments": "Chưa có bình luận nào",
+    "add_comment": "Thêm bình luận...",
+    "delete_task": "Xóa công việc",
+    "close": "Đóng",
+    "edit": "Chỉnh sửa",
+    "save": "Lưu thay đổi",
+    "cancel": "Hủy",
+    "status_todo": "Việc cần làm",
+    "status_in_progress": "Đang làm",
+    "status_review": "Đang review",
+    "status_done": "Hoàn thành",
+    "priority_low": "Thấp",
+    "priority_medium": "Trung bình",
+    "priority_high": "Cao",
+    "ai_breakdown_started": "AI đang phân tích và tạo Sub-task...",
+    "ai_estimate_started": "AI đang ước lượng thời gian...",
+    "ai_error": "Không thể gọi AI",
+    "name_placeholder": "Nhập tên công việc...",
+    "ai_estimate_title": "AI Tự động ước lượng (Fibonacci)",
+    "ai_processing": "AI đang xử lý...",
+    "ai_breakdown_btn": "Phân rã bằng AI",
+    "remove_dep": "Xóa phụ thuộc",
+    "no_deps": "Không có phụ thuộc nào."
+  },
+  "automationPage": {
+    "title": "Tự động hóa",
+    "subtitle": "Thiết lập các quy tắc thông minh để tự động hóa quy trình làm việc",
+    "templates": "Mẫu đề xuất",
+    "my_rules": "Quy tắc của tôi",
+    "create_rule": "Tạo Rule Mới",
+    "no_rules": "Chưa có quy tắc nào",
+    "no_rules_desc": "Bắt đầu tự động hóa các tác vụ để tiết kiệm thời gian",
+    "status": {
+      "active": "Đang hoạt động",
+      "inactive": "Đã tắt",
+      "turn_on": "Bật",
+      "turn_off": "Tắt"
+    },
+    "trigger": "Điều kiện (IF)",
+    "action": "Hành động (THEN)",
+    "rule_name": "Tên tự động hóa",
+    "save": "Lưu thay đổi",
+    "create": "Tạo Rule",
+    "edit": "Chỉnh sửa Rule",
+    "triggers": {
+      "task.created": "Khi task được tạo",
+      "task.status_changed": "Khi status thay đổi thành",
+      "task.assigned": "Khi task được giao",
+      "task.priority_changed": "Khi priority thay đổi thành",
+      "task.unblocked": "Khi rảnh tay (Hết block)",
+      "task.due_soon": "Khi sắp tới hạn (24h)",
+      "task.overdue": "Khi task bị quá hạn",
+      "task.stale": "Khi task bị bỏ quên (5 ngày)"
+    },
+    "actions": {
+      "set_status": "Chuyển status thành",
+      "set_priority": "Đặt priority thành",
+      "assign_to_sprint": "Thêm vào sprint",
+      "remove_from_sprint": "Xóa khỏi sprint",
+      "add_comment": "Tự động Comment",
+      "reassign": "Chuyển giao cho",
+      "ai_generate_subtasks": "AI: Tạo sub-tasks (Breakdown)",
+      "ai_auto_estimate": "AI: Đánh giá Story Points",
+      "set_deadline": "Gia hạn deadline thêm (ngày)",
+      "send_custom_notification": "Gửi thông báo"
+    },
+    "how_it_works": "Cách thức hoạt động",
+    "step_1_title": "Trigger",
+    "step_1_desc": "Sự kiện xảy ra trên task (tạo mới, đổi status, giao việc…)",
+    "step_2_title": "Điều kiện",
+    "step_2_desc": "Lọc thêm: status/priority cụ thể, chỉ áp dụng khi thỏa mãn",
+    "step_3_title": "Hành động",
+    "step_3_desc": "Tự động cập nhật status, priority, hoặc gán vào sprint",
+    "total_rules": "Tổng rules",
+    "edit_rule": "Sửa Rule"
+  },
+  "ai_insights": {
+    "no_data": "Chưa có phân tích AI",
+    "no_data_desc": "Nhấn Phân tích lại để AI đánh giá dự án.",
+    "analyze_btn": "Phân tích ngay",
+    "cards": {
+      "no_tasks": {
+        "title": "Chưa có công việc",
+        "description": "Dự án hiện tại chưa có công việc nào."
+      },
+      "completion_good": {
+        "title": "Tiến độ tốt",
+        "description": "Tỷ lệ hoàn thành công việc ổn định."
+      },
+      "completion_low": {
+        "title": "Tiến độ chậm",
+        "description": "Tỷ lệ hoàn thành công việc đang ở mức thấp."
+      },
+      "overdue": {
+        "title": "Công việc quá hạn",
+        "description": "Có một số công việc đã quá hạn."
+      },
+      "no_overdue": {
+        "title": "Đúng tiến độ",
+        "description": "Không có công việc nào bị quá hạn."
+      },
+      "blocked": {
+        "title": "Công việc bị chặn",
+        "description": "Có công việc đang bị chặn (blocked)."
+      },
+      "no_sprint": {
+        "title": "Chưa có Sprint",
+        "description": "Chưa có sprint nào đang chạy."
+      },
+      "sprint_behind": {
+        "title": "Sprint chậm trễ",
+        "description": "Tiến độ Sprint đang bị chậm."
+      },
+      "sprint_ending": {
+        "title": "Sprint sắp kết thúc",
+        "description": "Sprint hiện tại sắp kết thúc, hãy chú ý."
+      },
+      "sprint_on_track": {
+        "title": "Sprint đúng tiến độ",
+        "description": "Sprint hiện tại đang đi đúng hướng."
+      },
+      "overloaded_member": {
+        "title": "Thành viên quá tải",
+        "description": "{{names}} và {{count}} thành viên đang được giao quá nhiều task."
+      },
+      "member_overdue": {
+        "title": "Thành viên có task quá hạn",
+        "description": "{{name}} có {{count}} task quá hạn cần xử lý."
+      }
+    },
+    "health_label": {
+      "excellent": "Xuất sắc",
+      "good": "Tốt",
+      "at_risk": "Cần chú ý",
+      "warning": "Cảnh báo",
+      "critical": "Nguy hiểm"
+    },
+    "insight_labels": {
+      "success": "Tốt",
+      "warning": "Cảnh báo",
+      "risk": "Rủi ro",
+      "info": "Thông tin"
+    }
+  },
+  "endSprint": {
+    "title": "Kết thúc Sprint",
+    "success": "Sprint \"{{name}}\" đã kết thúc!",
+    "success_desc": "{{done}}/{{total}} tasks hoàn thành · {{incomplete}} tasks chuyển {{action}}.",
+    "to_backlog": "về Backlog",
+    "to_next": "sang Sprint mới",
+    "sprint_label": "Sprint",
+    "stats": {
+      "total": "Tổng tasks",
+      "done": "Hoàn thành",
+      "incomplete": "Chưa xong"
+    },
+    "action_prompt": "{{count}} task chưa hoàn thành — bạn muốn:",
+    "actions": {
+      "backlog": {
+        "title": "Chuyển về Backlog",
+        "desc": "Tasks sẽ không thuộc sprint nào, có thể kéo vào sprint sau."
+      },
+      "next_sprint": {
+        "title": "Chuyển sang Sprint khác",
+        "select": "— Chọn Sprint —"
+      }
+    },
+    "status": {
+      "active": "Đang chạy",
+      "planning": "Chưa bắt đầu"
+    },
+    "completion_rate": "Tỷ lệ hoàn thành",
+    "actual_days": "Thời gian chạy",
+    "days_unit": "ngày",
+    "buttons": {
+      "cancel": "Hủy",
+      "confirm": "Xác nhận kết thúc",
+      "processing": "Đang xử lý..."
+    }
+  },
+  "sprintBoard": {
+    "title": "Quản lý Sprints",
+    "management": "Sprint Management",
+    "create_new": "Tạo Sprint mới",
+    "create_success": "Tạo Sprint thành công!",
+    "update_success": "Cập nhật Sprint thành công!",
+    "start_success": "Sprint đã bắt đầu!",
+    "already_active": "Đã có Sprint đang chạy trong dự án này.",
+    "reopen_success": "Sprint đã được mở lại!",
+    "reopen_error": "Đã có Sprint đang chạy. Kết thúc sprint đó trước.",
+    "delete_tasks_success": "Đã xóa {{count}} task",
+    "no_project": "Vui lòng chọn dự án.",
+    "form": {
+      "name_placeholder": "Tên sprint (ví dụ: Sprint 1)",
+      "goal_placeholder": "Mục tiêu (tùy chọn)",
+      "plan": "Kế hoạch",
+      "save": "Lưu",
+      "cancel": "Hủy"
+    },
+    "headers": {
+      "task": "Task",
+      "deadline": "Hạn",
+      "who": "Who",
+      "status": "Trạng thái"
+    },
+    "status": {
+      "planning": "Chưa bắt đầu",
+      "active": "Đang chạy",
+      "completed": "Đã kết thúc"
+    },
+    "actions": {
+      "start": "Bắt đầu",
+      "end": "Kết thúc",
+      "report": "Báo cáo",
+      "reopen": "Mở lại",
+      "reopen_hint": "Mở lại sprint (tasks đã chuyển ra ngoài sẽ không tự quay về)",
+      "add_task": "Thêm Task"
+    },
+    "empty": {
+      "completed": "Sprint đã kết thúc.",
+      "drag_here": "Kéo task từ Backlog vào đây",
+      "backlog": "Không có task nào trong Backlog 🎉"
+    },
+    "hidden_subtasks": "{{count}} subtask ẩn",
+    "unassigned": "Chưa giao",
+    "move_error": "Lỗi khi di chuyển",
+    "delete_error": "Lỗi khi xóa",
+    "bulk": {
+      "clear": "Xóa",
+      "delete": "Xóa",
+      "selected": "Đã chọn"
+    },
+    "burndown": {
+      "title": "Báo cáo Sprint: {{name}}",
+      "subtitle": "Burndown Chart (Giờ ước tính còn lại)",
+      "no_data": "Chưa có dữ liệu báo cáo hoặc có lỗi xảy ra.",
+      "ideal": "Kế hoạch (Ideal)",
+      "actual": "Thực tế (Actual)"
+    }
+  },
+  "projectOverview": {
+    "title": "Tổng quan dự án",
+    "active_status": "Đang hoạt động",
+    "active": "Đang hoạt động",
+    "loading": "Đang tải...",
+    "updated_at": "Cập nhật lúc {{time}}",
+    "reanalyze": "Phân tích lại",
+    "settings": "Cài đặt",
+    "select_project": "Chọn một dự án để xem phân tích AI",
+    "no_data": "Chưa có phân tích AI",
+    "no_data_desc": "Nhấn Phân tích lại để AI đánh giá dự án.",
+    "risk_banner_both": "Phát hiện {{riskCount}} rủi ro và {{warningCount}} cảnh báo — cần xem xét ngay",
+    "risk_banner_warnings": "Phát hiện {{warningCount}} cảnh báo cần chú ý",
+    "health_score": "Sức Khỏe Dự Án",
+    "health_desc": "Dựa trên {{total}} tasks · {{members}} thành viên",
+    "insight_labels": {
+      "risk": "Rủi ro",
+      "warning": "Cảnh báo",
+      "success": "Tốt",
+      "info": "Thông tin"
+    },
+    "workload_levels": {
+      "low": "Thấp",
+      "normal": "Bình thường",
+      "high": "Cao",
+      "critical": "Quá tải"
+    },
+    "stats": {
+      "total_tasks": "Tổng Task",
+      "completed": "Đã hoàn thành",
+      "overdue": "Quá hạn",
+      "blocked": "Bị chặn",
+      "completion_rate": "{{rate}}% hoàn thành",
+      "in_progress": "{{count}} đang xử lý",
+      "needs_action": "Cần xử lý ngay",
+      "all_on_track": "Tất cả trong hạn",
+      "dependency_not_done": "Dependency chưa done",
+      "no_blocked": "Không có task bị block"
+    },
+    "status_distribution": "Phân bổ trạng thái",
+    "ai_analysis": {
+      "title": "Phân Tích AI",
+      "powered_by": "Powered by LLM · NVIDIA AI",
+      "ai_generated": "AI Tạo ra",
+      "recommendations": "Đề xuất hành động",
+      "configure_api": "Cấu hình NVIDIA_API_KEY hoặc OPENAI_API_KEY để bật phân tích AI."
+    },
+    "sprint": {
+      "current": "Sprint Hiện Tại",
+      "no_sprint": "Chưa có sprint đang chạy",
+      "on_track": "Đúng tiến độ",
+      "needs_speed": "Cần tăng tốc",
+      "completed": "Đã hoàn thành",
+      "task_done": "Task đã xong",
+      "days_remaining": "Ngày còn lại",
+      "no_active": "Chưa có sprint đang chạy"
+    },
+    "team": {
+      "workload": "Workload Đội Nhóm",
+      "members_count": "{{count}} thành viên",
+      "no_members": "Chưa có thành viên",
+      "overdue_count": "{{count}} quá hạn",
+      "workload_desc": "{{active}} task đang làm · {{in_progress}} in progress"
+    },
+    "insight_details": "Chi Tiết Phân Tích",
+    "analyzed_at": "Phân tích lúc {{time}}",
+    "ai_narrative": "AI narrative: NVIDIA AI",
+    "details": {
+      "title": "Chi Tiết Phân Tích",
+      "risk_count": "{{count}} rủi ro",
+      "warning_count": "{{count}} cảnh báo",
+      "banner_risks": "Phát hiện {{riskCount}} rủi ro{{andWarning}} — cần xem xét ngay",
+      "and_warnings": " và {{warningCount}} cảnh báo",
+      "banner_warnings": "Phát hiện {{warningCount}} cảnh báo"
+    },
+    "active_sprint": "Sprint Hiện Tại",
+    "all_on_time": "Tất cả trong hạn",
+    "based_on": "Dựa trên {{tasks}} tasks · {{members}} thành viên",
+    "blocked_tasks": "Bị chặn",
+    "completion_rate": "{{rate}}% hoàn thành",
+    "dependency_not_done": "Dependency chưa xong",
+    "done_tasks": "Đã hoàn thành",
+    "in_progress": "{{count}} đang xử lý",
+    "members": "thành viên",
+    "needs_action": "Cần xử lý ngay",
+    "no_active_sprint": "Chưa có sprint đang chạy",
+    "no_blocked": "Không có task bị block",
+    "no_members": "Chưa có thành viên",
+    "overdue_tasks": "Quá hạn",
+    "status_dist": "Phân bổ trạng thái",
+    "team_workload": "Workload Đội Nhóm",
+    "total_tasks": "Tổng Task"
+  },
+  "settings": {
+    "title": "Cài đặt hệ thống",
+    "subtitle": "Tùy chỉnh giao diện, tùy chọn làm mờ, hiệu ứng động và màu sắc.",
+    "appearance": "Giao diện (Appearance)",
+    "themeMode": {
+      "title": "Chế độ màu",
+      "hint": "Sáng, Tối, hoặc theo Hệ thống.",
+      "light": "Sáng",
+      "dark": "Tối",
+      "system": "Hệ thống"
+    },
+    "themeStyle": {
+      "title": "Phong cách (Theme style)",
+      "hint": "Bề mặt cơ bản (Standard) hoặc Kính lỏng (Liquid Glass).",
+      "standard": "Cơ bản",
+      "glass": "Kính lỏng"
+    },
+    "transparency": {
+      "title": "Độ trong suốt",
+      "hint": "Mức độ nhìn xuyên thấu của mặt kính."
+    },
+    "blur": {
+      "title": "Độ nhòe",
+      "hint": "Mức độ làm mờ nền phía sau kính."
+    },
+    "motion": {
+      "title": "Độ nảy (Motion intensity)",
+      "hint": "Độ nảy (spring) của các hiệu ứng di chuột và nổi lên."
+    },
+    "motionToggle": {
+      "title": "Hiệu ứng chuyển động",
+      "hint": "Công tắc tổng cho các hiệu ứng transition và animation."
+    },
+    "mouseGlow": {
+      "title": "Đèn nền chạy theo chuột",
+      "hint": "Hiển thị vệt sáng đi theo con trỏ chuột trên toàn hệ thống."
+    },
+    "bgGrid": {
+      "title": "Hiển thị lưới nền",
+      "hint": "Hiển thị họa tiết lưới mờ (grid) phía sau các trang."
+    },
+    "accent": {
+      "title": "Màu chủ đạo (Accent color)",
+      "hint": "Màu nhấn cho các nút hành động chính và viền focus."
+    },
+    "preview": {
+      "title": "Xem trước",
+      "sidebar": "Bề mặt Sidebar",
+      "sidebarDesc": "Khối kính nổi (Floating glass)",
+      "modal": "Menu thả xuống",
+      "modalDesc": "Kính mờ, đổi màu theo nền.",
+      "card": "Thẻ công việc",
+      "cardDesc": "Màu đặc — đảm bảo dễ đọc.",
+      "primary": "Chính",
+      "secondary": "Phụ"
+    }
+  },
+  "dashboard": {
+    "greeting": {
+      "morning": "Chào buổi sáng",
+      "afternoon": "Chào buổi chiều",
+      "evening": "Chào buổi tối"
+    },
+    "admin_subtitle": "Tổng quan hệ thống và công việc cá nhân của bạn.",
+    "user_subtitle": "Tổng quan công việc của bạn hôm nay, trên tất cả dự án.",
+    "system_stats": "Thống kê hệ thống",
+    "users": "Người dùng",
+    "active_users": "đang hoạt động",
+    "active_projects": "Dự án active",
+    "total_projects": "tổng cộng",
+    "total_tasks": "Tổng tasks",
+    "done_this_week": "Done tuần này",
+    "system_wide": "Toàn hệ thống",
+    "status_distribution": "Phân bố trạng thái task",
+    "status": {
+      "todo": "Chờ xử lý",
+      "in_progress": "Đang làm",
+      "review": "Chờ duyệt",
+      "done": "Hoàn thành"
+    },
+    "deadline": {
+      "today": "Hôm nay",
+      "tomorrow": "Ngày mai",
+      "days_left": "{{count}} ngày nữa"
+    },
+    "recent_users": "Người dùng mới đăng ký",
+    "admin_badge": "Admin",
+    "personal_tasks": "Công việc cá nhân",
+    "my_tasks_label": "Công việc của bạn",
+    "overdue": "Quá hạn",
+    "upcoming_tasks": "Sắp đến hạn (7 ngày tới)",
+    "view_all": "Xem tất cả",
+    "no_upcoming": "Không có task nào sắp đến hạn. Tuyệt vời! 🎉",
+    "all": "Tất cả",
+    "no_projects": "Chưa tham gia dự án nào",
+    "no_assigned_tasks": "Chưa có task nào giao cho bạn",
+    "team_management": "Quản lý đội nhóm",
+    "team_workload": "Tải công việc đội nhóm",
+    "no_team_members": "Chưa có thành viên nào trong project bạn quản lý",
+    "blocked_tasks": "Task bị chặn (dependency chưa xong)",
+    "no_blocked": "Không có task nào bị chặn 🎉",
+    "blocked_count": "chặn",
+    "ai": {
+      "overdue_msg_1": "Bạn có ",
+      "overdue_msg_2": " task quá hạn",
+      "overdue_msg_3": ". Hãy cập nhật tiến độ hoặc điều chỉnh deadline sớm nhé.",
+      "in_progress_msg_1": "Bạn đang xử lý ",
+      "in_progress_msg_2": " task",
+      "in_progress_msg_3": ". Tuyệt! Hãy giữ vững nhịp độ và đừng quên cập nhật trạng thái.",
+      "clear_msg_1": "Inbox trống! ",
+      "clear_msg_2": "Không có task quá hạn",
+      "clear_msg_3": ". Bạn đang quản lý công việc rất tốt 🚀"
+    },
+    "tab_overview": "Tổng quan",
+    "tab_my_day": "Ngày của tôi",
+    "update_success": "Cập nhật thành công",
+    "my_day": {
+      "empty": "Trống",
+      "empty_desc": "Không có task nào",
+      "personal_project": "Dự án cá nhân",
+      "title": "Ngày của tôi",
+      "project_label": "Dự án"
+    },
+    "my_day_subtitle": "Công việc của tôi hôm nay"
+  },
+  "projectList": {
+    "title": "Dự án của tôi",
+    "active_count": "{{count}} dự án đang hoạt động",
+    "create_new": "Tạo dự án mới",
+    "no_projects": "Chưa có dự án nào",
+    "no_projects_desc": "Tạo dự án đầu tiên để bắt đầu quản lý công việc!",
+    "create_now": "Tạo dự án ngay",
+    "no_description": "Chưa có mô tả",
+    "create": {
+      "title": "Tạo dự án mới",
+      "name_label": "Tên dự án *",
+      "name_placeholder": "VD: TaskManager AI",
+      "name_required": "Vui lòng nhập tên dự án",
+      "desc_label": "Mô tả",
+      "desc_placeholder": "Mô tả ngắn về dự án...",
+      "start_date": "Ngày bắt đầu",
+      "end_date": "Ngày kết thúc",
+      "telegram_label": "Telegram Group Chat ID (Tùy chọn)",
+      "telegram_hint": "Mời Bot @TM_1005_BOT vào nhóm và dùng lệnh /start để nhận thông báo tự động.",
+      "cancel": "Hủy",
+      "submit": "Tạo dự án"
+    },
+    "member_count": "{{count}} thành viên"
+  },
+  "workspace": {
+    "roles_title": "Vai trò & Quyền hạn",
+    "roles_subtitle": "Quản lý các vai trò tùy chỉnh và mức độ truy cập trong workspace.",
+    "new_role": "Tạo Vai trò",
+    "permissions": "Quyền hạn",
+    "members": "Thành viên",
+    "members_desc": "Quản lý những người có quyền truy cập vào workspace này.",
+    "invite_member": "Mời thành viên",
+    "edit_member": "Chỉnh sửa thành viên",
+    "role": "Vai trò",
+    "owner": "Chủ sở hữu",
+    "confirm_remove_member": "Bạn có chắc chắn muốn xóa thành viên này khỏi workspace?",
+    "member_removed": "Đã xóa thành viên khỏi workspace.",
+    "invitation_sent": "Đã gửi lời mời thành công.",
+    "features_title": "Tính năng",
+    "features_desc": "Bật hoặc tắt các module tính năng cho workspace này. Thay đổi sẽ có hiệu lực ngay lập tức.",
+    "feature_enable_sprint": "Sprints",
+    "feature_enable_sprint_desc": "Bật chế độ lập kế hoạch theo sprint và các chế độ xem timeline",
+    "feature_enable_epics": "Epics & Lộ trình",
+    "feature_enable_epics_desc": "Bật tính năng lập lộ trình và quản lý tiến độ tổng thể",
+    "feature_enable_story_points": "Story Points",
+    "feature_enable_story_points_desc": "Bật tính năng đánh giá độ khó của công việc bằng Story Points",
+    "feature_enable_workload": "Khối lượng công việc",
+    "feature_enable_workload_desc": "Bật chế độ xem workload để phân bổ năng lực",
+    "feature_enable_automation": "Tự động hóa",
+    "feature_enable_automation_desc": "Bật các luật tự động hóa quy trình làm việc",
+    "feature_enable_ai": "Trợ lý AI",
+    "feature_enable_ai_desc": "Bật các tính năng gợi ý và hỗ trợ thông minh từ AI",
+    "feature_enable_time_tracking": "Theo dõi thời gian",
+    "feature_enable_time_tracking_desc": "Bật tính năng theo dõi thời gian làm việc trên từng task",
+    "feature_enable_calendar": "Lịch",
+    "feature_enable_calendar_desc": "Bật chế độ xem Lịch cho các công việc có hạn chót",
+    "member_updated": "Đã cập nhật thông tin thành viên.",
+    "send_invite": "Gửi lời mời",
+    "no_members": "Chưa có thành viên nào.",
+    "settings_desc": "Quản lý thành viên, vai trò và quyền truy cập.",
+    "sys_role": "Hệ thống",
+    "type_desc": {
+      "personal": "Workspace cho cá nhân",
+      "team": "Workspace cho đội nhóm"
+    },
+    "btn_cancel": "Hủy",
+    "type": {
+      "personal": "Cá nhân",
+      "team": "Đội nhóm"
+    },
+    "name_placeholder": "Nhập tên workspace...",
+    "type_label": "Loại",
+    "btn_create": "Tạo mới",
+    "create_title": "Tạo Workspace mới",
+    "create_failed": "Tạo thất bại",
+    "name_label": "Tên Workspace",
+    "created_success": "Tạo Workspace thành công",
+    "not_found": "Không tìm thấy workspace.",
+    "access_denied": "Bạn không có quyền truy cập workspace này.",
+    "owner_or_admin_required": "Chỉ chủ sở hữu hoặc admin của workspace mới có thể thực hiện thao tác này.",
+    "member_already_exists": "Người dùng đã là thành viên của workspace này.",
+    "member_not_found": "Không tìm thấy thành viên trong workspace này.",
+    "invitation_not_found": "Không tìm thấy lời mời."
+  },
+  "server": {
+    "notification_unavailable": "Dịch vụ thông báo hiện không khả dụng. Vui lòng thử lại sau.",
+    "db_unavailable": "Cơ sở dữ liệu tạm thời không khả dụng. Vui lòng thử lại sau.",
+    "conflict_error": "Đã xảy ra xung đột. Tài nguyên có thể đã tồn tại."
+  },
+  "role": {
+    "project_owner": "Chủ dự án",
+    "project_manager": "Quản lý dự án"
+  },
+  "pomodoro": {
+    "sounds": {
+      "rain": "Tiếng mưa",
+      "none": "Không âm thanh",
+      "white": "Tiếng ồn trắng",
+      "wind": "Tiếng gió"
+    },
+    "completed_sessions": "Phiên đã hoàn thành",
+    "btn_pause": "Tạm dừng",
+    "btn_start": "Bắt đầu",
+    "sound_label": "Âm thanh",
+    "no_task": "Chưa chọn task",
+    "focus_tip_title": "Mẹo tập trung",
+    "exit_fullscreen": "Thoát toàn màn hình",
+    "current_goal": "Mục tiêu hiện tại",
+    "toast": {
+      "break_done": "Nghỉ ngơi xong",
+      "focus_done": "Hoàn thành tập trung"
+    },
+    "focus": "Tập trung",
+    "btn_fullscreen": "Toàn màn hình",
+    "timer": "Đồng hồ",
+    "break": "Nghỉ ngơi",
+    "select_task": "Chọn Task",
+    "sessions_today": "Phiên hôm nay",
+    "btn_reset": "Đặt lại",
+    "focus_tip_desc": "Tránh xa điện thoại và tập trung hoàn toàn vào công việc."
+  },
+  "timeline": {
+    "legend": {
+      "today": "Hôm nay",
+      "task_deadline": "Hạn chót Task",
+      "completed": "Đã hoàn thành",
+      "active": "Đang hoạt động",
+      "planning": "Đang lên kế hoạch"
+    },
+    "no_sprints": "Không có sprint",
+    "title": "Timeline",
+    "no_sprints_desc": "Dự án này chưa có sprint nào.",
+    "footer_hint": "Gợi ý Timeline",
+    "go_to_sprints": "Đi tới Sprints",
+    "no_dates": "Chưa có ngày",
+    "due": "Hạn chót",
+    "stats": {
+      "total_tasks": "Tổng số Task",
+      "overdue_tasks": "Task quá hạn",
+      "total_sprints": "Tổng số Sprint",
+      "active": "Đang hoạt động"
+    },
+    "sprint_col": "Cột Sprint",
+    "sprint_board": "Bảng Sprint",
+    "subtitle": "Quản lý tiến độ dự án"
+  },
+  "notifications": {
+    "automation": "Tự động hóa",
+    "no_unread": "Không có thông báo chưa đọc",
+    "no_notifs": "Không có thông báo",
+    "info": "Thông tin",
+    "mark_read": "Đánh dấu đã đọc",
+    "all": "Tất cả",
+    "will_let_you_know": "Chúng tôi sẽ thông báo cho bạn khi có gì mới",
+    "showing_last_notifs": "Đang hiển thị các thông báo gần nhất",
+    "unread": "Chưa đọc",
+    "unread_notifs": "Thông báo chưa đọc",
+    "assignment": "Phân công",
+    "filter_task": "Task",
+    "filter_sprint": "Sprint",
+    "filter_project": "Dự án"
+  },
+  "roadmap": {
+    "title": "Lộ trình dự án (Roadmap)",
+    "subtitle": "Lập kế hoạch dài hạn, nhóm các task vào Epic và theo dõi tiến độ.",
+    "create_epic": "Tạo Epic Mới",
+    "delete_success": "Xóa Epic thành công!",
+    "delete_error": "Xóa Epic thất bại!",
+    "delete_confirm": "Bạn có chắc chắn muốn xóa Epic này? Tất cả task liên quan sẽ được gỡ Epic.",
+    "empty_title": "Chưa có Epic nào trong Roadmap",
+    "empty_desc": "Hãy tạo Epic đầu tiên để bắt đầu lập lộ trình.",
+    "create_now": "Tạo ngay",
+    "no_description": "Không có mô tả.",
+    "due_date": "Hạn chót: {{date}}",
+    "linked_tasks": "Thẻ công việc liên kết ({{count}})",
+    "no_linked_tasks": "Chưa có công việc nào liên kết với Epic này."
+  },
+  "createTask": {
+    "title": "Tạo công việc mới",
+    "name_label": "Tên công việc",
+    "name_placeholder": "Nhập tên công việc...",
+    "desc_label": "Mô tả",
+    "desc_placeholder": "Mô tả chi tiết..."
+  },
+  "profile": {
+    "title": "Hồ sơ cá nhân",
+    "subtitle": "Quản lý thông tin cá nhân và bảo mật",
+    "basic_info": "Thông tin cơ bản",
+    "full_name": "Họ và Tên",
+    "email": "Địa chỉ Email",
+    "email_hint": "Không thể thay đổi email.",
+    "security": "Bảo mật",
+    "new_password": "Mật khẩu mới",
+    "password_hint": "Bỏ trống nếu không muốn đổi mật khẩu.",
+    "confirm_password": "Xác nhận mật khẩu mới",
+    "password_mismatch": "Mật khẩu không khớp",
+    "update_success": "Cập nhật hồ sơ thành công",
+    "update_error": "Cập nhật hồ sơ thất bại"
+  },
+  "ai_metrics": {
+    "title": "Chỉ số đánh giá AI",
+    "no_data": "Chưa có dữ liệu. Hãy sử dụng tính năng Chia nhỏ (Breakdown) hoặc Ước lượng (Estimate) bằng AI để bắt đầu theo dõi.",
+    "total_calls": "Tổng lượt gọi AI",
+    "acceptance": "Tỷ lệ được chấp thuận",
+    "avg_response": "Thời gian phản hồi TB",
+    "tokens_used": "Số Tokens đã dùng",
+    "by_feature": "Theo từng tính năng",
+    "recent": "Lượt gọi AI gần đây"
+  },
+  "reports": {
+    "subtitle": "Năng suất cá nhân & sức khỏe dự án",
+    "done_this_week": "Hoàn thành tuần này",
+    "in_progress": "Đang thực hiện",
+    "overdue": "Quá hạn",
+    "my_projects": "Dự án của tôi",
+    "task_breakdown": "Phân tích công việc",
+    "no_tasks": "Chưa có công việc nào được giao",
+    "project_progress": "Tiến độ dự án",
+    "no_projects": "Chưa có dự án",
+    "upcoming_deadlines": "Sắp đến hạn",
+    "team_workload": "Khối lượng nhóm",
+    "blocked_tasks": "Công việc bị chặn",
+    "blocking_deps": "phụ thuộc chặn",
+    "tasks_completed": "hoàn thành tuần này",
+    "needs_attention": "cần xử lý",
+    "all_on_track": "đúng tiến độ"
+  }
+}
