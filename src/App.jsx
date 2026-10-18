@@ -5,6 +5,9 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 // Pages
+import LoginPage from '@/pages/LoginPage';
+import RegisterPage from '@/pages/RegisterPage';
+import ProfilePage from '@/pages/ProfilePage';
 
 import { Toaster } from 'sonner';
 
@@ -29,10 +32,13 @@ export default function App() {
       />
       <Routes>
         {/* Public routes */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
         {/* Protected routes with Sidebar Layout */}
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
         </Route>
 
