@@ -15,6 +15,7 @@ import SprintBoardPage from '@/pages/SprintBoardPage';
 import AutomationPage from '@/pages/AutomationPage';
 import NotificationsPage from '@/pages/NotificationsPage';
 import TimelinePage from '@/pages/TimelinePage';
+import WorkspaceSettingsPage from '@/pages/WorkspaceSettingsPage';
 import ProjectSettingsPage from '@/pages/ProjectSettingsPage';
 import ProfilePage from '@/pages/ProfilePage';
 
@@ -56,6 +57,7 @@ export default function App() {
             <Route path="/projects/:id/automation" element={<AutomationPage />} />
             <Route path="/projects/:id/settings" element={<ProjectSettingsPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/workspace-settings" element={<WorkspaceSettingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
         </Route>
