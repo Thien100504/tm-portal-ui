@@ -8,6 +8,9 @@ import { useTranslation } from 'react-i18next';
 import LoginPage from '@/pages/LoginPage';
 import RegisterPage from '@/pages/RegisterPage';
 import DashboardPage from '@/pages/DashboardPage';
+import ProjectListPage from '@/pages/ProjectListPage';
+import ProjectOverviewPage from '@/pages/ProjectOverviewPage';
+import ProjectSettingsPage from '@/pages/ProjectSettingsPage';
 import ProfilePage from '@/pages/ProfilePage';
 
 import { Toaster } from 'sonner';
@@ -40,6 +43,9 @@ export default function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/projects" element={<ProjectListPage />} />
+            <Route path="/projects/:id" element={<ProjectOverviewPage />} />
+            <Route path="/projects/:id/settings" element={<ProjectSettingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
         </Route>
