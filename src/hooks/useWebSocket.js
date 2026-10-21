@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useAuthStore } from '@/store/authStore';
+import api, { getAccessToken } from '@/lib/axios';
 import { useQueryClient } from '@tanstack/react-query';
 
 const PING_INTERVAL_MS  = 25_000;   // send ping every 25s
@@ -15,7 +16,6 @@ export function useWebSocket(projectId = null, onNotification = null) {
   const pingTimer         = useRef(null);
   const pongTimer         = useRef(null);
   const attemptRef        = useRef(0);
-  const unmountedRef      = useRef(false);
   const onNotificationRef = useRef(onNotification);
 
   useEffect(() => { onNotificationRef.current = onNotification; }, [onNotification]);
@@ -39,7 +39,8 @@ export function useWebSocket(projectId = null, onNotification = null) {
       setIsConnected(false);
       return;
     }
-    unmountedRef.current = false;
+    // Per-run flag: events of a socket from a previous run must not touch this run
+    let disposed = false;
 
     const clearTimers = () => {
       clearInterval(pingTimer.current);
@@ -48,7 +49,7 @@ export function useWebSocket(projectId = null, onNotification = null) {
     };
 
     const scheduleReconnect = () => {
-      if (unmountedRef.current) return;
+      if (disposed) return;
       const delay = Math.min(
         BACKOFF_BASE_MS * Math.pow(BACKOFF_FACTOR, attemptRef.current),
         BACKOFF_MAX_MS
@@ -72,31 +73,41 @@ export function useWebSocket(projectId = null, onNotification = null) {
     };
 
     const connect = () => {
-      if (unmountedRef.current) return;
+      if (disposed) return;
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      // Read the token on every (re)connect: the axios interceptor may have refreshed it
+      const token = getAccessToken() || accessToken;
       const url = projectId
-        ? `${protocol}//${window.location.host}/ws/projects/${projectId}?token=${accessToken}`
-        : `${protocol}//${window.location.host}/ws/global?token=${accessToken}`;
+        ? `${protocol}//${window.location.host}/ws/projects/${projectId}?token=${token}`
+        : `${protocol}//${window.location.host}/ws/global?token=${token}`;
 
       const ws = new WebSocket(url);
       wsRef.current = ws;
 
       ws.onopen = () => {
-        if (unmountedRef.current) { ws.close(); return; }
+        if (disposed || wsRef.current !== ws) { ws.close(); return; }
         setIsConnected(true);
         attemptRef.current = 0;   // reset backoff on success
-        // If this is a reconnect (attempt > 0 was reset), flush cache for missed events
+        // Refetch cached queries so events missed while disconnected show up
         flushOnReconnect();
         startPing(ws);
       };
 
       ws.onclose = (event) => {
+        // Ignore stale sockets: replaced by a newer one, or closed by the effect cleanup
+        if (disposed || wsRef.current !== ws) return;
         setIsConnected(false);
         clearInterval(pingTimer.current);
         clearTimeout(pongTimer.current);
         wsRef.current = null;
-        // 1008 = auth failure, 1001 = clean close (unmount) — don't reconnect
-        if (event.code !== 1008 && event.code !== 1001 && !unmountedRef.current) {
+        if (event.code === 1008) {
+          // Auth failure, usually an expired access token. One API call lets the axios
+          // interceptor refresh it; the new token re-runs this effect, which reconnects.
+          api.get('/users/me').catch(() => {});
+          return;
+        }
+        // 1001 = server going away
+        if (event.code !== 1001) {
           scheduleReconnect();
         }
       };
@@ -104,6 +115,7 @@ export function useWebSocket(projectId = null, onNotification = null) {
       ws.onerror = () => { /* onclose fires after onerror, reconnect handled there */ };
 
       ws.onmessage = (event) => {
+        if (wsRef.current !== ws) return; // stale socket
         // Server pong — cancel the dead-connection timer
         if (event.data === 'pong') {
           clearTimeout(pongTimer.current);
@@ -155,10 +167,17 @@ export function useWebSocket(projectId = null, onNotification = null) {
     document.addEventListener('visibilitychange', onVisible);
 
     return () => {
-      unmountedRef.current = true;
+      disposed = true;
       clearTimers();
       document.removeEventListener('visibilitychange', onVisible);
-      wsRef.current?.close(1000, 'component unmount');
+      const ws = wsRef.current;
+      wsRef.current = null;
+      if (ws) {
+        // Detach the handlers first: the close event arrives later, possibly after
+        // the next run of this effect has opened a new socket
+        ws.onopen = ws.onclose = ws.onmessage = ws.onerror = null;
+        ws.close(1000, 'component unmount');
+      }
     };
   }, [projectId, accessToken, queryClient, flushOnReconnect]);
 

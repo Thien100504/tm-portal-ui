@@ -54,7 +54,10 @@
     "roadmap": "Roadmap",
     "timeline": "Timeline",
     "workspaceSettings": "Workspace Settings",
-    "workspaces_title": "Workspaces"
+    "workspaces_title": "Workspaces",
+    "profile": "Profile",
+    "projectSettings": "Settings",
+    "view_all_projects": "View all"
   },
   "auth": {
     "login_title": "TaskFlow AI",
@@ -895,7 +898,8 @@
   },
   "role": {
     "project_owner": "Project Owner",
-    "project_manager": "Project Manager"
+    "project_manager": "Project Manager",
+    "custom_role": "Custom role"
   },
   "pomodoro": {
     "sounds": {

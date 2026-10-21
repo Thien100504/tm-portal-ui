@@ -54,7 +54,10 @@
     "roadmap": "Roadmap",
     "timeline": "Timeline",
     "workspaceSettings": "Cài đặt Workspace",
-    "workspaces_title": "Danh sách Workspace"
+    "workspaces_title": "Danh sách Workspace",
+    "profile": "Hồ sơ",
+    "projectSettings": "Cài đặt",
+    "view_all_projects": "Xem tất cả"
   },
   "auth": {
     "login_title": "TaskFlow AI",
@@ -895,7 +898,8 @@
   },
   "role": {
     "project_owner": "Chủ dự án",
-    "project_manager": "Quản lý dự án"
+    "project_manager": "Quản lý dự án",
+    "custom_role": "Vai trò tùy chỉnh"
   },
   "pomodoro": {
     "sounds": {
