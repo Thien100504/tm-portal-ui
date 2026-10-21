@@ -12,6 +12,7 @@ import ProjectListPage from '@/pages/ProjectListPage';
 import ProjectOverviewPage from '@/pages/ProjectOverviewPage';
 import KanbanPage from '@/pages/KanbanPage';
 import SprintBoardPage from '@/pages/SprintBoardPage';
+import NotificationsPage from '@/pages/NotificationsPage';
 import TimelinePage from '@/pages/TimelinePage';
 import ProjectSettingsPage from '@/pages/ProjectSettingsPage';
 import ProfilePage from '@/pages/ProfilePage';
@@ -52,6 +53,7 @@ export default function App() {
             <Route path="/projects/:id/sprints" element={<SprintBoardPage />} />
             <Route path="/projects/:id/timeline" element={<TimelinePage />} />
             <Route path="/projects/:id/settings" element={<ProjectSettingsPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
         </Route>
