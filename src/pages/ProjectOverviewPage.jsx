@@ -12,6 +12,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { vi, enUS } from 'date-fns/locale';
 import aiService from '@/services/aiService';
 import projectService from '@/services/projectService';
+import AIMetricsDashboard from '@/components/AIMetricsDashboard';
 import EditProjectModal from '@/components/EditProjectModal';
 import StatusBadge from '@/components/ui/StatusBadge';
 import { useTheme } from "@/contexts/useTheme";
@@ -702,6 +703,9 @@ export default function ProjectOverviewPage() {
             )}
 
             {/* Footer */}
+            {/* AI Evaluation Metrics */}
+            <AIMetricsDashboard projectId={projectId} />
+
             <div className="pt-2 pb-4 text-center">
               <p className="text-[10px] text-muted-foreground/60">
                 {t('projectOverview.analyzed_at', { time: new Date(insights.generated_at).toLocaleString(i18n.language === 'vi' ? 'vi-VN' : 'en-US', {
