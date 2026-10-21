@@ -13,9 +13,12 @@ import ProjectOverviewPage from '@/pages/ProjectOverviewPage';
 import KanbanPage from '@/pages/KanbanPage';
 import SprintBoardPage from '@/pages/SprintBoardPage';
 import AutomationPage from '@/pages/AutomationPage';
+import ReportsPage from '@/pages/ReportsPage';
 import NotificationsPage from '@/pages/NotificationsPage';
 import TimelinePage from '@/pages/TimelinePage';
+import SettingsPage from '@/pages/SettingsPage';
 import WorkspaceSettingsPage from '@/pages/WorkspaceSettingsPage';
+import AdminPage from '@/pages/AdminPage';
 import RoadmapPage from '@/pages/RoadmapPage';
 import ProjectSettingsPage from '@/pages/ProjectSettingsPage';
 import ProfilePage from '@/pages/ProfilePage';
@@ -58,9 +61,12 @@ export default function App() {
             <Route path="/projects/:id/roadmap" element={<RoadmapPage />} />
             <Route path="/projects/:id/automation" element={<AutomationPage />} />
             <Route path="/projects/:id/settings" element={<ProjectSettingsPage />} />
+            <Route path="/reports" element={<ReportsPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
             <Route path="/workspace-settings" element={<WorkspaceSettingsPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/admin" element={<AdminPage />} />
           </Route>
         </Route>
 
