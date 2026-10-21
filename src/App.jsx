@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 // Pages
 import LoginPage from '@/pages/LoginPage';
 import RegisterPage from '@/pages/RegisterPage';
+import DashboardPage from '@/pages/DashboardPage';
 import ProfilePage from '@/pages/ProfilePage';
 
 import { Toaster } from 'sonner';
@@ -38,6 +39,7 @@ export default function App() {
         {/* Protected routes with Sidebar Layout */}
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
         </Route>
