@@ -10,6 +10,9 @@ import RegisterPage from '@/pages/RegisterPage';
 import DashboardPage from '@/pages/DashboardPage';
 import ProjectListPage from '@/pages/ProjectListPage';
 import ProjectOverviewPage from '@/pages/ProjectOverviewPage';
+import KanbanPage from '@/pages/KanbanPage';
+import SprintBoardPage from '@/pages/SprintBoardPage';
+import TimelinePage from '@/pages/TimelinePage';
 import ProjectSettingsPage from '@/pages/ProjectSettingsPage';
 import ProfilePage from '@/pages/ProfilePage';
 
@@ -45,6 +48,9 @@ export default function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/projects" element={<ProjectListPage />} />
             <Route path="/projects/:id" element={<ProjectOverviewPage />} />
+            <Route path="/projects/:id/kanban" element={<KanbanPage />} />
+            <Route path="/projects/:id/sprints" element={<SprintBoardPage />} />
+            <Route path="/projects/:id/timeline" element={<TimelinePage />} />
             <Route path="/projects/:id/settings" element={<ProjectSettingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
