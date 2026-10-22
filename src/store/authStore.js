@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { useWorkspaceStore } from '@/store/workspaceStore';
 
 export const useAuthStore = create((set) => ({
   user: null,
@@ -19,6 +20,8 @@ export const useAuthStore = create((set) => ({
   clearAuth: () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    // The active workspace belongs to the user who is logging out
+    useWorkspaceStore.getState().setActiveWorkspaceId('');
     set({
       user: null,
       accessToken: null,

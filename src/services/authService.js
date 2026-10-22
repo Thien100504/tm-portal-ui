@@ -1,4 +1,4 @@
-import api, { setTokens, clearTokens } from '@/lib/axios';
+import api, { setTokens, clearTokens, getRefreshToken } from '@/lib/axios';
 
 /**
  * Authentication API service
@@ -36,7 +36,8 @@ const authService = {
    */
   async logout() {
     try {
-      await api.post('/auth/logout');
+      // Send the refresh token too, so the server revokes it along with the access token
+      await api.post('/auth/logout', { refresh_token: getRefreshToken() });
     } finally {
       clearTokens();
     }

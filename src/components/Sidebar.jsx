@@ -263,9 +263,10 @@ export default function Sidebar({ onMobileClose, isMobile, projectId }) {
   const activeWsId = useWorkspaceStore((state) => state.activeWorkspaceId);
   const setActiveWsId = useWorkspaceStore((state) => state.setActiveWorkspaceId);
 
-  // Auto-select first workspace if none is selected
+  // Auto-select the first workspace if none is selected, or if the stored one
+  // is not in this user's list (e.g. left over from another account)
   useEffect(() => {
-    if (!activeWsId && workspaces.length > 0) {
+    if (workspaces.length > 0 && !workspaces.some((w) => w.id === activeWsId)) {
       const firstId = workspaces[0].id;
       setActiveWsId(firstId);
       qc.invalidateQueries({ queryKey: ['projects'] });
