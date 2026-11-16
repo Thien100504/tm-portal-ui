@@ -1,5 +1,9 @@
 {
   "common": {
+    "saving": "Saving...",
+    "required_fields": "Please fill in the required fields",
+    "remove": "Remove",
+    "you": "You",
     "add": "Add",
     "create": "Create",
     "save_changes": "Save Changes",
@@ -103,6 +107,19 @@
     "requires_number": "Password must contain at least one number."
   },
   "project": {
+    "settings_title": "Project Settings",
+    "no_settings_access": "You do not have permission to access project settings.",
+    "members_title": "Members",
+    "members_desc": "Manage who has access to this project and their roles.",
+    "search_add": "Search user by name or email to add...",
+    "all_already_members": "All results are already members",
+    "member_added": "Member added",
+    "member_removed": "Member removed",
+    "role_updated": "Role updated",
+    "no_members": "No members",
+    "remove_member": "Remove member",
+    "owner_badge": "Owner",
+    "topic_id": "Topic ID",
     "not_found": "Project not found.",
     "permission_denied": "You don't have access to this project.",
     "manager_only": "Only Project Managers can perform this action.",

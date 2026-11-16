@@ -24,7 +24,7 @@ export default function ProjectSettingsPage() {
   const { t } = useTranslation();
   const { id: projectId } = useParams();
   const { user: currentUser } = useAuth();
-  const { can } = useProjectPermissions(projectId);
+  const { can, isLoading: permissionsLoading } = useProjectPermissions(projectId);
   const [activeTab, setActiveTab] = useState('members');
 
   const { data: project } = useQuery({
@@ -33,8 +33,12 @@ export default function ProjectSettingsPage() {
     enabled: !!projectId,
   });
 
+  // Same rule as the API: the project owner or a member with project.settings
   const isOwner = project?.owner_id === currentUser?.id;
-  const isPM = isOwner || currentUser?.system_role === 'admin' || can('project.settings');
+  const isPM = isOwner || can('project.settings');
+
+  // Avoid flashing "no access" while the project and permissions are loading
+  if (!project || permissionsLoading) return null;
 
   if (!isPM) {
     return (
@@ -237,8 +241,8 @@ function ProjectMembersTab({ projectId, project, currentUser, isPM }) {
                         <div>
                           <p className="font-medium text-foreground text-[13px] flex items-center gap-1.5">
                             {member.user?.full_name}
-                            {isMemberOwner && <Badge variant="glass" className="text-[8px] px-1 py-px bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)]">Owner</Badge>}
-                            {isSelf && !isMemberOwner && <Badge variant="outline" className="text-[8px] px-1 py-px">You</Badge>}
+                            {isMemberOwner && <Badge variant="glass" className="text-[8px] px-1 py-px bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)]">{t('project.owner_badge')}</Badge>}
+                            {isSelf && !isMemberOwner && <Badge variant="outline" className="text-[8px] px-1 py-px">{t('common.you')}</Badge>}
                           </p>
                           <p className="text-[11px] text-muted-foreground flex items-center gap-1">
                             <Mail className="w-3 h-3" /> {member.user?.email}

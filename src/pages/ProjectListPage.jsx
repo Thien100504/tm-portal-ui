@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import {
   Plus, FolderKanban, Users, Calendar, Loader2, BarChart3
 } from 'lucide-react';
@@ -29,6 +30,7 @@ function CreateProjectModal({ onClose }) {
       qc.invalidateQueries({ queryKey: ['projects'] });
       onClose();
     },
+    onError: (err) => toast.error(err.translatedMessage || t('common.error')),
   });
 
   return (
@@ -89,7 +91,7 @@ function CreateProjectModal({ onClose }) {
               <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">{t('projectList.create.telegram_label') || 'Telegram Group Chat ID (Optional)'}</label>
               <input
                 {...register('telegram_chat_id')}
-                placeholder="VD: -5171357396"
+                placeholder="e.g. -5171357396"
                 className="w-full bg-background border border-border rounded-lg px-3 py-2 text-[13px] focus:outline-none focus:border-[color:var(--color-ai)] focus:ring-1 focus:ring-[color:var(--color-ai)] transition-all"
               />
               <p className="text-[10px] text-muted-foreground mt-1.5">
@@ -212,7 +214,7 @@ export default function ProjectListPage() {
                     </p>
                   </div>
                   <Badge variant="glass" className={`shrink-0 tracking-widest uppercase border-none text-[9px] px-2 py-0.5 ${STATUS_COLOR[project.status] || STATUS_COLOR.active}`}>
-                    {project.status === 'active' ? 'Active' : 'Archived'}
+                    {project.status === 'active' ? t('project.status_active') : t('project.status_archived')}
                   </Badge>
                 </div>
 
@@ -267,14 +269,6 @@ export default function ProjectListPage() {
                   >
                     <BarChart3 className="w-3.5 h-3.5 shrink-0" />
                     <span className="truncate">{t('common.overview')}</span>
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    onClick={() => navigate(`/projects/${project.id}/kanban`)}
-                    className="flex-1 flex items-center justify-center gap-1.5 text-[12px] h-8 rounded-xl"
-                  >
-                    <FolderKanban className="w-3.5 h-3.5 shrink-0" />
-                    <span className="truncate">Kanban</span>
                   </Button>
                 </div>
               </div>

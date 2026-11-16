@@ -19,6 +19,8 @@ import { useTheme } from "@/contexts/useTheme";
 import { Card, MotionCard } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { useAuth } from '@/hooks/useAuth';
+import { useProjectPermissions } from '@/hooks/useProjectPermissions';
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -424,6 +426,8 @@ function LoadingSkeleton() {
 export default function ProjectOverviewPage() {
   const { t, i18n } = useTranslation();
   const { id: projectId } = useParams();
+  const { user: currentUser } = useAuth();
+  const { can } = useProjectPermissions(projectId);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { themeStyle } = useTheme();
   const isGlass = themeStyle === 'glass';
@@ -498,15 +502,18 @@ export default function ProjectOverviewPage() {
               <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? 'animate-spin' : ''}`} />
               <span className="hidden sm:inline">{t('projectOverview.reanalyze')}</span>
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsEditModalOpen(true)}
-              className="flex items-center gap-1.5"
-            >
-              <Settings className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{t('projectOverview.settings')}</span>
-            </Button>
+            {/* Same rule as PUT /projects/{id}: the owner or a member with project.settings */}
+            {(project?.owner_id === currentUser?.id || can('project.settings')) && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsEditModalOpen(true)}
+                className="flex items-center gap-1.5"
+              >
+                <Settings className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">{t('projectOverview.settings')}</span>
+              </Button>
+            )}
           </div>
         </div>
       </div>

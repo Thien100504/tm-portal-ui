@@ -2,6 +2,7 @@ import { Save, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import projectService from '@/services/projectService';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
@@ -30,6 +31,7 @@ export default function EditProjectModal({ project, onClose }) {
       qc.invalidateQueries({ queryKey: ['projects', project.id] });
       onClose();
     },
+    onError: (err) => toast.error(err.translatedMessage || t('common.error')),
   });
 
   return (
@@ -85,7 +87,7 @@ export default function EditProjectModal({ project, onClose }) {
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">Telegram Group Chat ID</label>
+          <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">{t('project.telegram_id')}</label>
           <input
             {...register('telegram_chat_id')}
             placeholder="-5171357396"

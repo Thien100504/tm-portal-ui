@@ -43,14 +43,14 @@ export default function ProjectMembersModal({ project, onClose }) {
   const addMutation = useMutation({
     mutationFn: ({ userId, roleId }) => projectService.addMember(project.id, userId, roleId),
     onSuccess: () => {
-      qc.invalidateQueries(['members', project.id]);
+      qc.invalidateQueries({ queryKey: ['members', project.id] });
     }
   });
 
   const updateMemberMutation = useMutation({
     mutationFn: ({ userId, data }) => projectService.updateMember(project.id, userId, data),
     onSuccess: () => {
-      qc.invalidateQueries(['members', project.id]);
+      qc.invalidateQueries({ queryKey: ['members', project.id] });
     }
   });
 
@@ -167,10 +167,10 @@ export default function ProjectMembersModal({ project, onClose }) {
                   
                   {/* Topic ID Input */}
                   <div className="flex items-center gap-2 mt-1 pt-2 border-t border-border">
-                    <span className="text-[10px] text-muted-foreground whitespace-nowrap font-medium">Topic ID:</span>
+                    <span className="text-[10px] text-muted-foreground whitespace-nowrap font-medium">{t('project.topic_id')}:</span>
                     <input
                       type="text"
-                      placeholder="VD: 15"
+                      placeholder="e.g. 15"
                       defaultValue={m.telegram_thread_id || ''}
                       onBlur={(e) => {
                         const val = e.target.value.trim();

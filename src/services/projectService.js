@@ -1,5 +1,15 @@
 import api from '@/lib/axios';
 
+// Empty inputs (e.g. a cleared DatePicker) must be null: the API rejects "" for dates
+const OPTIONAL_FIELDS = ['start_date', 'end_date', 'telegram_chat_id', 'description'];
+function cleanProject(data) {
+  const out = { ...data };
+  OPTIONAL_FIELDS.forEach((key) => {
+    if (out[key] === '') out[key] = null;
+  });
+  return out;
+}
+
 const projectService = {
   async getProjects(workspaceId) {
     const res = await api.get('/projects', { params: workspaceId ? { workspace_id: workspaceId } : {} });
@@ -19,7 +29,7 @@ const projectService = {
   async createProject(data) {
     const activeWorkspaceId = localStorage.getItem('active-workspace-id');
     const payload = {
-      ...data,
+      ...cleanProject(data),
       workspace_id: activeWorkspaceId || undefined
     };
     const res = await api.post('/projects', payload);
@@ -27,7 +37,7 @@ const projectService = {
   },
 
   async updateProject(projectId, data) {
-    const res = await api.put(`/projects/${projectId}`, data);
+    const res = await api.put(`/projects/${projectId}`, cleanProject(data));
     return res.data;
   },
 
