@@ -270,6 +270,14 @@ export default function ProjectListPage() {
                     <BarChart3 className="w-3.5 h-3.5 shrink-0" />
                     <span className="truncate">{t('common.overview')}</span>
                   </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() => navigate(`/projects/${project.id}/kanban`)}
+                    className="flex-1 flex items-center justify-center gap-1.5 text-[12px] h-8 rounded-xl"
+                  >
+                    <FolderKanban className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate">{t('sidebar.kanban')}</span>
+                  </Button>
                 </div>
               </div>
             </MotionCard>
