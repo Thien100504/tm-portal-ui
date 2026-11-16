@@ -27,7 +27,7 @@ export default function ProjectSettingsPage() {
   const { can, isLoading: permissionsLoading } = useProjectPermissions(projectId);
   const [activeTab, setActiveTab] = useState('members');
 
-  const { data: project } = useQuery({
+  const { data: project, isLoading: projectLoading } = useQuery({
     queryKey: ['projects', projectId],
     queryFn: () => projectService.getProject(projectId),
     enabled: !!projectId,
@@ -37,8 +37,8 @@ export default function ProjectSettingsPage() {
   const isOwner = project?.owner_id === currentUser?.id;
   const isPM = isOwner || can('project.settings');
 
-  // Avoid flashing "no access" while the project and permissions are loading
-  if (!project || permissionsLoading) return null;
+  // Avoid flashing "no access" while loading; on an error (403/404) show it
+  if (projectLoading || permissionsLoading) return null;
 
   if (!isPM) {
     return (
