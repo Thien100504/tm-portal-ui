@@ -8,6 +8,9 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import aiService from '@/services/aiService';
+import { toast } from 'sonner';
+import { useProjectPermissions } from '@/hooks/useProjectPermissions';
+import { getApiError } from '@/lib/apiError';
 import { Card } from '@/components/ui/Card';
 
 const FEATURE_META = {
@@ -134,13 +137,22 @@ export default function AIMetricsDashboard({ projectId }) {
         qc.invalidateQueries({ queryKey: ['task'] });
       }
     },
+    onError: (err) => toast.error(getApiError(err, t('common.error'))),
   });
 
+  // Feedback needs task.update; rejecting a breakdown deletes its subtasks
+  const { can } = useProjectPermissions(projectId);
   const handleFeedback = (id, status) => {
+    if (feedbackMutation.isPending) return;
+    const metric = metrics?.recent?.find(m => m.id === id);
+    if (status === 'rejected' && metric?.feature === 'breakdown'
+        && !window.confirm(t('ai_metrics.reject_confirm', 'Reject this breakdown and delete the subtasks it created?'))) {
+      return;
+    }
     feedbackMutation.mutate({ id, status });
   };
 
-  const { data: metrics, isLoading } = useQuery({
+  const { data: metrics, isLoading, isError } = useQuery({
     queryKey: ['ai-metrics', projectId],
     queryFn: () => aiService.getMetrics(projectId),
     enabled: !!projectId,
@@ -151,6 +163,16 @@ export default function AIMetricsDashboard({ projectId }) {
     return (
       <Card className="glass-surface border border-border/60 p-8 flex items-center justify-center">
         <Cpu className="w-5 h-5 text-muted-foreground animate-spin" />
+      </Card>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Card className="glass-surface border border-border/60 p-8 text-center">
+        <p className="text-sm text-muted-foreground">
+          {t('ai_metrics.load_failed', 'Could not load the AI metrics.')}
+        </p>
       </Card>
     );
   }
@@ -226,7 +248,7 @@ export default function AIMetricsDashboard({ projectId }) {
           </h4>
           <div className="max-h-[240px] overflow-y-auto">
             {metrics.recent.slice(0, 10).map((m) => (
-              <RecentRow key={m.id} metric={m} onFeedback={handleFeedback} />
+              <RecentRow key={m.id} metric={m} onFeedback={can('task.update') ? handleFeedback : undefined} />
             ))}
           </div>
         </Card>

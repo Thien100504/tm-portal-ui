@@ -11,6 +11,9 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import automationService from '@/services/automationService';
+import { useAuth } from '@/hooks/useAuth';
+import { useProjectPermissions } from '@/hooks/useProjectPermissions';
+import { getApiError } from '@/lib/apiError';
 import projectService from '@/services/projectService';
 import sprintService from '@/services/sprintService';
 
@@ -378,7 +381,7 @@ function RuleModal({ rule, sprints = [], members = [], onClose, onSave, isSaving
     onSave({
       name: finalName,
       trigger_event: triggerId,
-      conditions: Object.keys(conditions).length ? conditions : null,
+      conditions, // {} clears the previous conditions on update
       actions,
     });
   };
@@ -433,9 +436,10 @@ function RuleModal({ rule, sprints = [], members = [], onClose, onSave, isSaving
                   <button
                     key={tg.id}
                     type="button"
-                    onClick={() => handleTriggerId(tg.id)}
+                    onClick={() => !isEdit && handleTriggerId(tg.id)}
+                    disabled={isEdit && triggerId !== tg.id}
                     className={`flex items-start gap-2 p-2.5 rounded-lg border text-left transition-all ${
-                      triggerId === t.id
+                      triggerId === tg.id
                         ? 'border-[color:var(--color-ai)]/50 bg-[color:var(--color-ai)]/5 ring-1 ring-[color:var(--color-ai)]/20'
                         : 'border-border hover:border-border/80 hover:bg-muted/30'
                     }`}
@@ -556,7 +560,7 @@ function RuleModal({ rule, sprints = [], members = [], onClose, onSave, isSaving
 
 // ── Rule Card ─────────────────────────────────────────────────────────────────
 
-function RuleCard({ rule, members, sprints, onToggle, onEdit, onDelete, isDeleting, t }) {
+function RuleCard({ rule, members, sprints, onToggle, onEdit, onDelete, isDeleting, canManage, t }) {
   const trigger = getTrigger(rule.trigger_event);
   const action = getAction(rule.actions?.type);
   const TrigIcon = trigger?.icon || Zap;
@@ -585,6 +589,7 @@ function RuleCard({ rule, members, sprints, onToggle, onEdit, onDelete, isDeleti
           </div>
 
           {/* Actions */}
+          {canManage && (
           <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={() => onEdit(rule)}
@@ -602,6 +607,7 @@ function RuleCard({ rule, members, sprints, onToggle, onEdit, onDelete, isDeleti
               {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
             </button>
           </div>
+          )}
         </div>
 
         {/* IF → THEN visual */}
@@ -637,7 +643,8 @@ function RuleCard({ rule, members, sprints, onToggle, onEdit, onDelete, isDeleti
           </span>
           <Switch
             checked={rule.is_active}
-            onCheckedChange={() => onToggle(rule)}
+            onCheckedChange={() => canManage && onToggle(rule)}
+            disabled={!canManage}
           />
         </div>
       </div>
@@ -727,18 +734,24 @@ export default function AutomationPage() {
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ['automation-rules', projectId] });
 
+  // Only the project owner or a PM (project.settings) may change rules
+  const { user: currentUser } = useAuth();
+  const { can } = useProjectPermissions(projectId);
+  const project = _projects.find(p => p.id === projectId);
+  const canManage = project?.owner_id === currentUser?.id || can('project.settings');
+
   // Create
   const createMutation = useMutation({
     mutationFn: (data) => automationService.createRule(projectId, data),
     onSuccess: () => { invalidate(); setModalState(null); toast.success(t('automationPage.created', 'Automation rule created')); },
-    onError: () => toast.error(t('automationPage.create_failed', 'Could not create the rule')),
+    onError: (err) => toast.error(getApiError(err, t('automationPage.create_failed', 'Could not create the rule'))),
   });
 
   // Update
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => automationService.updateRule(id, data),
     onSuccess: () => { invalidate(); setModalState(null); toast.success(t('automationPage.updated', 'Rule updated')); },
-    onError: () => toast.error(t('automationPage.update_failed', 'Update failed')),
+    onError: (err) => toast.error(getApiError(err, t('automationPage.update_failed', 'Update failed'))),
   });
 
   // Toggle
@@ -756,7 +769,7 @@ export default function AutomationPage() {
       if (context?.previousRules) {
         qc.setQueryData(['automation-rules', projectId], context.previousRules);
       }
-      toast.error(t('automationPage.toggle_failed', 'Could not change the status'));
+      toast.error(getApiError(err, t('automationPage.toggle_failed', 'Could not change the status')));
     },
     onSettled: () => invalidate()
   });
@@ -766,7 +779,7 @@ export default function AutomationPage() {
     mutationFn: (ruleId) => automationService.deleteRule(ruleId),
     onMutate: (ruleId) => setDeletingId(ruleId),
     onSuccess: () => { invalidate(); setDeletingId(null); toast.success(t('automationPage.deleted', 'Rule deleted')); },
-    onError: () => { toast.error(t('automationPage.delete_failed', 'Delete failed')); setDeletingId(null); },
+    onError: (err) => { toast.error(getApiError(err, t('automationPage.delete_failed', 'Delete failed'))); setDeletingId(null); },
   });
 
   const handleSave = (formData) => {
@@ -778,7 +791,7 @@ export default function AutomationPage() {
   };
 
   const openCreate = (prefill = null) => {
-    setModalState({ mode: 'create', rule: prefill ? { ...prefill, id: null } : null });
+    setModalState({ mode: 'create', rule: prefill ? { ...prefill, name: t(prefill.nameKey, prefill.name), id: null } : null });
   };
 
   const activeCount = rules.filter(r => r.is_active).length;
@@ -802,7 +815,7 @@ export default function AutomationPage() {
 
           <Button
             onClick={() => openCreate()}
-            disabled={!projectId}
+            disabled={!projectId || !canManage}
             className="flex items-center gap-1.5 shrink-0"
           >
             <Plus className="w-3.5 h-3.5" />
@@ -864,6 +877,7 @@ export default function AutomationPage() {
                 </div>
                 <Button
                   onClick={() => openCreate()}
+                  disabled={!canManage}
                   className="flex items-center gap-2"
                 >
                   <Plus className="w-4 h-4" />
@@ -889,6 +903,7 @@ export default function AutomationPage() {
                         onEdit={(r) => setModalState({ mode: 'edit', rule: r })}
                         onDelete={(r) => setDeleteTarget(r)}
                         isDeleting={deletingId === rule.id}
+                        canManage={canManage}
                         t={t}
                       />
                     ))}
@@ -907,7 +922,7 @@ export default function AutomationPage() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {TEMPLATES.map((tpl, i) => (
-                  <TemplateCard key={i} tpl={tpl} onUse={openCreate} t={t} />
+                  <TemplateCard key={i} tpl={tpl} onUse={canManage ? openCreate : () => {}} t={t} />
                 ))}
               </div>
             </div>
