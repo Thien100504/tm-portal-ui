@@ -341,6 +341,19 @@
     "search_results": "Search results"
   },
   "taskDetail": {
+    "ai_agree": "👍 Agree",
+    "ai_calculating": "AI is calculating...",
+    "ai_created_subtasks": "✨ AI created {{n}} subtasks",
+    "ai_estimated": "✨ AI estimate: {{points}} story points",
+    "ai_inaccurate": "👎 Not accurate",
+    "ai_keep": "👍 Keep",
+    "ai_kept": "Subtasks kept",
+    "ai_thinking": "AI is thinking...",
+    "ai_undo": "👎 Undo",
+    "ai_undone": "AI subtasks undone",
+    "no_dependents": "No dependent tasks.",
+    "remove_dep_failed": "Could not remove the dependency",
+    "subtask_progress": "Sub-task progress",
     "title": "Details",
     "subtasks": "Sub-tasks",
     "comments": "Comments",
@@ -547,6 +560,7 @@
     }
   },
   "sprintBoard": {
+    "delete_tasks_failed": "Some tasks could not be deleted. Changes were reverted.",
     "title": "Sprint Management",
     "management": "Sprint Management",
     "create_new": "Create new Sprint",
@@ -1003,6 +1017,10 @@
     "no_linked_tasks": "No tasks linked to this Epic yet."
   },
   "createTask": {
+    "assignee_placeholder": "Choose an assignee",
+    "name_required": "Please enter a task name.",
+    "submit": "Create task",
+    "success": "Task created.",
     "title": "Create new task",
     "name_label": "Task name",
     "name_placeholder": "Enter task name...",
