@@ -885,6 +885,12 @@
     "member_count": "{{count}} thành viên"
   },
   "workspace": {
+    "cancel_invite_desc": "Lời mời gửi đến {{email}} sẽ bị hủy.",
+    "cancel_invite_title": "Hủy lời mời",
+    "delete_role_desc": "Role này sẽ bị xóa. Các thành viên đang dùng role này sẽ bị ảnh hưởng.",
+    "delete_role_title": "Xóa role",
+    "remove_member_desc": "Thành viên \"{{name}}\" sẽ bị xóa khỏi workspace.",
+    "remove_member_title": "Xóa thành viên",
     "roles_title": "Vai trò & Quyền hạn",
     "roles_subtitle": "Quản lý các vai trò tùy chỉnh và mức độ truy cập trong workspace.",
     "new_role": "Tạo Vai trò",

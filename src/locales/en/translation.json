@@ -885,6 +885,12 @@
     "member_count": "{{count}} members"
   },
   "workspace": {
+    "cancel_invite_desc": "The invitation sent to {{email}} will be cancelled.",
+    "cancel_invite_title": "Cancel invitation",
+    "delete_role_desc": "This role will be deleted. Members using it will be affected.",
+    "delete_role_title": "Delete role",
+    "remove_member_desc": "\"{{name}}\" will be removed from the workspace.",
+    "remove_member_title": "Remove member",
     "roles_title": "Roles & Permissions",
     "roles_subtitle": "Manage access levels across workspaces and projects",
     "new_role": "New Role",
