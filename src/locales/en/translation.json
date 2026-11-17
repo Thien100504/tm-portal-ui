@@ -992,6 +992,9 @@
     "subtitle": "Visual overview of sprints and task deadlines."
   },
   "notifications": {
+    "retry": "Retry",
+    "refresh": "Refresh",
+    "read": "Read",
     "automation": "Automation",
     "no_unread": "No unread notifications",
     "no_notifs": "No notifications yet",

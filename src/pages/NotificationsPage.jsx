@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import {
   Bell, BellOff, Info, CheckCircle, AlertTriangle, XCircle,
   UserCheck, Workflow, Check, CheckCheck, RefreshCw, Filter
@@ -89,8 +90,8 @@ export default function NotificationsPage() {
     queryFn: () => notificationService.getUnreadCount(),
   });
 
-  const { data: rawData = [], isLoading, refetch } = useQuery({
-    queryKey: ['notifications'],
+  const { data: rawData = [], isLoading, isError, refetch } = useQuery({
+    queryKey: ['notifications', 'list', 50],
     queryFn: () => notificationService.getAll(50, 0),
     select: (data) => (Array.isArray(data) ? data : data?.items ?? []),
   });
@@ -115,7 +116,13 @@ export default function NotificationsPage() {
       await notificationService.markRead(id);
       queryClient.invalidateQueries({ queryKey: ['notifications-count'] });
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
-    } catch { /* noop */ }
+    } catch (err) {
+      toast.error(t('common.error'), {
+        description: t(err?.response?.data?.detail || 'server.notification_unavailable'),
+      });
+      // a notification that no longer exists disappears from the list
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    }
   };
 
   const handleMarkAllRead = async () => {
@@ -123,7 +130,13 @@ export default function NotificationsPage() {
       await notificationService.markAllRead();
       queryClient.invalidateQueries({ queryKey: ['notifications-count'] });
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
-    } catch { /* noop */ }
+    } catch (err) {
+      toast.error(t('common.error'), {
+        description: t(err?.response?.data?.detail || 'server.notification_unavailable'),
+      });
+      // a notification that no longer exists disappears from the list
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    }
   };
 
   const hasUnread = rawData.some((n) => !n.is_read);
@@ -157,7 +170,7 @@ export default function NotificationsPage() {
             size="icon"
             onClick={() => refetch()}
             className="w-8 h-8"
-            title="Refresh"
+            title={t('notifications.refresh', 'Refresh')}
           >
             <RefreshCw className="w-3.5 h-3.5" />
           </Button>
@@ -210,6 +223,13 @@ export default function NotificationsPage() {
       <div className={`rounded-xl border border-border overflow-hidden ${isGlass ? 'bg-card/80 backdrop-blur-md' : 'bg-card'}`}>
         {isLoading ? (
           Array.from({ length: 5 }).map((_, i) => <NotifSkeleton key={i} />)
+        ) : isError ? (
+          <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+            <p className="text-sm font-medium text-foreground">{t('server.notification_unavailable')}</p>
+            <Button variant="outline" size="sm" onClick={() => refetch()}>
+              {t('notifications.retry', 'Retry')}
+            </Button>
+          </div>
         ) : notifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
             <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center">
@@ -302,13 +322,13 @@ export default function NotificationsPage() {
                           size="sm"
                           onClick={() => handleMarkRead(notif.id)}
                           className="opacity-0 group-hover:opacity-100 h-6 px-2 text-[10px]"
-                          title="Mark as read"
+                          title={t('notifications.mark_read')}
                         >
                           <Check className="w-3 h-3 mr-1" />
                           {t('notifications.mark_read')}
                         </Button>
                       ) : (
-                        <div className="w-2 h-2 rounded-full bg-muted" title="Read" />
+                        <div className="w-2 h-2 rounded-full bg-muted" title={t('notifications.read', 'Read')} />
                       )}
                       {!notif.is_read && (
                         <div className="w-2 h-2 rounded-full bg-[color:var(--color-ai)]" />
