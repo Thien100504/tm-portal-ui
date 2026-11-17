@@ -411,6 +411,7 @@ export default function KanbanPage() {
 
   const updateStatusMutation = useMutation({
     mutationFn: ({ taskId, status }) => taskService.updateStatus(taskId, status),
+    onSettled: () => qc.invalidateQueries({ queryKey: ['tasks', projectId] }),
     onMutate: async ({ taskId, status: _status }) => {
       await qc.cancelQueries({ queryKey: ['tasks', projectId] });
       const previousTasks = qc.getQueryData(['tasks', projectId]);
@@ -427,6 +428,7 @@ export default function KanbanPage() {
 
   const updatePositionMutation = useMutation({
     mutationFn: ({ taskId, status, insertAfterId }) => taskService.updatePosition(taskId, status, insertAfterId),
+    onSettled: () => qc.invalidateQueries({ queryKey: ['tasks', projectId] }),
     onMutate: async ({ previousTasks, taskId }) => {
       await qc.cancelQueries({ queryKey: ['tasks', projectId] });
       return { previousTasks, taskId };
@@ -795,7 +797,7 @@ export default function KanbanPage() {
               <BarChart2 className="w-3.5 h-3.5" />
             </Button>
 
-            {currentSprint.status === 'planning' && (
+            {can('sprint.manage') && currentSprint.status === 'planning' && (
               <Button
                 size="sm"
                 onClick={() => startSprintMutation.mutate(currentSprint.id)}
@@ -805,7 +807,7 @@ export default function KanbanPage() {
                 <Play className="w-3 h-3" /> {t('sprintBoard.actions.start')}
               </Button>
             )}
-            {currentSprint.status === 'active' && (
+            {can('sprint.manage') && currentSprint.status === 'active' && (
               <Button
                 size="sm" variant="destructive"
                 onClick={() => setEndingSprintId(currentSprint.id)}
@@ -814,7 +816,7 @@ export default function KanbanPage() {
                 <Square className="w-3 h-3" /> {t('sprintBoard.actions.end')}
               </Button>
             )}
-            {currentSprint.status === 'completed' && (
+            {can('sprint.manage') && currentSprint.status === 'completed' && (
               <Button
                 size="sm" variant="outline"
                 onClick={() => reopenSprintMutation.mutate(currentSprint.id)}
@@ -992,7 +994,7 @@ export default function KanbanPage() {
             <BulkActionBar
               count={selectedIds.size}
               isDeleting={bulkDeleteMutation.isPending}
-              onDelete={() => bulkDeleteMutation.mutate(selectedIds)}
+              onDelete={can('task.delete') ? () => bulkDeleteMutation.mutate(selectedIds) : undefined}
               onClear={clearSelection}
             />
           </motion.div>

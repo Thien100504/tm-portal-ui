@@ -450,6 +450,7 @@ export default function SprintBoardPage() {
 
   // ── Mutations ──────────────────────────────────────────────────────
   const createSprintMutation = useMutation({
+    onError: (err) => toast.error(t('common.error'), { description: getApiError(err, t('common.error')) }),
     mutationFn: (name) => sprintService.createSprint(projectId, { name }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['sprints', projectId] });
@@ -460,6 +461,7 @@ export default function SprintBoardPage() {
   });
 
   const updateSprintMutation = useMutation({
+    onError: (err) => toast.error(t('common.error'), { description: getApiError(err, t('common.error')) }),
     mutationFn: ({ sprintId, data }) => sprintService.updateSprint(sprintId, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['sprints', projectId] });
@@ -661,22 +663,22 @@ export default function SprintBoardPage() {
                           <Button variant="ghost" size="icon" onClick={() => setChartSprint(sprint)} title={t('sprintBoard.actions.report')} className="h-7 w-7 text-muted-foreground hover:text-foreground">
                             <BarChart2 className="w-3.5 h-3.5" />
                           </Button>
-                          {sprint.status !== 'completed' && (
+                          {can('sprint.manage') && sprint.status !== 'completed' && (
                             <Button variant="ghost" size="icon" onClick={() => setEditingSprintId(sprint.id)} title={t('common.edit')} className="h-7 w-7 text-muted-foreground hover:text-foreground">
                               <Pencil className="w-3.5 h-3.5" />
                             </Button>
                           )}
-                          {sprint.status === 'planning' && (
+                          {can('sprint.manage') && sprint.status === 'planning' && (
                             <Button size="sm" onClick={() => startSprintMutation.mutate(sprint.id)} disabled={startSprintMutation.isPending} className="h-7 text-xs">
                               <Play className="w-3 h-3" /> {t('sprintBoard.actions.start')}
                             </Button>
                           )}
-                          {sprint.status === 'active' && (
+                          {can('sprint.manage') && sprint.status === 'active' && (
                             <Button size="sm" variant="destructive" onClick={() => setEndingSprintId(sprint.id)} className="h-7 text-xs">
                               <Square className="w-3 h-3" /> {t('sprintBoard.actions.end')}
                             </Button>
                           )}
-                          {sprint.status === 'completed' && (
+                          {can('sprint.manage') && sprint.status === 'completed' && (
                             <Button size="sm" variant="outline" onClick={() => reopenSprintMutation.mutate(sprint.id)} disabled={reopenSprintMutation.isPending}
                               className="h-7 text-xs hover:text-[color:var(--color-warning)] hover:bg-[color:var(--color-warning)]/10 hover:border-[color:var(--color-warning)]/30">
                               <Play className="w-3 h-3" /> {t('sprintBoard.actions.reopen')}
@@ -794,7 +796,7 @@ export default function SprintBoardPage() {
           <BulkActionBar
             count={selectedIds.size}
             isDeleting={bulkDeleteMutation.isPending}
-            onDelete={() => bulkDeleteMutation.mutate(selectedIds)}
+            onDelete={can('task.delete') ? () => bulkDeleteMutation.mutate(selectedIds) : undefined}
             onClear={clearSelection}
           />
         )}

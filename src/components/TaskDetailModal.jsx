@@ -84,6 +84,7 @@ export default function TaskDetailModal({ task, projectId, onClose }) {
   });
 
   const updateStatusMutation = useMutation({
+    onError: (err) => toast.error(t('common.error'), { description: getApiError(err, t('common.error')) }),
     mutationFn: ({ status }) => taskService.updateStatus(task.id, status),
     onSuccess: (updatedTask) => {
       qc.setQueryData(['task', task.id], old => ({ ...old, ...updatedTask }));
@@ -162,6 +163,7 @@ export default function TaskDetailModal({ task, projectId, onClose }) {
   };
 
   const addCommentMutation = useMutation({
+    onError: (err) => toast.error(t('common.error'), { description: getApiError(err, t('common.error')) }),
     mutationFn: (content) => taskService.addComment(task.id, content),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['comments', task.id] });
@@ -170,6 +172,7 @@ export default function TaskDetailModal({ task, projectId, onClose }) {
   });
 
   const deleteMutation = useMutation({
+    onError: (err) => toast.error(t('common.error'), { description: getApiError(err, t('common.error')) }),
     mutationFn: () => taskService.deleteTask(task.id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['tasks', projectId] });
@@ -178,6 +181,7 @@ export default function TaskDetailModal({ task, projectId, onClose }) {
   });
 
   const addSubtaskMutation = useMutation({
+    onError: (err) => toast.error(t('common.error'), { description: getApiError(err, t('common.error')) }),
     mutationFn: (title) => taskService.createTask({
       title,
       project_id: projectId,
@@ -186,6 +190,7 @@ export default function TaskDetailModal({ task, projectId, onClose }) {
     }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['task', task.id] });
+      qc.invalidateQueries({ queryKey: ['tasks', projectId] });
       setNewSubtask('');
     },
   });

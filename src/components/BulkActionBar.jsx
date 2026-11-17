@@ -41,7 +41,8 @@ export default function BulkActionBar({ count, onDelete, onClear, isDeleting, ch
       <div className="flex-1" />
       <div className="w-px h-4 bg-border shrink-0" />
 
-      {/* Delete */}
+      {/* Delete (only offered when the user may delete tasks) */}
+      {onDelete && (
       <button
         onClick={onDelete}
         disabled={isDeleting}
@@ -55,6 +56,7 @@ export default function BulkActionBar({ count, onDelete, onClear, isDeleting, ch
         }
         {t('sprintBoard.bulk.delete', { count })}
       </button>
+      )}
 
       {/* Clear */}
       <button

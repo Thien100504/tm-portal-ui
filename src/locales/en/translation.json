@@ -160,6 +160,8 @@
     "error_assignee_not_member": "The assignee is not a member of this project."
   },
   "sprint": {
+    "error_end_before_start": "The end date must be after the start date",
+    "error_too_long": "A sprint can last at most 365 days",
     "not_found": "Sprint not found.",
     "error_not_in_planning": "Sprint must be in 'Planning' state to start.",
     "error_already_active": "Another sprint is already active in this project.",
@@ -286,6 +288,10 @@
     }
   },
   "kanban": {
+    "status": "Status",
+    "today": "Today",
+    "unscheduled": "Unscheduled Tasks",
+    "no_unscheduled": "All tasks have deadlines!",
     "title": "Project Progress",
     "subtitle": "Kanban Board",
     "tasks_title": "Tasks",

@@ -160,6 +160,8 @@
     "error_assignee_not_member": "Người được giao không thuộc dự án này."
   },
   "sprint": {
+    "error_end_before_start": "Ngày kết thúc phải sau ngày bắt đầu",
+    "error_too_long": "Sprint chỉ được kéo dài tối đa 365 ngày",
     "not_found": "Không tìm thấy sprint.",
     "error_not_in_planning": "Sprint phải ở trạng thái 'Lập kế hoạch' để bắt đầu.",
     "error_already_active": "Đã có một sprint đang hoạt động trong dự án này.",
@@ -286,6 +288,10 @@
     }
   },
   "kanban": {
+    "status": "Trạng thái",
+    "today": "Hôm nay",
+    "unscheduled": "Công việc chưa có hạn",
+    "no_unscheduled": "Tất cả công việc đều đã có hạn!",
     "title": "Tiến độ dự án",
     "subtitle": "Kanban Board",
     "tasks_title": "Công việc",
