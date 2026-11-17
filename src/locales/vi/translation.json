@@ -992,6 +992,9 @@
     "subtitle": "Quản lý tiến độ dự án"
   },
   "notifications": {
+    "retry": "Thử lại",
+    "refresh": "Làm mới",
+    "read": "Đã đọc",
     "automation": "Tự động hóa",
     "no_unread": "Không có thông báo chưa đọc",
     "no_notifs": "Không có thông báo",
