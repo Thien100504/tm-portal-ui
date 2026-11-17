@@ -160,6 +160,8 @@
     "error_assignee_not_member": "Người được giao không thuộc dự án này."
   },
   "sprint": {
+    "error_end_before_start": "Ngày kết thúc phải sau ngày bắt đầu",
+    "error_too_long": "Sprint chỉ được kéo dài tối đa 365 ngày",
     "not_found": "Không tìm thấy sprint.",
     "error_not_in_planning": "Sprint phải ở trạng thái 'Lập kế hoạch' để bắt đầu.",
     "error_already_active": "Đã có một sprint đang hoạt động trong dự án này.",
@@ -286,6 +288,10 @@
     }
   },
   "kanban": {
+    "status": "Trạng thái",
+    "today": "Hôm nay",
+    "unscheduled": "Công việc chưa có hạn",
+    "no_unscheduled": "Tất cả công việc đều đã có hạn!",
     "title": "Tiến độ dự án",
     "subtitle": "Kanban Board",
     "tasks_title": "Công việc",
@@ -341,6 +347,19 @@
     "search_results": "Kết quả tìm kiếm"
   },
   "taskDetail": {
+    "ai_agree": "👍 Đồng ý",
+    "ai_calculating": "AI đang tính...",
+    "ai_created_subtasks": "✨ AI đã tạo {{n}} subtasks",
+    "ai_estimated": "✨ AI ước lượng: {{points}} Story Points",
+    "ai_inaccurate": "👎 Không chính xác",
+    "ai_keep": "👍 Giữ lại",
+    "ai_kept": "Đã xác nhận giữ subtasks",
+    "ai_thinking": "AI đang nghĩ...",
+    "ai_undo": "👎 Hoàn tác",
+    "ai_undone": "Đã hoàn tác subtasks AI",
+    "no_dependents": "Không có task phụ thuộc.",
+    "remove_dep_failed": "Không thể xóa phụ thuộc",
+    "subtask_progress": "Tiến độ Sub-tasks",
     "title": "Chi tiết",
     "subtasks": "Sub-tasks",
     "comments": "Bình luận",
@@ -547,6 +566,7 @@
     }
   },
   "sprintBoard": {
+    "delete_tasks_failed": "Không thể xóa một số task. Đã hoàn tác.",
     "title": "Quản lý Sprints",
     "management": "Sprint Management",
     "create_new": "Tạo Sprint mới",
@@ -1003,6 +1023,10 @@
     "no_linked_tasks": "Chưa có công việc nào liên kết với Epic này."
   },
   "createTask": {
+    "assignee_placeholder": "Chọn người làm",
+    "name_required": "Vui lòng nhập tên công việc.",
+    "submit": "Tạo công việc",
+    "success": "Tạo task mới thành công.",
     "title": "Tạo công việc mới",
     "name_label": "Tên công việc",
     "name_placeholder": "Nhập tên công việc...",
