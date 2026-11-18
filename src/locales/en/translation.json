@@ -410,6 +410,22 @@
     "no_deps": "No dependencies."
   },
   "automationPage": {
+    "create_failed": "Could not create the rule",
+    "created": "Automation rule created",
+    "delete_desc": "Rule \"{{name}}\" will be permanently deleted.",
+    "delete_failed": "Delete failed",
+    "delete_title": "Delete automation rule",
+    "deleted": "Rule deleted",
+    "pick_action_value": "Choose an action value",
+    "pick_project": "Choose a project to see its automation rules",
+    "pick_trigger_value": "Choose a trigger value",
+    "toggle_failed": "Could not change the status",
+    "tpl_assigned_in_progress": "Task assigned → Move to In Progress",
+    "tpl_created_remove_sprint": "New task → Remove from sprint",
+    "tpl_done_low_priority": "Task done → Lower priority",
+    "tpl_high_to_review": "High priority → Move to Review",
+    "update_failed": "Update failed",
+    "updated": "Rule updated",
     "title": "Automation",
     "subtitle": "Set up smart rules to automate your workflow",
     "templates": "Suggested Templates",
@@ -1052,6 +1068,10 @@
     "update_error": "Failed to update profile"
   },
   "ai_metrics": {
+    "reject_confirm": "Reject this breakdown and delete the subtasks it created?",
+    "load_failed": "Could not load the AI metrics.",
+    "accept": "Accept",
+    "reject": "Reject",
     "title": "AI Evaluation Metrics",
     "no_data": "No AI metrics yet. Use AI Breakdown or Estimate to start tracking.",
     "total_calls": "Total AI Calls",

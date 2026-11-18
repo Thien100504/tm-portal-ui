@@ -410,6 +410,22 @@
     "no_deps": "Không có phụ thuộc nào."
   },
   "automationPage": {
+    "create_failed": "Tạo rule thất bại",
+    "created": "Đã tạo automation rule",
+    "delete_desc": "Rule \"{{name}}\" sẽ bị xóa vĩnh viễn.",
+    "delete_failed": "Xóa thất bại",
+    "delete_title": "Xóa automation rule",
+    "deleted": "Đã xóa rule",
+    "pick_action_value": "Chọn giá trị action",
+    "pick_project": "Chọn dự án để xem automation rules",
+    "pick_trigger_value": "Chọn giá trị trigger",
+    "toggle_failed": "Không thể thay đổi trạng thái",
+    "tpl_assigned_in_progress": "Task được giao → Chuyển In Progress",
+    "tpl_created_remove_sprint": "Task mới tạo → Xóa khỏi sprint",
+    "tpl_done_low_priority": "Task hoàn thành → Giảm priority",
+    "tpl_high_to_review": "Priority Cao → Chuyển Review",
+    "update_failed": "Cập nhật thất bại",
+    "updated": "Đã cập nhật rule",
     "title": "Tự động hóa",
     "subtitle": "Thiết lập các quy tắc thông minh để tự động hóa quy trình làm việc",
     "templates": "Mẫu đề xuất",
@@ -1052,6 +1068,10 @@
     "update_error": "Cập nhật hồ sơ thất bại"
   },
   "ai_metrics": {
+    "reject_confirm": "Từ chối kết quả phân rã này và xóa các subtask AI đã tạo?",
+    "load_failed": "Không thể tải chỉ số AI.",
+    "accept": "Đồng ý",
+    "reject": "Từ chối",
     "title": "Chỉ số đánh giá AI",
     "no_data": "Chưa có dữ liệu. Hãy sử dụng tính năng Chia nhỏ (Breakdown) hoặc Ước lượng (Estimate) bằng AI để bắt đầu theo dõi.",
     "total_calls": "Tổng lượt gọi AI",
