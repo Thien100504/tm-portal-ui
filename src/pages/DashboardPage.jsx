@@ -1,3 +1,4 @@
+import { getApiError } from '@/lib/apiError';
 import { useState } from 'react';
 import PriorityBadge from '@/components/ui/PriorityBadge';
 import { useTranslation } from 'react-i18next';
@@ -160,7 +161,8 @@ export default function DashboardPage() {
       qc.invalidateQueries({ queryKey: ['dashboard', 'my-day'] });
       qc.invalidateQueries({ queryKey: ['dashboard', 'personal'] });
       toast.success(t('dashboard.update_success'));
-    }
+    },
+    onError: (err) => toast.error(getApiError(err, t('common.error'))),
   });
 
   // ── Render ─────────────────────────────────────────────────────────

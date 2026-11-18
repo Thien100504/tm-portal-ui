@@ -1,5 +1,7 @@
 {
   "common": {
+    "tasks": "tasks",
+    "optional": "optional",
     "description": "Description",
     "email": "Email",
     "saving": "Saving...",
@@ -189,6 +191,14 @@
     }
   },
   "admin": {
+    "profile_updated": "User profile updated",
+    "password_reset_success": "Password reset successfully",
+    "password_too_short": "Password must be at least 6 characters",
+    "password_hint": "Minimum 6 characters. Only fill if you want to change.",
+    "new_password_placeholder": "Leave empty to keep current",
+    "reset_password": "Reset Password",
+    "field_name": "Full Name",
+    "edit_user": "Edit User",
     "stats_forbidden": "Only admins can access system-wide statistics.",
     "access_forbidden": "Administrator access required.",
     "role_updated_success": "Role updated successfully!",
@@ -749,6 +759,7 @@
       "system": "System"
     },
     "themeStyle": {
+      "sketch": "Sketch",
       "title": "Theme style",
       "hint": "Standard solid surfaces or Apple-inspired Liquid Glass.",
       "standard": "Standard",

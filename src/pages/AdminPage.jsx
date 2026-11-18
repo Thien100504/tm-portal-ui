@@ -35,17 +35,19 @@ export default function AdminPage() {
     queryKey: ['admin', 'stats'],
     queryFn: dashboardService.getAdminStats,
     staleTime: 30_000,
+    enabled: currentUser?.system_role === 'admin',
   });
 
   const { data: users = [], isLoading: usersLoading } = useQuery({
     queryKey: ['admin', 'users'],
     queryFn: adminService.listUsers,
+    enabled: currentUser?.system_role === 'admin',
   });
 
   const { data: workspaces = [], isLoading: workspacesLoading } = useQuery({
     queryKey: ['admin', 'workspaces'],
     queryFn: adminService.listWorkspaces,
-    enabled: activeTab === 'workspaces',
+    enabled: currentUser?.system_role === 'admin' && activeTab === 'workspaces',
   });
 
   // ── Mutations ──────────────────────────────────────────────────────
@@ -356,21 +358,22 @@ function EditUserModal({ user, currentUserId, onClose }) {
     onError: (err) => setError(err.translatedMessage || t('common.error')),
   });
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     setError(null);
+    // Validate first so that nothing is saved when the password is rejected
+    if (newPassword.length > 0 && newPassword.length < 6) {
+      return setError(t('admin.password_too_short', { defaultValue: 'Password must be at least 6 characters' }));
+    }
     const updates = {};
     if (fullName !== user.full_name) updates.full_name = fullName;
     if (email !== user.email) updates.email = email;
-    if (Object.keys(updates).length > 0) {
-      profileMutation.mutate(updates);
-    }
-    if (newPassword.length > 0) {
-      if (newPassword.length < 6) return setError(t('admin.password_too_short', { defaultValue: 'Password must be at least 6 characters' }));
-      passwordMutation.mutate(newPassword);
-    }
-    if (Object.keys(updates).length === 0 && !newPassword) {
+    try {
+      if (Object.keys(updates).length > 0) await profileMutation.mutateAsync(updates);
+      if (newPassword) await passwordMutation.mutateAsync(newPassword);
       onClose();
+    } catch {
+      // the mutation's onError already shows the message in the form
     }
   };
 
