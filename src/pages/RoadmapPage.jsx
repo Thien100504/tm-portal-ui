@@ -9,6 +9,10 @@ import {
   CheckCircle2, Circle, Clock, ChevronRight, ChevronDown
 } from 'lucide-react';
 import epicService from '@/services/epicService';
+import projectService from '@/services/projectService';
+import { useAuth } from '@/hooks/useAuth';
+import { useProjectPermissions } from '@/hooks/useProjectPermissions';
+import { getApiError } from '@/lib/apiError';
 import taskService from '@/services/taskService';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -28,6 +32,16 @@ export default function RoadmapPage() {
   const [editingEpic, setEditingEpic] = useState(null);
   const [expandedEpicId, setExpandedEpicId] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+
+  // Same rule as the API: the project owner or a member with project.settings
+  const { user: currentUser } = useAuth();
+  const { can } = useProjectPermissions(projectId);
+  const { data: project } = useQuery({
+    queryKey: ['projects', projectId],
+    queryFn: () => projectService.getProject(projectId),
+    enabled: !!projectId,
+  });
+  const canManage = project?.owner_id === currentUser?.id || can('project.settings');
 
   // Fetch Epics
   const { data: epics = [], isLoading: epicsLoading } = useQuery({
@@ -50,8 +64,8 @@ export default function RoadmapPage() {
       qc.invalidateQueries({ queryKey: ['epics', projectId] });
       toast.success(t('roadmap.delete_success'));
     },
-    onError: () => {
-      toast.error(t('roadmap.delete_error'));
+    onError: (err) => {
+      toast.error(getApiError(err, t('roadmap.delete_error')));
     }
   });
 
@@ -99,7 +113,7 @@ export default function RoadmapPage() {
           </div>
         </div>
         <Button
-          onClick={() => setShowCreateModal(true)}
+          disabled={!canManage} onClick={() => setShowCreateModal(true)}
           className="rounded-xl flex items-center gap-1.5 shadow-sm"
         >
           <Plus className="w-4 h-4" /> {t('roadmap.create_epic')}
@@ -119,7 +133,7 @@ export default function RoadmapPage() {
             </div>
             <Button
               variant="outline"
-              onClick={() => setShowCreateModal(true)}
+              disabled={!canManage} onClick={() => setShowCreateModal(true)}
               className="mt-2 text-xs rounded-xl"
             >
               {t('roadmap.create_now')}
@@ -179,6 +193,7 @@ export default function RoadmapPage() {
 
                     {/* Actions */}
                     <div className="flex items-center gap-1">
+                      {canManage && (<>
                       <Button
                         variant="ghost"
                         size="icon"
@@ -195,6 +210,7 @@ export default function RoadmapPage() {
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </Button>
+                      </>)}
                       <span className="text-muted-foreground/50 ml-1">
                         {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
                       </span>
@@ -306,8 +322,8 @@ function EpicFormModal({ workspaceId, projectId, epic, onClose }) {
       toast.success(isEdit ? t('roadmap.update_success', 'Epic updated!') : t('roadmap.create_success', 'Epic created!'));
       onClose();
     },
-    onError: () => {
-      toast.error(t('roadmap.save_error', 'Could not save the Epic!'));
+    onError: (err) => {
+      toast.error(getApiError(err, t('roadmap.save_error', 'Could not save the Epic!')));
     }
   });
 
@@ -316,10 +332,10 @@ function EpicFormModal({ workspaceId, projectId, epic, onClose }) {
     if (!name.trim()) return;
     mutation.mutate({
       name: name.trim(),
-      description: description.trim() || undefined,
+      description: isEdit ? description.trim() : description.trim() || undefined,
       color,
       status,
-      due_date: dueDate || undefined,
+      due_date: dueDate || (isEdit ? null : undefined),
       workspace_id: workspaceId,
       project_id: projectId
     });
