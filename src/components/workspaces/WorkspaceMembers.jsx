@@ -1,3 +1,4 @@
+import { getApiError } from '@/lib/apiError';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -39,7 +40,7 @@ export default function WorkspaceMembers() {
       queryClient.invalidateQueries(['workspace-members', activeWorkspaceId]);
       toast.success(t('workspace.member_removed'));
     },
-    onError: () => toast.error(t('common.error')),
+    onError: (err) => toast.error(getApiError(err, t('common.error'))),
   });
 
   const cancelInvMutation = useMutation({
@@ -48,7 +49,7 @@ export default function WorkspaceMembers() {
       queryClient.invalidateQueries(['workspace-invitations', activeWorkspaceId]);
       toast.success(t('workspace.invitation_cancelled', { defaultValue: 'Invitation cancelled' }));
     },
-    onError: () => toast.error(t('common.error')),
+    onError: (err) => toast.error(getApiError(err, t('common.error'))),
   });
 
   const openInviteModal = () => setModalState({ isOpen: true, mode: 'invite', member: null });
