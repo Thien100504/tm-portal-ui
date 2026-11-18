@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation, Link, useNavigate, useOutlet } from 'react-router-dom';
 import { flushSync } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, Moon, Monitor, Wifi, Menu, Bell, Info, CheckCircle, AlertTriangle, XCircle, UserCheck, Workflow, X, ChevronRight } from 'lucide-react';
+import { Sun, Moon, Monitor, Wifi, Menu, Bell, Info, CheckCircle, AlertTriangle, XCircle, UserCheck, Workflow, X, ChevronRight, Flame } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { useTheme } from "@/contexts/useTheme";
@@ -22,6 +22,8 @@ import { useActiveWorkspace } from '@/hooks/useActiveWorkspace';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { vi as viLocale, enUS as enLocale } from 'date-fns/locale';
+import GlobalPomodoroManager from '@/components/pomodoro/GlobalPomodoroManager';
+import usePomodoroStore from '@/store/usePomodoroStore';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -220,6 +222,69 @@ function NotificationBell() {
   );
 }
 
+// ─── Pomodoro Quick Toggle ───────────────────────────────────────────────────
+
+function PomodoroQuickToggle() {
+  const { isRunning, isPipMode, setIsPipMode, timeLeft, duration, mode, currentTask } = usePomodoroStore();
+  const { t } = useTranslation();
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const isActive = isRunning || timeLeft < duration;
+
+  const tooltipContent = isActive ? (
+    <div className="flex flex-col items-center justify-center p-0.5 min-w-[120px]">
+      <span className="font-bold text-[12px] mb-0.5">
+        {mode === 'focus' ? '🎯 ' + t('pomodoro.focus') : '☕ ' + t('pomodoro.break')}
+      </span>
+      {currentTask && (
+        <span className="text-[10px] text-muted-foreground truncate w-full text-center max-w-[140px] mb-1.5">
+          {currentTask.title}
+        </span>
+      )}
+      <span className="text-[9px] text-muted-foreground/80 uppercase tracking-widest border-t border-border/50 w-full text-center pt-1 mt-0.5">
+        {isPipMode ? "Hide PiP" : "Show PiP"}
+      </span>
+    </div>
+  ) : "Start Pomodoro";
+
+  return (
+    <Tooltip content={tooltipContent} position="bottom">
+      <motion.button
+        layout
+        onClick={() => setIsPipMode(!isPipMode)}
+        className={`h-8 flex items-center justify-center rounded-lg shadow-sm overflow-hidden transition-colors ${
+          isActive 
+            ? 'px-2.5 text-[color:var(--color-ai)] bg-[color:var(--color-ai)]/10 hover:bg-[color:var(--color-ai)]/20' 
+            : 'w-8 px-0 text-muted-foreground hover:text-foreground hover:bg-muted/50'
+        }`}
+        style={{ touchAction: 'none' }}
+        transition={{ type: "spring", stiffness: 350, damping: 25 }}
+      >
+        <motion.div layout="position" className="flex items-center gap-1.5">
+          <Flame className={`w-4 h-4 shrink-0 ${isRunning ? 'animate-pulse text-amber-500' : ''}`} />
+          <AnimatePresence>
+            {isActive && (
+              <motion.span
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: "auto", opacity: 1 }}
+                exit={{ width: 0, opacity: 0 }}
+                className="font-mono text-[11px] font-bold leading-none tracking-tight whitespace-nowrap overflow-hidden block"
+              >
+                {formatTime(timeLeft)}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </motion.button>
+    </Tooltip>
+  );
+}
+
 // ─── TopBar ──────────────────────────────────────────────────────────────────
 
 function TopBar({ onMenuClick }) {
@@ -368,6 +433,9 @@ function TopBar({ onMenuClick }) {
 
         {/* Utilities Toolbar */}
         <div className="flex items-center gap-2">
+          {/* Pomodoro Quick Toggle */}
+          <PomodoroQuickToggle />
+
           {/* Language toggle */}
           <Tooltip content="Change Language" position="bottom">
             <Button
@@ -559,6 +627,7 @@ export default function AppLayout() {
           </div>
         </div>
       </div>
+      <GlobalPomodoroManager />
     </MouseGlowBackground>
   );
 }
