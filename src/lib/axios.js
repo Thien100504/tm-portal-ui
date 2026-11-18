@@ -1,5 +1,6 @@
 import axios from 'axios';
 import i18n from './i18n';
+import { useAuthStore } from '@/store/authStore';
 
 const API_BASE_URL = '/api/v1';
 
@@ -50,11 +51,23 @@ export function getRefreshToken() {
 export function setTokens(accessToken, refreshToken) {
   localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
   localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+  // Keep the store in sync so token consumers (e.g. the WebSocket hook) pick up the new token
+  useAuthStore.setState({ accessToken });
 }
 
 export function clearTokens() {
   localStorage.removeItem(ACCESS_TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);
+}
+
+// Tabs share localStorage: when another tab refreshes or clears the tokens,
+// update this tab's store too (the WebSocket hook reconnects on a new token)
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (event) => {
+    if (event.key === ACCESS_TOKEN_KEY) {
+      useAuthStore.setState({ accessToken: event.newValue });
+    }
+  });
 }
 
 // Removed trailing slash interceptor because backend no longer uses trailing slashes
@@ -148,6 +161,22 @@ api.interceptors.response.use(
         }
         return api(originalRequest);
       } catch (refreshError) {
+        // Refresh tokens are one-time: if another tab already rotated ours, reuse its
+        // tokens. Give that tab a moment to save them before deciding to log out.
+        let latestRefreshToken = getRefreshToken();
+        if (latestRefreshToken === refreshToken) {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          latestRefreshToken = getRefreshToken();
+        }
+        if (latestRefreshToken && latestRefreshToken !== refreshToken) {
+          const latestAccessToken = getAccessToken();
+          useAuthStore.setState({ accessToken: latestAccessToken });
+          processQueue(null, latestAccessToken);
+          if (originalRequest.headers) {
+            originalRequest.headers.Authorization = `Bearer ${latestAccessToken}`;
+          }
+          return api(originalRequest);
+        }
         processQueue(refreshError, null);
         clearTokens();
         window.location.href = '/login';

@@ -1,5 +1,13 @@
 {
   "common": {
+    "tasks": "tasks",
+    "optional": "optional",
+    "description": "Description",
+    "email": "Email",
+    "saving": "Saving...",
+    "required_fields": "Please fill in the required fields",
+    "remove": "Remove",
+    "you": "You",
     "add": "Add",
     "create": "Create",
     "save_changes": "Save Changes",
@@ -54,7 +62,10 @@
     "roadmap": "Roadmap",
     "timeline": "Timeline",
     "workspaceSettings": "Workspace Settings",
-    "workspaces_title": "Workspaces"
+    "workspaces_title": "Workspaces",
+    "profile": "Profile",
+    "projectSettings": "Settings",
+    "view_all_projects": "View all"
   },
   "auth": {
     "login_title": "TaskFlow AI",
@@ -100,6 +111,19 @@
     "requires_number": "Password must contain at least one number."
   },
   "project": {
+    "settings_title": "Project Settings",
+    "no_settings_access": "You do not have permission to access project settings.",
+    "members_title": "Members",
+    "members_desc": "Manage who has access to this project and their roles.",
+    "search_add": "Search user by name or email to add...",
+    "all_already_members": "All results are already members",
+    "member_added": "Member added",
+    "member_removed": "Member removed",
+    "role_updated": "Role updated",
+    "no_members": "No members",
+    "remove_member": "Remove member",
+    "owner_badge": "Owner",
+    "topic_id": "Topic ID",
     "not_found": "Project not found.",
     "permission_denied": "You don't have access to this project.",
     "manager_only": "Only Project Managers can perform this action.",
@@ -140,6 +164,8 @@
     "error_assignee_not_member": "The assignee is not a member of this project."
   },
   "sprint": {
+    "error_end_before_start": "The end date must be after the start date",
+    "error_too_long": "A sprint can last at most 365 days",
     "not_found": "Sprint not found.",
     "error_not_in_planning": "Sprint must be in 'Planning' state to start.",
     "error_already_active": "Another sprint is already active in this project.",
@@ -165,6 +191,14 @@
     }
   },
   "admin": {
+    "profile_updated": "User profile updated",
+    "password_reset_success": "Password reset successfully",
+    "password_too_short": "Password must be at least 6 characters",
+    "password_hint": "Minimum 6 characters. Only fill if you want to change.",
+    "new_password_placeholder": "Leave empty to keep current",
+    "reset_password": "Reset Password",
+    "field_name": "Full Name",
+    "edit_user": "Edit User",
     "stats_forbidden": "Only admins can access system-wide statistics.",
     "access_forbidden": "Administrator access required.",
     "role_updated_success": "Role updated successfully!",
@@ -266,6 +300,10 @@
     }
   },
   "kanban": {
+    "status": "Status",
+    "today": "Today",
+    "unscheduled": "Unscheduled Tasks",
+    "no_unscheduled": "All tasks have deadlines!",
     "title": "Project Progress",
     "subtitle": "Kanban Board",
     "tasks_title": "Tasks",
@@ -321,6 +359,19 @@
     "search_results": "Search results"
   },
   "taskDetail": {
+    "ai_agree": "👍 Agree",
+    "ai_calculating": "AI is calculating...",
+    "ai_created_subtasks": "✨ AI created {{n}} subtasks",
+    "ai_estimated": "✨ AI estimate: {{points}} story points",
+    "ai_inaccurate": "👎 Not accurate",
+    "ai_keep": "👍 Keep",
+    "ai_kept": "Subtasks kept",
+    "ai_thinking": "AI is thinking...",
+    "ai_undo": "👎 Undo",
+    "ai_undone": "AI subtasks undone",
+    "no_dependents": "No dependent tasks.",
+    "remove_dep_failed": "Could not remove the dependency",
+    "subtask_progress": "Sub-task progress",
     "title": "Details",
     "subtasks": "Sub-tasks",
     "comments": "Comments",
@@ -371,6 +422,22 @@
     "no_deps": "No dependencies."
   },
   "automationPage": {
+    "create_failed": "Could not create the rule",
+    "created": "Automation rule created",
+    "delete_desc": "Rule \"{{name}}\" will be permanently deleted.",
+    "delete_failed": "Delete failed",
+    "delete_title": "Delete automation rule",
+    "deleted": "Rule deleted",
+    "pick_action_value": "Choose an action value",
+    "pick_project": "Choose a project to see its automation rules",
+    "pick_trigger_value": "Choose a trigger value",
+    "toggle_failed": "Could not change the status",
+    "tpl_assigned_in_progress": "Task assigned → Move to In Progress",
+    "tpl_created_remove_sprint": "New task → Remove from sprint",
+    "tpl_done_low_priority": "Task done → Lower priority",
+    "tpl_high_to_review": "High priority → Move to Review",
+    "update_failed": "Update failed",
+    "updated": "Rule updated",
     "title": "Automation",
     "subtitle": "Set up smart rules to automate your workflow",
     "templates": "Suggested Templates",
@@ -527,6 +594,7 @@
     }
   },
   "sprintBoard": {
+    "delete_tasks_failed": "Some tasks could not be deleted. Changes were reverted.",
     "title": "Sprint Management",
     "management": "Sprint Management",
     "create_new": "Create new Sprint",
@@ -691,6 +759,7 @@
       "system": "System"
     },
     "themeStyle": {
+      "sketch": "Sketch",
       "title": "Theme style",
       "hint": "Standard solid surfaces or Apple-inspired Liquid Glass.",
       "standard": "Standard",
@@ -829,6 +898,35 @@
     "member_count": "{{count}} members"
   },
   "workspace": {
+    "role_desc_placeholder": "What can this role do?",
+    "role_name_placeholder": "e.g. Lead Developer",
+    "btn_create_role": "Create Role",
+    "admin_role_fixed": "This role has full access to all workspace features and cannot be modified.",
+    "no_permissions": "No workspace permissions found.",
+    "expires": "Expires",
+    "invitation_cancelled": "Invitation cancelled",
+    "pending_invitations": "Pending Invitations",
+    "no_access": "You do not have permission to access workspace settings.",
+    "permissions_updated": "Permissions updated",
+    "role_deleted": "Role deleted",
+    "role_updated": "Role updated",
+    "role_created": "Role created",
+    "edit_role": "Edit Role",
+    "create_role": "Create Role",
+    "role_name": "Role Name",
+    "owner_required": "Only the workspace owner can do this",
+    "last_personal": "You cannot delete your last personal workspace",
+    "not_empty": "Delete the projects in this workspace first",
+    "cannot_modify_self": "You cannot change or remove yourself",
+    "cannot_modify_owner": "The workspace owner cannot be changed or removed",
+    "invalid_role": "This role cannot be used in this workspace",
+    "personal_cannot_invite": "Personal workspaces cannot invite members",
+    "cancel_invite_desc": "The invitation sent to {{email}} will be cancelled.",
+    "cancel_invite_title": "Cancel invitation",
+    "delete_role_desc": "This role will be deleted. Members using it will be affected.",
+    "delete_role_title": "Delete role",
+    "remove_member_desc": "\"{{name}}\" will be removed from the workspace.",
+    "remove_member_title": "Remove member",
     "roles_title": "Roles & Permissions",
     "roles_subtitle": "Manage access levels across workspaces and projects",
     "new_role": "New Role",
@@ -895,9 +993,14 @@
   },
   "role": {
     "project_owner": "Project Owner",
-    "project_manager": "Project Manager"
+    "project_manager": "Project Manager",
+    "custom_role": "Custom role"
   },
   "pomodoro": {
+    "long_break": "Long break",
+    "short_break": "Short break",
+    "pip": "Picture in Picture",
+    "fullscreen": "Fullscreen",
     "sounds": {
       "rain": "Rain",
       "none": "None",
@@ -951,6 +1054,9 @@
     "subtitle": "Visual overview of sprints and task deadlines."
   },
   "notifications": {
+    "retry": "Retry",
+    "refresh": "Refresh",
+    "read": "Read",
     "automation": "Automation",
     "no_unread": "No unread notifications",
     "no_notifs": "No notifications yet",
@@ -967,6 +1073,23 @@
     "filter_project": "Projects"
   },
   "roadmap": {
+    "color_label": "Epic label color",
+    "create_success": "Epic created!",
+    "delete_desc": "Epic \"{{name}}\" will be permanently deleted.",
+    "delete_title": "Delete Epic",
+    "desc_placeholder": "Short description...",
+    "description_label": "Description",
+    "due_label": "Due date",
+    "edit_epic": "Edit Epic",
+    "name_label": "Epic name",
+    "name_placeholder": "e.g. Payments, Main UI...",
+    "no_linked_tasks_hint": "No tasks are linked to this Epic yet. Assign the Epic in the task details.",
+    "save_error": "Could not save the Epic!",
+    "status_done": "Done",
+    "status_in_progress": "In Progress",
+    "status_label": "Status",
+    "status_open": "Open",
+    "update_success": "Epic updated!",
     "title": "Project Roadmap",
     "subtitle": "Plan long-term goals, group tasks into Epics and track overall progress.",
     "create_epic": "Create New Epic",
@@ -982,6 +1105,10 @@
     "no_linked_tasks": "No tasks linked to this Epic yet."
   },
   "createTask": {
+    "assignee_placeholder": "Choose an assignee",
+    "name_required": "Please enter a task name.",
+    "submit": "Create task",
+    "success": "Task created.",
     "title": "Create new task",
     "name_label": "Task name",
     "name_placeholder": "Enter task name...",
@@ -1004,6 +1131,10 @@
     "update_error": "Failed to update profile"
   },
   "ai_metrics": {
+    "reject_confirm": "Reject this breakdown and delete the subtasks it created?",
+    "load_failed": "Could not load the AI metrics.",
+    "accept": "Accept",
+    "reject": "Reject",
     "title": "AI Evaluation Metrics",
     "no_data": "No AI metrics yet. Use AI Breakdown or Estimate to start tracking.",
     "total_calls": "Total AI Calls",

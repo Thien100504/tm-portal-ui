@@ -65,7 +65,7 @@ function NotificationBell() {
   });
 
   const { data: notifications = [] } = useQuery({
-    queryKey: ['notifications'],
+    queryKey: ['notifications', 'list', 8],
     queryFn: () => notificationService.getAll(8, 0),
     enabled: isOpen,
     select: (data) => (Array.isArray(data) ? data : data?.items ?? []),

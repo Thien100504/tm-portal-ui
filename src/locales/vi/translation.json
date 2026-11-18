@@ -1,5 +1,13 @@
 {
   "common": {
+    "tasks": "công việc",
+    "optional": "không bắt buộc",
+    "description": "Mô tả",
+    "email": "Email",
+    "saving": "Đang lưu...",
+    "required_fields": "Vui lòng điền các trường bắt buộc",
+    "remove": "Xóa",
+    "you": "Bạn",
     "add": "Thêm",
     "create": "Tạo mới",
     "save_changes": "Lưu thay đổi",
@@ -54,7 +62,10 @@
     "roadmap": "Roadmap",
     "timeline": "Timeline",
     "workspaceSettings": "Cài đặt Workspace",
-    "workspaces_title": "Danh sách Workspace"
+    "workspaces_title": "Danh sách Workspace",
+    "profile": "Hồ sơ",
+    "projectSettings": "Cài đặt",
+    "view_all_projects": "Xem tất cả"
   },
   "auth": {
     "login_title": "TaskFlow AI",
@@ -100,6 +111,19 @@
     "requires_number": "Mật khẩu phải chứa ít nhất một chữ số."
   },
   "project": {
+    "settings_title": "Cài đặt dự án",
+    "no_settings_access": "Bạn không có quyền truy cập cài đặt dự án.",
+    "members_title": "Thành viên",
+    "members_desc": "Quản lý những ai có quyền truy cập dự án và vai trò của họ.",
+    "search_add": "Tìm người dùng theo tên hoặc email để thêm...",
+    "all_already_members": "Tất cả kết quả đều đã là thành viên",
+    "member_added": "Đã thêm thành viên",
+    "member_removed": "Đã xóa thành viên",
+    "role_updated": "Đã cập nhật vai trò",
+    "no_members": "Chưa có thành viên",
+    "remove_member": "Xóa thành viên",
+    "owner_badge": "Chủ sở hữu",
+    "topic_id": "Topic ID",
     "not_found": "Không tìm thấy dự án.",
     "permission_denied": "Bạn không có quyền truy cập dự án này.",
     "manager_only": "Chỉ Project Manager mới có quyền thực hiện.",
@@ -140,6 +164,8 @@
     "error_assignee_not_member": "Người được giao không thuộc dự án này."
   },
   "sprint": {
+    "error_end_before_start": "Ngày kết thúc phải sau ngày bắt đầu",
+    "error_too_long": "Sprint chỉ được kéo dài tối đa 365 ngày",
     "not_found": "Không tìm thấy sprint.",
     "error_not_in_planning": "Sprint phải ở trạng thái 'Lập kế hoạch' để bắt đầu.",
     "error_already_active": "Đã có một sprint đang hoạt động trong dự án này.",
@@ -165,6 +191,14 @@
     }
   },
   "admin": {
+    "profile_updated": "Đã cập nhật thông tin người dùng",
+    "password_reset_success": "Đặt lại mật khẩu thành công",
+    "password_too_short": "Mật khẩu phải có ít nhất 6 ký tự",
+    "password_hint": "Tối thiểu 6 ký tự. Chỉ nhập nếu muốn đổi.",
+    "new_password_placeholder": "Để trống nếu giữ mật khẩu hiện tại",
+    "reset_password": "Đặt lại mật khẩu",
+    "field_name": "Họ và tên",
+    "edit_user": "Sửa người dùng",
     "stats_forbidden": "Chỉ admin mới có quyền truy cập thống kê hệ thống.",
     "access_forbidden": "Yêu cầu quyền quản trị viên.",
     "role_updated_success": "Cập nhật vai trò thành công!",
@@ -266,6 +300,10 @@
     }
   },
   "kanban": {
+    "status": "Trạng thái",
+    "today": "Hôm nay",
+    "unscheduled": "Công việc chưa có hạn",
+    "no_unscheduled": "Tất cả công việc đều đã có hạn!",
     "title": "Tiến độ dự án",
     "subtitle": "Kanban Board",
     "tasks_title": "Công việc",
@@ -321,6 +359,19 @@
     "search_results": "Kết quả tìm kiếm"
   },
   "taskDetail": {
+    "ai_agree": "👍 Đồng ý",
+    "ai_calculating": "AI đang tính...",
+    "ai_created_subtasks": "✨ AI đã tạo {{n}} subtasks",
+    "ai_estimated": "✨ AI ước lượng: {{points}} Story Points",
+    "ai_inaccurate": "👎 Không chính xác",
+    "ai_keep": "👍 Giữ lại",
+    "ai_kept": "Đã xác nhận giữ subtasks",
+    "ai_thinking": "AI đang nghĩ...",
+    "ai_undo": "👎 Hoàn tác",
+    "ai_undone": "Đã hoàn tác subtasks AI",
+    "no_dependents": "Không có task phụ thuộc.",
+    "remove_dep_failed": "Không thể xóa phụ thuộc",
+    "subtask_progress": "Tiến độ Sub-tasks",
     "title": "Chi tiết",
     "subtasks": "Sub-tasks",
     "comments": "Bình luận",
@@ -371,6 +422,22 @@
     "no_deps": "Không có phụ thuộc nào."
   },
   "automationPage": {
+    "create_failed": "Tạo rule thất bại",
+    "created": "Đã tạo automation rule",
+    "delete_desc": "Rule \"{{name}}\" sẽ bị xóa vĩnh viễn.",
+    "delete_failed": "Xóa thất bại",
+    "delete_title": "Xóa automation rule",
+    "deleted": "Đã xóa rule",
+    "pick_action_value": "Chọn giá trị action",
+    "pick_project": "Chọn dự án để xem automation rules",
+    "pick_trigger_value": "Chọn giá trị trigger",
+    "toggle_failed": "Không thể thay đổi trạng thái",
+    "tpl_assigned_in_progress": "Task được giao → Chuyển In Progress",
+    "tpl_created_remove_sprint": "Task mới tạo → Xóa khỏi sprint",
+    "tpl_done_low_priority": "Task hoàn thành → Giảm priority",
+    "tpl_high_to_review": "Priority Cao → Chuyển Review",
+    "update_failed": "Cập nhật thất bại",
+    "updated": "Đã cập nhật rule",
     "title": "Tự động hóa",
     "subtitle": "Thiết lập các quy tắc thông minh để tự động hóa quy trình làm việc",
     "templates": "Mẫu đề xuất",
@@ -527,6 +594,7 @@
     }
   },
   "sprintBoard": {
+    "delete_tasks_failed": "Không thể xóa một số task. Đã hoàn tác.",
     "title": "Quản lý Sprints",
     "management": "Sprint Management",
     "create_new": "Tạo Sprint mới",
@@ -691,6 +759,7 @@
       "system": "Hệ thống"
     },
     "themeStyle": {
+      "sketch": "Bản phác thảo",
       "title": "Phong cách (Theme style)",
       "hint": "Bề mặt cơ bản (Standard) hoặc Kính lỏng (Liquid Glass).",
       "standard": "Cơ bản",
@@ -829,6 +898,35 @@
     "member_count": "{{count}} thành viên"
   },
   "workspace": {
+    "role_desc_placeholder": "Vai trò này có thể làm gì?",
+    "role_name_placeholder": "Ví dụ: Trưởng nhóm phát triển",
+    "btn_create_role": "Tạo vai trò",
+    "admin_role_fixed": "Vai trò này có toàn quyền trên workspace và không thể chỉnh sửa.",
+    "no_permissions": "Không tìm thấy quyền nào của workspace.",
+    "expires": "Hết hạn",
+    "invitation_cancelled": "Đã hủy lời mời",
+    "pending_invitations": "Lời mời đang chờ",
+    "no_access": "Bạn không có quyền truy cập cài đặt workspace.",
+    "permissions_updated": "Đã cập nhật quyền",
+    "role_deleted": "Đã xóa vai trò",
+    "role_updated": "Đã cập nhật vai trò",
+    "role_created": "Đã tạo vai trò",
+    "edit_role": "Sửa vai trò",
+    "create_role": "Tạo vai trò",
+    "role_name": "Tên vai trò",
+    "owner_required": "Chỉ chủ sở hữu workspace mới có thể thực hiện",
+    "last_personal": "Không thể xóa workspace cá nhân cuối cùng của bạn",
+    "not_empty": "Hãy xóa các dự án trong workspace này trước",
+    "cannot_modify_self": "Bạn không thể tự thay đổi hoặc xóa chính mình",
+    "cannot_modify_owner": "Không thể thay đổi hoặc xóa chủ sở hữu workspace",
+    "invalid_role": "Không thể dùng vai trò này trong workspace",
+    "personal_cannot_invite": "Workspace cá nhân không thể mời thành viên",
+    "cancel_invite_desc": "Lời mời gửi đến {{email}} sẽ bị hủy.",
+    "cancel_invite_title": "Hủy lời mời",
+    "delete_role_desc": "Role này sẽ bị xóa. Các thành viên đang dùng role này sẽ bị ảnh hưởng.",
+    "delete_role_title": "Xóa role",
+    "remove_member_desc": "Thành viên \"{{name}}\" sẽ bị xóa khỏi workspace.",
+    "remove_member_title": "Xóa thành viên",
     "roles_title": "Vai trò & Quyền hạn",
     "roles_subtitle": "Quản lý các vai trò tùy chỉnh và mức độ truy cập trong workspace.",
     "new_role": "Tạo Vai trò",
@@ -895,9 +993,14 @@
   },
   "role": {
     "project_owner": "Chủ dự án",
-    "project_manager": "Quản lý dự án"
+    "project_manager": "Quản lý dự án",
+    "custom_role": "Vai trò tùy chỉnh"
   },
   "pomodoro": {
+    "long_break": "Nghỉ dài",
+    "short_break": "Nghỉ ngắn",
+    "pip": "Cửa sổ nổi",
+    "fullscreen": "Toàn màn hình",
     "sounds": {
       "rain": "Tiếng mưa",
       "none": "Không âm thanh",
@@ -951,6 +1054,9 @@
     "subtitle": "Quản lý tiến độ dự án"
   },
   "notifications": {
+    "retry": "Thử lại",
+    "refresh": "Làm mới",
+    "read": "Đã đọc",
     "automation": "Tự động hóa",
     "no_unread": "Không có thông báo chưa đọc",
     "no_notifs": "Không có thông báo",
@@ -967,6 +1073,23 @@
     "filter_project": "Dự án"
   },
   "roadmap": {
+    "color_label": "Màu sắc nhãn Epic",
+    "create_success": "Tạo Epic thành công!",
+    "delete_desc": "Epic \"{{name}}\" sẽ bị xóa vĩnh viễn.",
+    "delete_title": "Xóa Epic",
+    "desc_placeholder": "Nhập mô tả ngắn gọn...",
+    "description_label": "Mô tả",
+    "due_label": "Hạn chót",
+    "edit_epic": "Chỉnh sửa Epic",
+    "name_label": "Tên Epic",
+    "name_placeholder": "Ví dụ: Tính năng Thanh toán, Giao diện chính...",
+    "no_linked_tasks_hint": "Chưa có công việc nào liên kết với Epic này. Hãy gán Epic trong phần chi tiết công việc.",
+    "save_error": "Lỗi khi lưu Epic!",
+    "status_done": "Hoàn thành (Done)",
+    "status_in_progress": "Đang làm (In Progress)",
+    "status_label": "Trạng thái",
+    "status_open": "Mở (Open)",
+    "update_success": "Cập nhật Epic thành công!",
     "title": "Lộ trình dự án (Roadmap)",
     "subtitle": "Lập kế hoạch dài hạn, nhóm các task vào Epic và theo dõi tiến độ.",
     "create_epic": "Tạo Epic Mới",
@@ -982,6 +1105,10 @@
     "no_linked_tasks": "Chưa có công việc nào liên kết với Epic này."
   },
   "createTask": {
+    "assignee_placeholder": "Chọn người làm",
+    "name_required": "Vui lòng nhập tên công việc.",
+    "submit": "Tạo công việc",
+    "success": "Tạo task mới thành công.",
     "title": "Tạo công việc mới",
     "name_label": "Tên công việc",
     "name_placeholder": "Nhập tên công việc...",
@@ -1004,6 +1131,10 @@
     "update_error": "Cập nhật hồ sơ thất bại"
   },
   "ai_metrics": {
+    "reject_confirm": "Từ chối kết quả phân rã này và xóa các subtask AI đã tạo?",
+    "load_failed": "Không thể tải chỉ số AI.",
+    "accept": "Đồng ý",
+    "reject": "Từ chối",
     "title": "Chỉ số đánh giá AI",
     "no_data": "Chưa có dữ liệu. Hãy sử dụng tính năng Chia nhỏ (Breakdown) hoặc Ước lượng (Estimate) bằng AI để bắt đầu theo dõi.",
     "total_calls": "Tổng lượt gọi AI",
