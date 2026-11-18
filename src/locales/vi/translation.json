@@ -1,5 +1,7 @@
 {
   "common": {
+    "tasks": "công việc",
+    "optional": "không bắt buộc",
     "description": "Mô tả",
     "email": "Email",
     "saving": "Đang lưu...",
@@ -189,6 +191,14 @@
     }
   },
   "admin": {
+    "profile_updated": "Đã cập nhật thông tin người dùng",
+    "password_reset_success": "Đặt lại mật khẩu thành công",
+    "password_too_short": "Mật khẩu phải có ít nhất 6 ký tự",
+    "password_hint": "Tối thiểu 6 ký tự. Chỉ nhập nếu muốn đổi.",
+    "new_password_placeholder": "Để trống nếu giữ mật khẩu hiện tại",
+    "reset_password": "Đặt lại mật khẩu",
+    "field_name": "Họ và tên",
+    "edit_user": "Sửa người dùng",
     "stats_forbidden": "Chỉ admin mới có quyền truy cập thống kê hệ thống.",
     "access_forbidden": "Yêu cầu quyền quản trị viên.",
     "role_updated_success": "Cập nhật vai trò thành công!",
@@ -749,6 +759,7 @@
       "system": "Hệ thống"
     },
     "themeStyle": {
+      "sketch": "Bản phác thảo",
       "title": "Phong cách (Theme style)",
       "hint": "Bề mặt cơ bản (Standard) hoặc Kính lỏng (Liquid Glass).",
       "standard": "Cơ bản",
