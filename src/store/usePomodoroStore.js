@@ -80,7 +80,6 @@ const usePomodoroStore = create(
       name: 'pomodoro-storage',
       partialize: (state) => ({
         // We persist these fields
-        mode: state.mode,
         completedSessions: state.completedSessions,
         soundType: state.soundType,
         volume: state.volume,

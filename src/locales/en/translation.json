@@ -986,6 +986,10 @@
     "custom_role": "Custom role"
   },
   "pomodoro": {
+    "long_break": "Long break",
+    "short_break": "Short break",
+    "pip": "Picture in Picture",
+    "fullscreen": "Fullscreen",
     "sounds": {
       "rain": "Rain",
       "none": "None",

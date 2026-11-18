@@ -986,6 +986,10 @@
     "custom_role": "Vai trò tùy chỉnh"
   },
   "pomodoro": {
+    "long_break": "Nghỉ dài",
+    "short_break": "Nghỉ ngắn",
+    "pip": "Cửa sổ nổi",
+    "fullscreen": "Toàn màn hình",
     "sounds": {
       "rain": "Tiếng mưa",
       "none": "Không âm thanh",
