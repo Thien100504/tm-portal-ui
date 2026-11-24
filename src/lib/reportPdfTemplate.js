@@ -8,6 +8,16 @@
  *  5. Save → direct .pdf download. No popups. No print dialogs.
  */
 
+/** Escape text from the API before it goes into the report HTML (the iframe shares the app's origin). */
+function esc(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export async function exportReportPDF({ stats, t, lang }) {
   const now = new Date();
   const dateStr = now.toLocaleDateString(lang === 'vi' ? 'vi-VN' : 'en-US', {
@@ -130,7 +140,7 @@ export async function exportReportPDF({ stats, t, lang }) {
                 return `
               <div style="margin-bottom:16px">
                 <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
-                  <span style="font-size:12px;font-weight:500;color:#1e293b;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${proj.name}</span>
+                  <span style="font-size:12px;font-weight:500;color:#1e293b;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(proj.name)}</span>
                   <span style="font-size:11px;color:#94a3b8;flex-shrink:0;margin-left:8px">${proj.my_tasks_done}/${proj.my_tasks_total} · ${p}%</span>
                 </div>
                 ${progressBar(p, '#4f46e5')}
@@ -160,8 +170,8 @@ export async function exportReportPDF({ stats, t, lang }) {
           return `
           <div style="display:flex;align-items:flex-start;gap:12px;padding:9px 0;${isLast ? '' : 'border-bottom:1px solid #e2e8f0;'}">
             <div style="flex:1;min-width:0">
-              <p style="font-size:12px;font-weight:500;color:#1e293b;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${task.title}</p>
-              <p style="font-size:10px;color:#94a3b8;margin:2px 0 0">${task.project_name}</p>
+              <p style="font-size:12px;font-weight:500;color:#1e293b;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(task.title)}</p>
+              <p style="font-size:10px;color:#94a3b8;margin:2px 0 0">${esc(task.project_name)}</p>
             </div>
             <span style="font-size:11px;font-weight:600;color:${badgeColor};background:${badgeBg};border-radius:9999px;padding:2px 9px;flex-shrink:0">${dueDate}</span>
           </div>`;
@@ -184,7 +194,7 @@ export async function exportReportPDF({ stats, t, lang }) {
           return `
           <div style="margin-bottom:16px">
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
-              <span style="font-size:12px;font-weight:500;color:#1e293b">${m.full_name}</span>
+              <span style="font-size:12px;font-weight:500;color:#1e293b">${esc(m.full_name)}</span>
               <span style="font-size:11px;color:#94a3b8">${total} tasks${m.overdue_count > 0 ? ` &middot; <span style="color:#dc2626">${m.overdue_count} overdue</span>` : ''}</span>
             </div>
             <div style="display:flex;height:8px;border-radius:9999px;overflow:hidden;background:#e2e8f0">
@@ -212,8 +222,8 @@ export async function exportReportPDF({ stats, t, lang }) {
           return `
           <div style="display:flex;align-items:flex-start;gap:12px;padding:9px 0;${isLast ? '' : 'border-bottom:1px solid #fecaca;'}">
             <div style="flex:1;min-width:0">
-              <p style="font-size:12px;font-weight:500;color:#1e293b;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${task.title}</p>
-              <p style="font-size:10px;color:#94a3b8;margin:2px 0 0">${task.project_name}</p>
+              <p style="font-size:12px;font-weight:500;color:#1e293b;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(task.title)}</p>
+              <p style="font-size:10px;color:#94a3b8;margin:2px 0 0">${esc(task.project_name)}</p>
             </div>
             <span style="font-size:11px;font-weight:600;color:#dc2626;flex-shrink:0">${task.blocked_by_count} ${t('reports.blocking_deps', { defaultValue: 'blocking' })}</span>
           </div>`;
