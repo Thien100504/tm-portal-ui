@@ -7,13 +7,11 @@ import { motion } from 'framer-motion';
 import { Mail, Lock, LogIn, ArrowRight, Sparkles, Sun, Moon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
-import { useTheme } from "@/contexts/useTheme";
+import { useTheme } from '@/contexts/useTheme';
 import MouseGlowBackground from '@/components/MouseGlowBackground';
 import { Button } from '@/components/ui/Button';
 import { toast } from 'sonner';
 import { getApiError } from '@/lib/apiError';
-
-
 
 export default function LoginPage() {
   const { loginAsync } = useAuth();
@@ -51,7 +49,7 @@ export default function LoginPage() {
   return (
     <MouseGlowBackground>
       {/* Top right floating toggles */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
@@ -93,8 +91,12 @@ export default function LoginPage() {
         </div>
 
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1.5">{t('auth.login_title')}</h1>
-          <p className="text-[13px] text-muted-foreground font-medium">{t('auth.login_subtitle')}</p>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1.5">
+            {t('auth.login_title')}
+          </h1>
+          <p className="text-[13px] text-muted-foreground font-medium">
+            {t('auth.login_subtitle')}
+          </p>
         </div>
 
         {globalError && (
@@ -110,7 +112,9 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-1.5">{t('auth.email')}</label>
+            <label className="block text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-1.5">
+              {t('auth.email')}
+            </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Mail className="h-4 w-4 text-muted-foreground/60" />
@@ -119,20 +123,29 @@ export default function LoginPage() {
                 type="email"
                 {...register('email')}
                 className={`block w-full pl-9 pr-3 py-2 text-[13px] bg-background border ${
-                  errors.email ? 'border-[color:var(--color-destructive)] focus:ring-[color:var(--color-destructive)]' : 'border-border focus:ring-[color:var(--color-ai)]'
+                  errors.email
+                    ? 'border-[color:var(--color-destructive)] focus:ring-[color:var(--color-destructive)]'
+                    : 'border-border focus:ring-[color:var(--color-ai)]'
                 } rounded-lg focus:outline-none focus:ring-1 text-foreground transition-all placeholder:text-muted-foreground/50`}
                 placeholder={t('auth.email_placeholder')}
               />
             </div>
             {errors.email && (
-              <p className="mt-1.5 text-[11px] font-medium text-[color:var(--color-destructive)]">{errors.email.message}</p>
+              <p className="mt-1.5 text-[11px] font-medium text-[color:var(--color-destructive)]">
+                {errors.email.message}
+              </p>
             )}
           </div>
 
           <div>
             <div className="flex justify-between items-center mb-1.5">
-              <label className="block text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">{t('auth.password')}</label>
-              <a href="#" className="text-[11px] font-medium text-[color:var(--color-ai)] hover:text-[color:var(--color-ai-soft)] transition-colors">
+              <label className="block text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+                {t('auth.password')}
+              </label>
+              <a
+                href="#"
+                className="text-[11px] font-medium text-[color:var(--color-ai)] hover:text-[color:var(--color-ai-soft)] transition-colors"
+              >
                 {t('auth.forgot_password')}
               </a>
             </div>
@@ -144,21 +157,21 @@ export default function LoginPage() {
                 type="password"
                 {...register('password')}
                 className={`block w-full pl-9 pr-3 py-2 text-[13px] bg-background border ${
-                  errors.password ? 'border-[color:var(--color-destructive)] focus:ring-[color:var(--color-destructive)]' : 'border-border focus:ring-[color:var(--color-ai)]'
+                  errors.password
+                    ? 'border-[color:var(--color-destructive)] focus:ring-[color:var(--color-destructive)]'
+                    : 'border-border focus:ring-[color:var(--color-ai)]'
                 } rounded-lg focus:outline-none focus:ring-1 text-foreground transition-all placeholder:text-muted-foreground/50`}
                 placeholder={t('auth.password_placeholder')}
               />
             </div>
             {errors.password && (
-              <p className="mt-1.5 text-[11px] font-medium text-[color:var(--color-destructive)]">{errors.password.message}</p>
+              <p className="mt-1.5 text-[11px] font-medium text-[color:var(--color-destructive)]">
+                {errors.password.message}
+              </p>
             )}
           </div>
 
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full mt-2"
-          >
+          <Button type="submit" disabled={isSubmitting} className="w-full mt-2">
             {isSubmitting ? (
               <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
             ) : (
@@ -172,7 +185,10 @@ export default function LoginPage() {
 
         <div className="mt-6 text-center text-[12px] text-muted-foreground">
           {t('auth.no_account')}{' '}
-          <Link to="/register" className="font-semibold text-foreground hover:text-[color:var(--color-ai)] inline-flex items-center group transition-colors">
+          <Link
+            to="/register"
+            className="font-semibold text-foreground hover:text-[color:var(--color-ai)] inline-flex items-center group transition-colors"
+          >
             {t('auth.register_now')}
             <ArrowRight className="w-3.5 h-3.5 ml-1 transform group-hover:translate-x-1 transition-transform" />
           </Link>

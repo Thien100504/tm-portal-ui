@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import authService from '@/services/authService';
 import { useAuthStore } from '@/store/authStore';
 
-
 /**
  * Custom hook that provides auth operations and current user state.
  * Wraps Zustand auth store + TanStack Query mutations/queries.
@@ -11,8 +10,7 @@ import { useAuthStore } from '@/store/authStore';
 export function useAuth() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { user, isAuthenticated, setAuth, clearAuth, setUser, setInitialized } =
-    useAuthStore();
+  const { user, isAuthenticated, setAuth, clearAuth, setUser, setInitialized } = useAuthStore();
 
   // ---- Query: current user ----
   const currentUserQuery = useQuery({

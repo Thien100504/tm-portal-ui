@@ -1,29 +1,41 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import {
-  Brain, Zap, Clock, CheckCircle2,
-  TrendingUp, Cpu, BarChart3, Activity,
-  ThumbsUp, ThumbsDown
+  Brain,
+  Zap,
+  Clock,
+  CheckCircle2,
+  TrendingUp,
+  Cpu,
+  BarChart3,
+  Activity,
+  ThumbsUp,
+  ThumbsDown,
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import aiService from '@/services/aiService';
-import { toast } from 'sonner';
 import { useProjectPermissions } from '@/hooks/useProjectPermissions';
 import { getApiError } from '@/lib/apiError';
 import { Card } from '@/components/ui/Card';
 
 const FEATURE_META = {
-  breakdown: { label: 'AI Breakdown', icon: Brain, color: 'text-purple-500', bg: 'bg-purple-500/10' },
-  estimate:  { label: 'AI Estimate',  icon: Zap,   color: 'text-amber-500',  bg: 'bg-amber-500/10' },
-  insights:  { label: 'AI Insights',  icon: Activity, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+  breakdown: {
+    label: 'AI Breakdown',
+    icon: Brain,
+    color: 'text-purple-500',
+    bg: 'bg-purple-500/10',
+  },
+  estimate: { label: 'AI Estimate', icon: Zap, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+  insights: { label: 'AI Insights', icon: Activity, color: 'text-blue-500', bg: 'bg-blue-500/10' },
 };
 
 const STATUS_STYLE = {
-  generated: { label: 'Pending',  cls: 'bg-muted text-muted-foreground' },
-  applied:   { label: 'Applied',  cls: 'bg-emerald-500/10 text-emerald-500' },
-  rejected:  { label: 'Rejected', cls: 'bg-red-500/10 text-red-500' },
-  modified:  { label: 'Modified', cls: 'bg-amber-500/10 text-amber-500' },
+  generated: { label: 'Pending', cls: 'bg-muted text-muted-foreground' },
+  applied: { label: 'Applied', cls: 'bg-emerald-500/10 text-emerald-500' },
+  rejected: { label: 'Rejected', cls: 'bg-red-500/10 text-red-500' },
+  modified: { label: 'Modified', cls: 'bg-amber-500/10 text-amber-500' },
 };
 
 function StatCard({ icon: Icon, label, value, sub, color = 'text-foreground' }) {
@@ -96,11 +108,11 @@ function RecentRow({ metric, onFeedback }) {
             ? `${metric.output_data?.count || '?'} subtasks`
             : metric.feature === 'estimate'
               ? `${metric.output_data?.story_points || '?'} SP`
-              : metric.feature
-          }
+              : metric.feature}
         </div>
         <div className="text-[10px] text-muted-foreground">
-          {metric.response_time_ms}ms · {formatDistanceToNow(new Date(metric.created_at), {
+          {metric.response_time_ms}ms ·{' '}
+          {formatDistanceToNow(new Date(metric.created_at), {
             addSuffix: true,
             locale: vi,
           })}
@@ -108,10 +120,18 @@ function RecentRow({ metric, onFeedback }) {
       </div>
       {metric.status === 'generated' && onFeedback ? (
         <div className="flex items-center gap-1">
-          <button onClick={() => onFeedback(metric.id, 'applied')} className="p-1 hover:bg-emerald-500/10 hover:text-emerald-500 rounded-md transition-colors text-muted-foreground" title={t('ai_metrics.accept', 'Accept')}>
+          <button
+            onClick={() => onFeedback(metric.id, 'applied')}
+            className="p-1 hover:bg-emerald-500/10 hover:text-emerald-500 rounded-md transition-colors text-muted-foreground"
+            title={t('ai_metrics.accept', 'Accept')}
+          >
             <ThumbsUp className="w-3.5 h-3.5" />
           </button>
-          <button onClick={() => onFeedback(metric.id, 'rejected')} className="p-1 hover:bg-red-500/10 hover:text-red-500 rounded-md transition-colors text-muted-foreground" title={t('ai_metrics.reject', 'Reject')}>
+          <button
+            onClick={() => onFeedback(metric.id, 'rejected')}
+            className="p-1 hover:bg-red-500/10 hover:text-red-500 rounded-md transition-colors text-muted-foreground"
+            title={t('ai_metrics.reject', 'Reject')}
+          >
             <ThumbsDown className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -144,15 +164,24 @@ export default function AIMetricsDashboard({ projectId }) {
   const { can } = useProjectPermissions(projectId);
   const handleFeedback = (id, status) => {
     if (feedbackMutation.isPending) return;
-    const metric = metrics?.recent?.find(m => m.id === id);
-    if (status === 'rejected' && metric?.feature === 'breakdown'
-        && !window.confirm(t('ai_metrics.reject_confirm', 'Reject this breakdown and delete the subtasks it created?'))) {
+    const metric = metrics?.recent?.find((m) => m.id === id);
+    if (
+      status === 'rejected' &&
+      metric?.feature === 'breakdown' &&
+      !window.confirm(
+        t('ai_metrics.reject_confirm', 'Reject this breakdown and delete the subtasks it created?')
+      )
+    ) {
       return;
     }
     feedbackMutation.mutate({ id, status });
   };
 
-  const { data: metrics, isLoading, isError } = useQuery({
+  const {
+    data: metrics,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ['ai-metrics', projectId],
     queryFn: () => aiService.getMetrics(projectId),
     enabled: !!projectId,
@@ -182,7 +211,10 @@ export default function AIMetricsDashboard({ projectId }) {
       <Card className="glass-surface border border-border/60 p-8 text-center">
         <Brain className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
         <p className="text-sm text-muted-foreground">
-          {t('ai_metrics.no_data', 'No AI metrics yet. Use AI Breakdown or Estimate to start tracking.')}
+          {t(
+            'ai_metrics.no_data',
+            'No AI metrics yet. Use AI Breakdown or Estimate to start tracking.'
+          )}
         </p>
       </Card>
     );
@@ -209,7 +241,13 @@ export default function AIMetricsDashboard({ projectId }) {
           icon={CheckCircle2}
           label={t('ai_metrics.acceptance', 'Acceptance Rate')}
           value={`${metrics.overall_acceptance_rate}%`}
-          color={metrics.overall_acceptance_rate >= 70 ? 'text-emerald-500' : metrics.overall_acceptance_rate >= 40 ? 'text-amber-500' : 'text-red-500'}
+          color={
+            metrics.overall_acceptance_rate >= 70
+              ? 'text-emerald-500'
+              : metrics.overall_acceptance_rate >= 40
+                ? 'text-amber-500'
+                : 'text-red-500'
+          }
         />
         <StatCard
           icon={Clock}
@@ -248,7 +286,11 @@ export default function AIMetricsDashboard({ projectId }) {
           </h4>
           <div className="max-h-[240px] overflow-y-auto">
             {metrics.recent.slice(0, 10).map((m) => (
-              <RecentRow key={m.id} metric={m} onFeedback={can('task.update') ? handleFeedback : undefined} />
+              <RecentRow
+                key={m.id}
+                metric={m}
+                onFeedback={can('task.update') ? handleFeedback : undefined}
+              />
             ))}
           </div>
         </Card>

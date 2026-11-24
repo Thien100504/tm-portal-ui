@@ -3,22 +3,24 @@ import { useAuthStore } from '@/store/authStore';
 import api, { getAccessToken } from '@/lib/axios';
 import { useQueryClient } from '@tanstack/react-query';
 
-const PING_INTERVAL_MS  = 25_000;   // send ping every 25s
-const PONG_TIMEOUT_MS   = 5_000;    // if no pong within 5s → dead connection
-const BACKOFF_BASE_MS   = 1_000;    // first reconnect after 1s
-const BACKOFF_MAX_MS    = 30_000;   // cap at 30s
-const BACKOFF_FACTOR    = 2;
+const PING_INTERVAL_MS = 25_000; // send ping every 25s
+const PONG_TIMEOUT_MS = 5_000; // if no pong within 5s → dead connection
+const BACKOFF_BASE_MS = 1_000; // first reconnect after 1s
+const BACKOFF_MAX_MS = 30_000; // cap at 30s
+const BACKOFF_FACTOR = 2;
 
 export function useWebSocket(projectId = null, onNotification = null) {
   const [isConnected, setIsConnected] = useState(false);
-  const wsRef             = useRef(null);
-  const reconnectTimer    = useRef(null);
-  const pingTimer         = useRef(null);
-  const pongTimer         = useRef(null);
-  const attemptRef        = useRef(0);
+  const wsRef = useRef(null);
+  const reconnectTimer = useRef(null);
+  const pingTimer = useRef(null);
+  const pongTimer = useRef(null);
+  const attemptRef = useRef(0);
   const onNotificationRef = useRef(onNotification);
 
-  useEffect(() => { onNotificationRef.current = onNotification; }, [onNotification]);
+  useEffect(() => {
+    onNotificationRef.current = onNotification;
+  }, [onNotification]);
 
   const { accessToken } = useAuthStore();
   const queryClient = useQueryClient();
@@ -85,11 +87,16 @@ export function useWebSocket(projectId = null, onNotification = null) {
       wsRef.current = ws;
 
       ws.onopen = () => {
-        if (disposed || wsRef.current !== ws) { ws.close(); return; }
+        if (disposed || wsRef.current !== ws) {
+          ws.close();
+          return;
+        }
+        // WS-1: only refetch on a real reconnect (attempt > 0), not on the first page load
+        const wasReconnect = attemptRef.current > 0;
+        attemptRef.current = 0; // reset backoff on success
         setIsConnected(true);
-        attemptRef.current = 0;   // reset backoff on success
         // Refetch cached queries so events missed while disconnected show up
-        flushOnReconnect();
+        if (wasReconnect) flushOnReconnect();
         startPing(ws);
       };
 
@@ -112,7 +119,9 @@ export function useWebSocket(projectId = null, onNotification = null) {
         }
       };
 
-      ws.onerror = () => { /* onclose fires after onerror, reconnect handled there */ };
+      ws.onerror = () => {
+        /* onclose fires after onerror, reconnect handled there */
+      };
 
       ws.onmessage = (event) => {
         if (wsRef.current !== ws) return; // stale socket
@@ -153,11 +162,12 @@ export function useWebSocket(projectId = null, onNotification = null) {
 
     connect();
 
-    // Reconnect when tab regains visibility (catches missed events while hidden)
+    // WS-5: Reconnect when tab regains visibility — check CONNECTING state to avoid duplicate connections
     const onVisible = () => {
       if (document.visibilityState === 'visible') {
         const ws = wsRef.current;
         if (!ws || ws.readyState === WebSocket.CLOSED || ws.readyState === WebSocket.CLOSING) {
+          // WS-5: do not reconnect while CONNECTING (avoids parallel connections)
           clearTimeout(reconnectTimer.current);
           attemptRef.current = 0;
           connect();

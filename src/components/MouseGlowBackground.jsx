@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
 
-import { useTheme } from "@/contexts/useTheme";
+import { useTheme } from '@/contexts/useTheme';
 
 export default function MouseGlowBackground({ children, fullScreen = false }) {
   const { mouseGlow, bgGrid } = useTheme();
@@ -23,7 +23,9 @@ export default function MouseGlowBackground({ children, fullScreen = false }) {
   }, [mouseX, mouseY]);
 
   return (
-    <div className={`relative w-full bg-background overflow-hidden text-foreground ${fullScreen ? 'h-screen' : 'min-h-screen'}`}>
+    <div
+      className={`relative w-full bg-background overflow-hidden text-foreground ${fullScreen ? 'h-screen' : 'min-h-screen'}`}
+    >
       {/* Background base */}
       <AnimatePresence>
         {bgGrid && (
@@ -49,14 +51,15 @@ export default function MouseGlowBackground({ children, fullScreen = false }) {
           >
             <motion.div
               className="fixed z-0 opacity-[0.2] pointer-events-none"
-              style={{ 
+              style={{
                 width: 600,
                 height: 600,
                 left: -300,
                 top: -300,
                 x: springX,
                 y: springY,
-                backgroundImage: 'radial-gradient(600px circle at center, var(--color-ai), transparent 40%)'
+                backgroundImage:
+                  'radial-gradient(600px circle at center, var(--color-ai), transparent 40%)',
               }}
             />
             <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-[color:var(--color-primary)]/10 blur-[120px]" />
@@ -66,7 +69,9 @@ export default function MouseGlowBackground({ children, fullScreen = false }) {
       </AnimatePresence>
 
       {/* Content */}
-      <div className={`relative z-10 w-full ${fullScreen ? 'h-screen' : 'min-h-screen flex items-center justify-center p-4'}`}>
+      <div
+        className={`relative z-10 w-full ${fullScreen ? 'h-screen' : 'min-h-screen flex items-center justify-center p-4'}`}
+      >
         {children}
       </div>
     </div>

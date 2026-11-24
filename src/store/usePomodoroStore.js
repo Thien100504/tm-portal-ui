@@ -8,7 +8,7 @@ const generateStars = () => {
     left: Math.random() * 100,
     top: Math.random() * 100,
     duration: Math.random() * 5 + 3,
-    delay: Math.random() * 5
+    delay: Math.random() * 5,
   }));
 };
 
@@ -72,9 +72,9 @@ const usePomodoroStore = create(
         set({
           duration: minutes * 60,
           timeLeft: minutes * 60,
-          isRunning: false
+          isRunning: false,
         });
-      }
+      },
     }),
     {
       name: 'pomodoro-storage',
@@ -85,7 +85,7 @@ const usePomodoroStore = create(
         volume: state.volume,
         currentTask: state.currentTask,
         // We DO NOT persist running state, PiP, Fullscreen, or time to avoid weirdness on reload
-      })
+      }),
     }
   )
 );

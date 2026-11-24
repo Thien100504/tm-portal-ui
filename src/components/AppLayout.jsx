@@ -1,15 +1,30 @@
-import React from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useLocation, Link, useNavigate, useOutlet } from 'react-router-dom';
 import { flushSync } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, Moon, Monitor, Wifi, Menu, Bell, Info, CheckCircle, AlertTriangle, XCircle, UserCheck, Workflow, X, ChevronRight, Flame } from 'lucide-react';
+import {
+  Sun,
+  Moon,
+  Monitor,
+  Wifi,
+  Menu,
+  Bell,
+  Info,
+  CheckCircle,
+  AlertTriangle,
+  XCircle,
+  UserCheck,
+  Workflow,
+  X,
+  ChevronRight,
+  Flame,
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
-import { useTheme } from "@/contexts/useTheme";
+import { useTheme } from '@/contexts/useTheme';
 import { useAuth } from '@/hooks/useAuth';
 import projectService from '@/services/projectService';
 import notificationService from '@/services/notificationService';
-import { useState, useRef, useEffect } from 'react';
 import { DropdownMenu } from '@/components/ui/DropdownMenu';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { Badge } from '@/components/ui/Badge';
@@ -23,6 +38,7 @@ import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { vi as viLocale, enUS as enLocale } from 'date-fns/locale';
 import GlobalPomodoroManager from '@/components/pomodoro/GlobalPomodoroManager';
+import ChatBot from '@/components/ChatBot';
 import usePomodoroStore from '@/store/usePomodoroStore';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -44,7 +60,10 @@ function getNotifMeta(type) {
     case 'assignment':
       return { Icon: UserCheck, colorClass: 'bg-violet-500/10 text-violet-500' };
     case 'automation':
-      return { Icon: Workflow, colorClass: 'bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)]' };
+      return {
+        Icon: Workflow,
+        colorClass: 'bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)]',
+      };
     default:
       return { Icon: Info, colorClass: 'bg-sky-500/10 text-sky-500' };
   }
@@ -68,7 +87,7 @@ function NotificationBell() {
     queryKey: ['notifications', 'list', 8],
     queryFn: () => notificationService.getAll(8, 0),
     enabled: isOpen,
-    select: (data) => (Array.isArray(data) ? data : data?.items ?? []),
+    select: (data) => (Array.isArray(data) ? data : (data?.items ?? [])),
   });
 
   // Close on click outside
@@ -87,7 +106,9 @@ function NotificationBell() {
       await notificationService.markRead(id);
       queryClient.invalidateQueries({ queryKey: ['notifications-count'] });
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
-    } catch { /* noop */ }
+    } catch {
+      /* noop */
+    }
   };
 
   const handleMarkAllRead = async () => {
@@ -95,7 +116,9 @@ function NotificationBell() {
       await notificationService.markAllRead();
       queryClient.invalidateQueries({ queryKey: ['notifications-count'] });
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
-    } catch { /* noop */ }
+    } catch {
+      /* noop */
+    }
   };
 
   const hasUnread = notifications.some((n) => !n.is_read);
@@ -122,101 +145,107 @@ function NotificationBell() {
         }
         content={
           <div className="w-[360px]">
-          {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-            <div className="flex items-center gap-2">
-              <Bell className="w-4 h-4 text-foreground" />
-              <span className="text-sm font-semibold text-foreground">{t('sidebar.notifications')}</span>
-              {count > 0 && (
-                <span className="inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500/15 px-1 text-[9px] font-bold text-rose-500">
-                  {count}
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+              <div className="flex items-center gap-2">
+                <Bell className="w-4 h-4 text-foreground" />
+                <span className="text-sm font-semibold text-foreground">
+                  {t('sidebar.notifications')}
                 </span>
+                {count > 0 && (
+                  <span className="inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500/15 px-1 text-[9px] font-bold text-rose-500">
+                    {count}
+                  </span>
+                )}
+              </div>
+              <Link
+                to="/notifications"
+                onClick={() => setIsOpen(false)}
+                className="text-[11px] text-[color:var(--color-ai)] hover:underline font-medium"
+              >
+                See all →
+              </Link>
+            </div>
+
+            {/* Notification list */}
+            <div className="max-h-[400px] overflow-y-auto scrollbar-thin">
+              {notifications.length === 0 ? (
+                <div className="flex flex-col items-center justify-center gap-2.5 py-10 text-center">
+                  <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                    <Bell className="w-5 h-5 text-muted-foreground/40" />
+                  </div>
+                  <p className="text-[12px] text-muted-foreground">{t('common.all_caught_up')}</p>
+                </div>
+              ) : (
+                notifications.map((notif) => {
+                  const { Icon, colorClass } = getNotifMeta(notif.type);
+
+                  let title = notif.title_key
+                    ? t(notif.title_key, notif.title_params || {})
+                    : notif.title;
+                  let desc = notif.message_key
+                    ? t(notif.message_key, notif.message_params || {})
+                    : notif.message;
+
+                  return (
+                    <button
+                      key={notif.id}
+                      onClick={() => !notif.is_read && handleMarkRead(notif.id)}
+                      className={`w-full flex items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/50 border-b border-border/40 last:border-0 ${
+                        !notif.is_read ? 'bg-[color:var(--color-ai)]/[0.04]' : ''
+                      }`}
+                    >
+                      {/* Type icon */}
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${colorClass}`}
+                      >
+                        <Icon className="w-3.5 h-3.5" />
+                      </div>
+
+                      {/* Content */}
+                      <div className="flex-1 min-w-0">
+                        <p
+                          className={`text-[12px] font-medium leading-tight ${notif.is_read ? 'text-muted-foreground' : 'text-foreground'}`}
+                        >
+                          {title}
+                        </p>
+                        {desc && (
+                          <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-snug">
+                            {desc}
+                          </p>
+                        )}
+                        <p className="text-[10px] text-muted-foreground/50 mt-1">
+                          {formatRelativeTime(notif.created_at, i18n.language)}
+                        </p>
+                      </div>
+
+                      {/* Unread indicator */}
+                      {!notif.is_read && (
+                        <div className="w-2 h-2 rounded-full bg-[color:var(--color-ai)] shrink-0 mt-2" />
+                      )}
+                    </button>
+                  );
+                })
               )}
             </div>
-            <Link
-              to="/notifications"
-              onClick={() => setIsOpen(false)}
-              className="text-[11px] text-[color:var(--color-ai)] hover:underline font-medium"
-            >
-              See all →
-            </Link>
-          </div>
 
-          {/* Notification list */}
-          <div className="max-h-[400px] overflow-y-auto scrollbar-thin">
-            {notifications.length === 0 ? (
-              <div className="flex flex-col items-center justify-center gap-2.5 py-10 text-center">
-                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
-                  <Bell className="w-5 h-5 text-muted-foreground/40" />
-                </div>
-                <p className="text-[12px] text-muted-foreground">{t('common.all_caught_up')}</p>
+            {/* Footer: mark all */}
+            {hasUnread && (
+              <div className="border-t border-border px-4 py-2.5 flex items-center justify-between">
+                <button
+                  onClick={handleMarkAllRead}
+                  className="text-[11px] text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t('common.mark_all_read')}
+                </button>
+                <X
+                  className="w-3.5 h-3.5 text-muted-foreground/40 cursor-pointer hover:text-foreground transition-colors"
+                  onClick={() => setIsOpen(false)}
+                />
               </div>
-            ) : (
-              notifications.map((notif) => {
-                const { Icon, colorClass } = getNotifMeta(notif.type);
-
-                let title = notif.title_key
-                  ? t(notif.title_key, notif.title_params || {})
-                  : notif.title;
-                let desc = notif.message_key
-                  ? t(notif.message_key, notif.message_params || {})
-                  : notif.message;
-
-                return (
-                  <button
-                    key={notif.id}
-                    onClick={() => !notif.is_read && handleMarkRead(notif.id)}
-                    className={`w-full flex items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/50 border-b border-border/40 last:border-0 ${
-                      !notif.is_read ? 'bg-[color:var(--color-ai)]/[0.04]' : ''
-                    }`}
-                  >
-                    {/* Type icon */}
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${colorClass}`}>
-                      <Icon className="w-3.5 h-3.5" />
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1 min-w-0">
-                      <p className={`text-[12px] font-medium leading-tight ${notif.is_read ? 'text-muted-foreground' : 'text-foreground'}`}>
-                        {title}
-                      </p>
-                      {desc && (
-                        <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-snug">
-                          {desc}
-                        </p>
-                      )}
-                      <p className="text-[10px] text-muted-foreground/50 mt-1">
-                        {formatRelativeTime(notif.created_at, i18n.language)}
-                      </p>
-                    </div>
-
-                    {/* Unread indicator */}
-                    {!notif.is_read && (
-                      <div className="w-2 h-2 rounded-full bg-[color:var(--color-ai)] shrink-0 mt-2" />
-                    )}
-                  </button>
-                );
-              })
             )}
           </div>
-
-          {/* Footer: mark all */}
-          {hasUnread && (
-            <div className="border-t border-border px-4 py-2.5 flex items-center justify-between">
-              <button
-                onClick={handleMarkAllRead}
-                className="text-[11px] text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {t('common.mark_all_read')}
-              </button>
-              <X
-                className="w-3.5 h-3.5 text-muted-foreground/40 cursor-pointer hover:text-foreground transition-colors"
-                onClick={() => setIsOpen(false)}
-              />
-            </div>
-          )}
-        </div>
-      }
+        }
       />
     </div>
   );
@@ -225,7 +254,8 @@ function NotificationBell() {
 // ─── Pomodoro Quick Toggle ───────────────────────────────────────────────────
 
 function PomodoroQuickToggle() {
-  const { isRunning, isPipMode, setIsPipMode, timeLeft, duration, mode, currentTask } = usePomodoroStore();
+  const { isRunning, isPipMode, setIsPipMode, timeLeft, duration, mode, currentTask } =
+    usePomodoroStore();
   const { t } = useTranslation();
 
   const formatTime = (seconds) => {
@@ -247,10 +277,12 @@ function PomodoroQuickToggle() {
         </span>
       )}
       <span className="text-[9px] text-muted-foreground/80 uppercase tracking-widest border-t border-border/50 w-full text-center pt-1 mt-0.5">
-        {isPipMode ? "Hide PiP" : "Show PiP"}
+        {isPipMode ? 'Hide PiP' : 'Show PiP'}
       </span>
     </div>
-  ) : "Start Pomodoro";
+  ) : (
+    'Start Pomodoro'
+  );
 
   return (
     <Tooltip content={tooltipContent} position="bottom">
@@ -258,20 +290,22 @@ function PomodoroQuickToggle() {
         layout
         onClick={() => setIsPipMode(!isPipMode)}
         className={`h-8 flex items-center justify-center rounded-lg shadow-sm overflow-hidden transition-colors ${
-          isActive 
-            ? 'px-2.5 text-[color:var(--color-ai)] bg-[color:var(--color-ai)]/10 hover:bg-[color:var(--color-ai)]/20' 
+          isActive
+            ? 'px-2.5 text-[color:var(--color-ai)] bg-[color:var(--color-ai)]/10 hover:bg-[color:var(--color-ai)]/20'
             : 'w-8 px-0 text-muted-foreground hover:text-foreground hover:bg-muted/50'
         }`}
         style={{ touchAction: 'none' }}
-        transition={{ type: "spring", stiffness: 350, damping: 25 }}
+        transition={{ type: 'spring', stiffness: 350, damping: 25 }}
       >
         <motion.div layout="position" className="flex items-center gap-1.5">
-          <Flame className={`w-4 h-4 shrink-0 ${isRunning ? 'animate-pulse text-amber-500' : ''}`} />
+          <Flame
+            className={`w-4 h-4 shrink-0 ${isRunning ? 'animate-pulse text-amber-500' : ''}`}
+          />
           <AnimatePresence>
             {isActive && (
               <motion.span
                 initial={{ width: 0, opacity: 0 }}
-                animate={{ width: "auto", opacity: 1 }}
+                animate={{ width: 'auto', opacity: 1 }}
                 exit={{ width: 0, opacity: 0 }}
                 className="font-mono text-[11px] font-bold leading-none tracking-tight whitespace-nowrap overflow-hidden block"
               >
@@ -314,7 +348,7 @@ function TopBar({ onMenuClick }) {
     const pName = project?.name || t('projectOverview.loading');
     crumbs.push({ label: t('sidebar.projects'), to: '/projects' });
     crumbs.push({ label: pName, to: `/projects/${projectId}` });
-    
+
     if (pathname.includes('/kanban')) {
       crumbs.push({ label: t('sidebar.kanban') });
     } else if (pathname.includes('/sprints')) {
@@ -325,7 +359,10 @@ function TopBar({ onMenuClick }) {
       crumbs.push({ label: t('sidebar.automation') });
     }
   } else if (pathname !== '/' && pathname !== '/dashboard') {
-    let cleanName = pathname.replace('/', '').replace('-', ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    let cleanName = pathname
+      .replace('/', '')
+      .replace('-', ' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase());
     if (pathname.includes('/admin')) cleanName = 'Admin';
     if (pathname.includes('/settings')) cleanName = 'Settings';
     crumbs.push({ label: cleanName });
@@ -336,11 +373,12 @@ function TopBar({ onMenuClick }) {
   const isGlass = themeStyle === 'glass';
 
   return (
-    <header data-app-topbar className={`sticky top-0 z-30 flex h-12 items-center justify-between gap-4 border-b px-4 md:px-6 transition-colors ${
-      isGlass 
-        ? 'bg-background/85 border-border backdrop-blur-md' 
-        : 'bg-background border-border'
-    }`}>
+    <header
+      data-app-topbar
+      className={`sticky top-0 z-30 flex h-12 items-center justify-between gap-4 border-b px-4 md:px-6 transition-colors ${
+        isGlass ? 'bg-background/85 border-border backdrop-blur-md' : 'bg-background border-border'
+      }`}
+    >
       <div className="flex min-w-0 items-center text-[12px]">
         <Button
           variant="ghost"
@@ -350,27 +388,29 @@ function TopBar({ onMenuClick }) {
         >
           <Menu className="w-4 h-4" />
         </Button>
-        
+
         <div className="hidden sm:flex items-center text-muted-foreground font-medium shrink-0">
           <Link to="/" className="hover:text-foreground transition-colors">
             TaskFlow
           </Link>
         </div>
-        
+
         {crumbs.map((crumb, idx) => {
           const isLast = idx === crumbs.length - 1;
           return (
             <div key={idx} className="flex items-center min-w-0 shrink">
               <ChevronRight className="w-3.5 h-3.5 mx-1.5 text-muted-foreground/40 shrink-0" />
               {crumb.to && !isLast ? (
-                <Link 
-                  to={crumb.to} 
+                <Link
+                  to={crumb.to}
                   className="text-muted-foreground hover:text-foreground transition-colors truncate max-w-[120px] sm:max-w-[180px] lg:max-w-[240px] block font-medium"
                 >
                   {crumb.label}
                 </Link>
               ) : (
-                <span className={`truncate max-w-[140px] sm:max-w-[200px] lg:max-w-[280px] block ${isLast ? 'font-bold text-foreground tracking-tight' : 'font-medium text-muted-foreground'}`}>
+                <span
+                  className={`truncate max-w-[140px] sm:max-w-[200px] lg:max-w-[280px] block ${isLast ? 'font-bold text-foreground tracking-tight' : 'font-medium text-muted-foreground'}`}
+                >
                   {crumb.label}
                 </span>
               )}
@@ -378,8 +418,8 @@ function TopBar({ onMenuClick }) {
           );
         })}
         {activeWorkspace && (
-          <Badge 
-            variant="glass" 
+          <Badge
+            variant="glass"
             className={`ml-3 px-1.5 py-0.5 text-[9px] font-semibold border shrink-0 ${
               activeWorkspace.type === 'personal'
                 ? 'bg-[color:var(--color-ai)]/10 border-[color:var(--color-ai)]/20 text-[color:var(--color-ai)]'
@@ -414,9 +454,16 @@ function TopBar({ onMenuClick }) {
                 }
                 content={
                   <div className="w-max max-w-[200px] p-2.5">
-                    <p className="text-[12px] font-bold text-foreground truncate">{m.user?.full_name || t('common.user')}</p>
-                    <p className="text-[10px] text-muted-foreground truncate mb-1">{m.user?.email}</p>
-                    <Badge variant={isGlass ? "glass" : "outline"} className="text-[9px] px-1 py-0.5 mt-1 border-none bg-muted text-muted-foreground uppercase">
+                    <p className="text-[12px] font-bold text-foreground truncate">
+                      {m.user?.full_name || t('common.user')}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground truncate mb-1">
+                      {m.user?.email}
+                    </p>
+                    <Badge
+                      variant={isGlass ? 'glass' : 'outline'}
+                      className="text-[9px] px-1 py-0.5 mt-1 border-none bg-muted text-muted-foreground uppercase"
+                    >
                       {m.role?.name || t('role.custom_role')}
                     </Badge>
                   </div>
@@ -473,7 +520,13 @@ function TopBar({ onMenuClick }) {
                 className="w-8 h-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-background shadow-sm transition-colors"
                 aria-label="Toggle theme"
               >
-                {theme === 'dark' ? <Moon className="w-4 h-4" /> : theme === 'light' ? <Sun className="w-4 h-4" /> : <Monitor className="w-4 h-4" />}
+                {theme === 'dark' ? (
+                  <Moon className="w-4 h-4" />
+                ) : theme === 'light' ? (
+                  <Sun className="w-4 h-4" />
+                ) : (
+                  <Monitor className="w-4 h-4" />
+                )}
               </Button>
             }
             content={
@@ -481,7 +534,9 @@ function TopBar({ onMenuClick }) {
                 <button
                   onClick={() => setMode('light')}
                   className={`w-full flex items-center gap-2 px-2 py-1.5 text-xs rounded-md transition-colors ${
-                    theme === 'light' ? 'bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)] font-medium' : 'hover:bg-muted text-muted-foreground'
+                    theme === 'light'
+                      ? 'bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)] font-medium'
+                      : 'hover:bg-muted text-muted-foreground'
                   }`}
                 >
                   <Sun className="w-3.5 h-3.5" /> {t('settings.themeMode.light')}
@@ -489,7 +544,9 @@ function TopBar({ onMenuClick }) {
                 <button
                   onClick={() => setMode('dark')}
                   className={`w-full flex items-center gap-2 px-2 py-1.5 text-xs rounded-md transition-colors ${
-                    theme === 'dark' ? 'bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)] font-medium' : 'hover:bg-muted text-muted-foreground'
+                    theme === 'dark'
+                      ? 'bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)] font-medium'
+                      : 'hover:bg-muted text-muted-foreground'
                   }`}
                 >
                   <Moon className="w-3.5 h-3.5" /> {t('settings.themeMode.dark')}
@@ -497,7 +554,9 @@ function TopBar({ onMenuClick }) {
                 <button
                   onClick={() => setMode('system')}
                   className={`w-full flex items-center gap-2 px-2 py-1.5 text-xs rounded-md transition-colors ${
-                    theme === 'system' ? 'bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)] font-medium' : 'hover:bg-muted text-muted-foreground'
+                    theme === 'system'
+                      ? 'bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)] font-medium'
+                      : 'hover:bg-muted text-muted-foreground'
                   }`}
                 >
                   <Monitor className="w-3.5 h-3.5" /> {t('settings.themeMode.system')}
@@ -511,7 +570,6 @@ function TopBar({ onMenuClick }) {
           {/* Notification Bell */}
           <NotificationBell />
         </div>
-
       </div>
     </header>
   );
@@ -540,17 +598,19 @@ export default function AppLayout() {
   // Fix nested scroll for Lenis
   useEffect(() => {
     const handleWheel = (e) => {
-      const scrollable = e.target.closest('.overflow-y-auto, .overflow-auto, .overflow-x-auto, .scrollbar-thin');
+      const scrollable = e.target.closest(
+        '.overflow-y-auto, .overflow-auto, .overflow-x-auto, .scrollbar-thin'
+      );
       if (scrollable && scrollable.tagName.toLowerCase() !== 'main') {
         e.stopPropagation();
       }
     };
-    
+
     // Must use capture phase to intercept before ReactLenis does
     document.addEventListener('wheel', handleWheel, { capture: true, passive: true });
     document.addEventListener('touchstart', handleWheel, { capture: true, passive: true });
     document.addEventListener('touchmove', handleWheel, { capture: true, passive: true });
-    
+
     return () => {
       document.removeEventListener('wheel', handleWheel, { capture: true });
       document.removeEventListener('touchstart', handleWheel, { capture: true });
@@ -560,12 +620,8 @@ export default function AppLayout() {
 
   // Global WebSocket for notifications
   useWebSocket(null, (notif) => {
-    let title = notif.title_key
-      ? t(notif.title_key, notif.title_params || {})
-      : notif.title;
-    let desc = notif.message_key
-      ? t(notif.message_key, notif.message_params || {})
-      : notif.message;
+    let title = notif.title_key ? t(notif.title_key, notif.title_params || {}) : notif.title;
+    let desc = notif.message_key ? t(notif.message_key, notif.message_params || {}) : notif.message;
 
     if (!title) {
       title = t('notification.system.alert.title');
@@ -577,16 +633,22 @@ export default function AppLayout() {
     toast(title, {
       description: desc,
       duration: 5000,
-      action: (projectId && taskId) ? {
-        label: t('common.view_now'),
-        onClick: () => navigate(`/projects/${projectId}/kanban?taskId=${taskId}`)
-      } : undefined
+      action:
+        projectId && taskId
+          ? {
+              label: t('common.view_now'),
+              onClick: () => navigate(`/projects/${projectId}/kanban?taskId=${taskId}`),
+            }
+          : undefined,
     });
   });
 
   return (
     <MouseGlowBackground fullScreen>
-      <div data-app-shell className="flex h-screen w-full text-foreground overflow-hidden relative z-10">
+      <div
+        data-app-shell
+        className="flex h-screen w-full text-foreground overflow-hidden relative z-10"
+      >
         {/* Mobile Sidebar Overlay */}
         {mobileMenuOpen && (
           <div
@@ -596,8 +658,14 @@ export default function AppLayout() {
         )}
 
         {/* Mobile Sidebar Container */}
-        <div className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 md:relative md:transform-none ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
-          <Sidebar onMobileClose={() => setMobileMenuOpen(false)} isMobile={mobileMenuOpen} projectId={projectId} />
+        <div
+          className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 md:relative md:transform-none ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
+        >
+          <Sidebar
+            onMobileClose={() => setMobileMenuOpen(false)}
+            isMobile={mobileMenuOpen}
+            projectId={projectId}
+          />
         </div>
 
         <div className="flex min-w-0 flex-1 flex-col relative z-10">
@@ -609,18 +677,12 @@ export default function AppLayout() {
               className="flex-1 overflow-x-hidden overflow-y-auto px-4 py-4 md:px-6 relative"
             >
               <div className="mx-auto w-full max-w-[1400px]">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={location.pathname}
-                    initial={motionEnabled ? { opacity: 0, y: 15, filter: 'blur(8px)' } : { opacity: 0 }}
-                    animate={motionEnabled ? { opacity: 1, y: 0, filter: 'blur(0px)', transitionEnd: { transform: 'none', filter: 'none' } } : { opacity: 1 }}
-                    exit={motionEnabled ? { opacity: 0, y: -15, filter: 'blur(8px)' } : { opacity: 0 }}
-                    transition={motionEnabled ? { duration: 0.2, ease: [0.22, 1, 0.36, 1] } : { duration: 0 }}
-                    className="w-full"
-                  >
-                    {outlet && React.cloneElement(outlet, { key: location.pathname })}
-                  </motion.div>
-                </AnimatePresence>
+                <div
+                  key={location.pathname}
+                  className={motionEnabled ? 'animate-fade-up w-full' : 'w-full'}
+                >
+                  {outlet}
+                </div>
               </div>
             </ReactLenis>
             <div id="modal-root" className="absolute inset-0 pointer-events-none z-[100]"></div>
@@ -628,6 +690,7 @@ export default function AppLayout() {
         </div>
       </div>
       <GlobalPomodoroManager />
+      <ChatBot />
     </MouseGlowBackground>
   );
 }

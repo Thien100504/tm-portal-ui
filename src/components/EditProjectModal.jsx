@@ -1,8 +1,8 @@
 import { Save, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
 import projectService from '@/services/projectService';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
@@ -13,7 +13,13 @@ export default function EditProjectModal({ project, onClose }) {
   const qc = useQueryClient();
   const { t } = useTranslation();
 
-  const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm({
     defaultValues: {
       name: project?.name || '',
       description: project?.description || '',
@@ -21,7 +27,7 @@ export default function EditProjectModal({ project, onClose }) {
       end_date: project?.end_date || '',
       telegram_chat_id: project?.telegram_chat_id || '',
       status: project?.status || 'active',
-    }
+    },
   });
 
   const mutation = useMutation({
@@ -49,25 +55,41 @@ export default function EditProjectModal({ project, onClose }) {
             disabled={isSubmitting || mutation.isPending}
             size="sm"
           >
-            {mutation.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+            {mutation.isPending ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <Save className="w-3.5 h-3.5" />
+            )}
             {t('common.save')}
           </Button>
         </div>
       }
     >
-      <form id="edit-project-form" onSubmit={handleSubmit((data) => mutation.mutate(data))} className="p-5 flex flex-col gap-4">
+      <form
+        id="edit-project-form"
+        onSubmit={handleSubmit((data) => mutation.mutate(data))}
+        className="p-5 flex flex-col gap-4"
+      >
         <div>
-          <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">{t('project.name')} <span className="text-destructive">*</span></label>
+          <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">
+            {t('project.name')} <span className="text-destructive">*</span>
+          </label>
           <input
             {...register('name', { required: t('common.required_fields') })}
             className="w-full bg-background border border-border rounded-lg px-3 py-2 text-[13px] focus:outline-none focus:border-[color:var(--color-ai)] focus:ring-1 focus:ring-[color:var(--color-ai)] transition-all"
             autoFocus
           />
-          {errors.name && <p className="text-xs text-[color:var(--color-destructive)] mt-1">{errors.name.message}</p>}
+          {errors.name && (
+            <p className="text-xs text-[color:var(--color-destructive)] mt-1">
+              {errors.name.message}
+            </p>
+          )}
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">{t('project.description')}</label>
+          <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">
+            {t('project.description')}
+          </label>
           <textarea
             {...register('description')}
             rows={3}
@@ -77,17 +99,23 @@ export default function EditProjectModal({ project, onClose }) {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">{t('project.start_date')}</label>
+            <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">
+              {t('project.start_date')}
+            </label>
             <DatePicker {...register('start_date')} />
           </div>
           <div>
-            <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">{t('project.end_date')}</label>
+            <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">
+              {t('project.end_date')}
+            </label>
             <DatePicker {...register('end_date')} />
           </div>
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">{t('project.telegram_id')}</label>
+          <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">
+            {t('project.telegram_id')}
+          </label>
           <input
             {...register('telegram_chat_id')}
             placeholder="-5171357396"
@@ -96,7 +124,9 @@ export default function EditProjectModal({ project, onClose }) {
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">{t('project.status')}</label>
+          <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">
+            {t('project.status')}
+          </label>
           <CustomSelect
             options={[
               { value: 'active', label: t('project.status_active') },
