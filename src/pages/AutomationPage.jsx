@@ -4,10 +4,30 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import {
-  Workflow, Plus, Zap, ChevronDown, Trash2, Pencil,
-  ToggleLeft, ArrowRight, X, Loader2,
-  CheckSquare, Flag, UserCheck, AlertCircle, RefreshCw,
-  Sparkles, Copy, Check, MessageSquare, Clock, Unlock, Bot, UserPlus, Bell
+  Workflow,
+  Plus,
+  Zap,
+  ChevronDown,
+  Trash2,
+  Pencil,
+  ToggleLeft,
+  ArrowRight,
+  X,
+  Loader2,
+  CheckSquare,
+  Flag,
+  UserCheck,
+  AlertCircle,
+  RefreshCw,
+  Sparkles,
+  Copy,
+  Check,
+  MessageSquare,
+  Clock,
+  Unlock,
+  Bot,
+  UserPlus,
+  Bell,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import automationService from '@/services/automationService';
@@ -187,39 +207,47 @@ const ACTIONS = [
 ];
 
 const STATUS_OPTIONS = [
-  { value: 'todo',        labelKey: 'dashboard.status.todo',       dot: 'bg-muted-foreground/40' },
-  { value: 'in_progress', labelKey: 'dashboard.status.in_progress',  dot: 'bg-[color:var(--color-ai)]' },
-  { value: 'review',      labelKey: 'dashboard.status.review',       dot: 'bg-amber-500' },
-  { value: 'done',        labelKey: 'dashboard.status.done',         dot: 'bg-emerald-500' },
+  { value: 'todo', labelKey: 'dashboard.status.todo', dot: 'bg-muted-foreground/40' },
+  {
+    value: 'in_progress',
+    labelKey: 'dashboard.status.in_progress',
+    dot: 'bg-[color:var(--color-ai)]',
+  },
+  { value: 'review', labelKey: 'dashboard.status.review', dot: 'bg-amber-500' },
+  { value: 'done', labelKey: 'dashboard.status.done', dot: 'bg-emerald-500' },
 ];
 
 const PRIORITY_OPTIONS = [
-  { value: 'low',    labelKey: 'kanban.card.priority.low',       dot: 'bg-emerald-500' },
+  { value: 'low', labelKey: 'kanban.card.priority.low', dot: 'bg-emerald-500' },
   { value: 'medium', labelKey: 'kanban.card.priority.medium', dot: 'bg-amber-500' },
-  { value: 'high',   labelKey: 'kanban.card.priority.high',        dot: 'bg-red-500' },
+  { value: 'high', labelKey: 'kanban.card.priority.high', dot: 'bg-red-500' },
 ];
 
 const TEMPLATES = [
   {
-    name: 'Task done → Lower priority', nameKey: 'automationPage.tpl_done_low_priority',
+    name: 'Task done → Lower priority',
+    nameKey: 'automationPage.tpl_done_low_priority',
     trigger_event: 'task.status_changed',
     conditions: { to_status: 'done' },
     actions: { type: 'set_priority', value: 'low' },
   },
   {
-    name: 'Task assigned → Move to In Progress', nameKey: 'automationPage.tpl_assigned_in_progress',
+    name: 'Task assigned → Move to In Progress',
+    nameKey: 'automationPage.tpl_assigned_in_progress',
     trigger_event: 'task.assigned',
     conditions: null,
     actions: { type: 'set_status', value: 'in_progress' },
   },
   {
-    name: 'New task → Remove from sprint', nameKey: 'automationPage.tpl_created_remove_sprint',
+    name: 'New task → Remove from sprint',
+    nameKey: 'automationPage.tpl_created_remove_sprint',
     trigger_event: 'task.created',
     conditions: null,
     actions: { type: 'remove_from_sprint' },
   },
   {
-    name: 'High priority → Move to Review', nameKey: 'automationPage.tpl_high_to_review',
+    name: 'High priority → Move to Review',
+    nameKey: 'automationPage.tpl_high_to_review',
     trigger_event: 'task.priority_changed',
     conditions: { to_priority: 'high' },
     actions: { type: 'set_status', value: 'review' },
@@ -228,8 +256,12 @@ const TEMPLATES = [
 
 // ── Small helpers ─────────────────────────────────────────────────────────────
 
-function getTrigger(id) { return TRIGGERS.find(t => t.id === id); }
-function getAction(id) { return ACTIONS.find(a => a.id === id); }
+function getTrigger(id) {
+  return TRIGGERS.find((t) => t.id === id);
+}
+function getAction(id) {
+  return ACTIONS.find((a) => a.id === id);
+}
 
 function triggerLabel(rule, t) {
   const trig = getTrigger(rule.trigger_event);
@@ -237,7 +269,7 @@ function triggerLabel(rule, t) {
   const cond = rule.conditions || {};
   if (trig.conditionKey && cond[trig.conditionKey]) {
     const val = cond[trig.conditionKey];
-    const opt = [...STATUS_OPTIONS, ...PRIORITY_OPTIONS].find(o => o.value === val);
+    const opt = [...STATUS_OPTIONS, ...PRIORITY_OPTIONS].find((o) => o.value === val);
     return `${t(trig.labelKey)} "${opt ? t(opt.labelKey) : val}"`;
   }
   return t(trig.labelKey);
@@ -248,13 +280,13 @@ function actionLabel(rule, members = [], sprints = [], t) {
   if (!a) return rule.actions?.type || '?';
   const val = rule.actions?.value;
   if (!val) return t(a.labelKey);
-  
+
   if (a.valueType === 'user') {
-    const mem = members.find(m => m.user_id === val);
+    const mem = members.find((m) => m.user_id === val);
     return `${t(a.labelKey)} "${mem?.user?.full_name || mem?.user?.email || 'User'}"`;
   }
   if (a.valueType === 'sprint') {
-    const sprint = sprints.find(s => s.id === val);
+    const sprint = sprints.find((s) => s.id === val);
     return `${t(a.labelKey)} "${sprint?.name || 'Sprint'}"`;
   }
   if (a.valueType === 'number') {
@@ -263,8 +295,8 @@ function actionLabel(rule, members = [], sprints = [], t) {
   if (a.valueType === 'text') {
     return `${t(a.labelKey)} "${val}"`;
   }
-  
-  const opt = [...STATUS_OPTIONS, ...PRIORITY_OPTIONS].find(o => o.value === val);
+
+  const opt = [...STATUS_OPTIONS, ...PRIORITY_OPTIONS].find((o) => o.value === val);
   return `${t(a.labelKey)} "${opt ? t(opt.labelKey) : val}"`;
 }
 
@@ -272,17 +304,21 @@ function actionLabel(rule, members = [], sprints = [], t) {
 
 function MiniSelect({ value, onChange, options, placeholder, t }) {
   const [open, setOpen] = useState(false);
-  const selected = options.find(o => o.value === value);
+  const selected = options.find((o) => o.value === value);
   return (
     <div className="relative">
       <button
         type="button"
-        onClick={() => setOpen(v => !v)}
+        onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-border bg-card text-[12px] text-foreground hover:bg-muted/50 transition-colors min-w-[110px] w-full"
       >
         {selected && <span className={`w-2 h-2 rounded-full shrink-0 ${selected.dot || ''}`} />}
-        <span className="flex-1 text-left truncate">{selected ? (selected.label || t(selected.labelKey)) : placeholder}</span>
-        <ChevronDown className={`w-3 h-3 text-muted-foreground shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <span className="flex-1 text-left truncate">
+          {selected ? selected.label || t(selected.labelKey) : placeholder}
+        </span>
+        <ChevronDown
+          className={`w-3 h-3 text-muted-foreground shrink-0 transition-transform ${open ? 'rotate-180' : ''}`}
+        />
       </button>
       <AnimatePresence>
         {open && (
@@ -294,13 +330,18 @@ function MiniSelect({ value, onChange, options, placeholder, t }) {
             className="absolute top-full left-0 mt-1 w-full bg-card border border-border rounded-xl shadow-xl z-50 py-1 min-w-[140px]"
             onMouseLeave={() => setOpen(false)}
           >
-            {options.map(o => (
+            {options.map((o) => (
               <button
                 key={o.value}
                 type="button"
-                onClick={() => { onChange(o.value); setOpen(false); }}
+                onClick={() => {
+                  onChange(o.value);
+                  setOpen(false);
+                }}
                 className={`flex items-center gap-2 w-full px-3 py-1.5 text-[12px] text-left hover:bg-muted/50 transition-colors ${
-                  o.value === value ? 'text-[color:var(--color-ai)] font-semibold' : 'text-foreground'
+                  o.value === value
+                    ? 'text-[color:var(--color-ai)] font-semibold'
+                    : 'text-foreground'
                 }`}
               >
                 {o.dot && <span className={`w-2 h-2 rounded-full ${o.dot}`} />}
@@ -325,7 +366,7 @@ function RuleModal({ rule, sprints = [], members = [], onClose, onSave, isSaving
   const [triggerValue, setTriggerValue] = useState(() => {
     if (!rule?.conditions) return '';
     const triggerObj = getTrigger(rule.trigger_event);
-    return triggerObj?.conditionKey ? (rule.conditions[triggerObj.conditionKey] || '') : '';
+    return triggerObj?.conditionKey ? rule.conditions[triggerObj.conditionKey] || '' : '';
   });
   const [actionId, setActionId] = useState(rule?.actions?.type || 'set_status');
   const [actionValue, setActionValue] = useState(rule?.actions?.value || '');
@@ -337,18 +378,18 @@ function RuleModal({ rule, sprints = [], members = [], onClose, onSave, isSaving
     let tStr = trigger?.labelKey ? t(trigger.labelKey) : '';
     if (trigger?.hasValue && triggerValue) {
       const opts = trigger.valueType === 'status' ? STATUS_OPTIONS : PRIORITY_OPTIONS;
-      const opt = opts.find(o => o.value === triggerValue);
+      const opt = opts.find((o) => o.value === triggerValue);
       if (opt) tStr += ` ${t(opt.labelKey)}`;
     }
-    
+
     let aStr = action?.labelKey ? t(action.labelKey) : '';
     if (action?.hasValue && actionValue) {
       if (action.valueType === 'status' || action.valueType === 'priority') {
         const opts = action.valueType === 'status' ? STATUS_OPTIONS : PRIORITY_OPTIONS;
-        const opt = opts.find(o => o.value === actionValue);
+        const opt = opts.find((o) => o.value === actionValue);
         if (opt) aStr += ` ${t(opt.labelKey)}`;
       } else if (action.valueType === 'user') {
-        const mem = members.find(m => m.user_id === actionValue);
+        const mem = members.find((m) => m.user_id === actionValue);
         if (mem) aStr += ` ${mem.user?.full_name || mem.user?.email || 'User'}`;
       } else if (action.valueType === 'number') {
         aStr += ` ${actionValue}`;
@@ -356,7 +397,7 @@ function RuleModal({ rule, sprints = [], members = [], onClose, onSave, isSaving
         aStr += ` "${actionValue}"`;
       }
     }
-    
+
     if (!tStr || !aStr) return t('automationPage.rule_name');
     return `${tStr} → ${aStr}`;
   };
@@ -369,8 +410,14 @@ function RuleModal({ rule, sprints = [], members = [], onClose, onSave, isSaving
   const handleSubmit = (e) => {
     e.preventDefault();
     const finalName = name.trim() || generateDefaultName();
-    if (trigger?.hasValue && !triggerValue) { toast.error(t('automationPage.pick_trigger_value', 'Choose a trigger value')); return; }
-    if (action?.hasValue && !actionValue) { toast.error(t('automationPage.pick_action_value', 'Choose an action value')); return; }
+    if (trigger?.hasValue && !triggerValue) {
+      toast.error(t('automationPage.pick_trigger_value', 'Choose a trigger value'));
+      return;
+    }
+    if (action?.hasValue && !actionValue) {
+      toast.error(t('automationPage.pick_action_value', 'Choose an action value'));
+      return;
+    }
 
     const conditions = {};
     if (trigger?.conditionKey && triggerValue) conditions[trigger.conditionKey] = triggerValue;
@@ -397,170 +444,198 @@ function RuleModal({ rule, sprints = [], members = [], onClose, onSave, isSaving
           <Button type="button" variant="secondary" size="sm" onClick={onClose}>
             {t('common.cancel')}
           </Button>
-          <Button
-            type="submit"
-            form="automation-rule-form"
-            disabled={isSaving}
-            size="sm"
-          >
-            {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+          <Button type="submit" form="automation-rule-form" disabled={isSaving} size="sm">
+            {isSaving ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <Check className="w-3.5 h-3.5" />
+            )}
             {isEdit ? t('automationPage.save') : t('automationPage.create')}
           </Button>
         </div>
       }
     >
-        <form id="automation-rule-form" onSubmit={handleSubmit} className="p-5 space-y-5">
-          {/* Rule name */}
-          <div>
-            <label className="block text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
-              {t('automationPage.rule_name')}
-            </label>
-            <input
-              value={name}
-              onChange={e => setName(e.target.value)}
-              placeholder="..."
-              className="w-full px-3 py-2 rounded-lg border border-border bg-background text-[13px] text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-[color:var(--color-ai)]/30 focus:border-[color:var(--color-ai)]/50"
-            />
+      <form id="automation-rule-form" onSubmit={handleSubmit} className="p-5 space-y-5">
+        {/* Rule name */}
+        <div>
+          <label className="block text-[11px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
+            {t('automationPage.rule_name')}
+          </label>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="..."
+            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-[13px] text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-[color:var(--color-ai)]/30 focus:border-[color:var(--color-ai)]/50"
+          />
+        </div>
+
+        {/* IF block */}
+        <div className="rounded-xl border border-border">
+          <div className="px-4 py-2.5 bg-muted/30 border-b border-border flex items-center gap-2 rounded-t-xl">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+              IF
+            </span>
+            <span className="text-[11px] text-muted-foreground">
+              — {t('automationPage.trigger')}
+            </span>
           </div>
-
-          {/* IF block */}
-          <div className="rounded-xl border border-border">
-            <div className="px-4 py-2.5 bg-muted/30 border-b border-border flex items-center gap-2 rounded-t-xl">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">IF</span>
-              <span className="text-[11px] text-muted-foreground">— {t('automationPage.trigger')}</span>
+          <div className="p-4 space-y-3">
+            {/* Trigger selector */}
+            <div className="grid grid-cols-2 gap-2">
+              {TRIGGERS.map((tg) => (
+                <button
+                  key={tg.id}
+                  type="button"
+                  onClick={() => !isEdit && handleTriggerId(tg.id)}
+                  disabled={isEdit && triggerId !== tg.id}
+                  className={`flex items-start gap-2 p-2.5 rounded-lg border text-left transition-all ${
+                    triggerId === tg.id
+                      ? 'border-[color:var(--color-ai)]/50 bg-[color:var(--color-ai)]/5 ring-1 ring-[color:var(--color-ai)]/20'
+                      : 'border-border hover:border-border/80 hover:bg-muted/30'
+                  }`}
+                >
+                  <div className={`mt-0.5 p-1 rounded-md shrink-0 ${tg.bg}`}>
+                    <tg.icon className={`w-3 h-3 ${tg.color}`} />
+                  </div>
+                  <span className="text-[11px] font-medium text-foreground leading-tight">
+                    {t(tg.labelKey)}
+                  </span>
+                </button>
+              ))}
             </div>
-            <div className="p-4 space-y-3">
-              {/* Trigger selector */}
-              <div className="grid grid-cols-2 gap-2">
-                {TRIGGERS.map(tg => (
-                  <button
-                    key={tg.id}
-                    type="button"
-                    onClick={() => !isEdit && handleTriggerId(tg.id)}
-                    disabled={isEdit && triggerId !== tg.id}
-                    className={`flex items-start gap-2 p-2.5 rounded-lg border text-left transition-all ${
-                      triggerId === tg.id
-                        ? 'border-[color:var(--color-ai)]/50 bg-[color:var(--color-ai)]/5 ring-1 ring-[color:var(--color-ai)]/20'
-                        : 'border-border hover:border-border/80 hover:bg-muted/30'
-                    }`}
-                  >
-                    <div className={`mt-0.5 p-1 rounded-md shrink-0 ${tg.bg}`}>
-                      <tg.icon className={`w-3 h-3 ${tg.color}`} />
-                    </div>
-                    <span className="text-[11px] font-medium text-foreground leading-tight">{t(tg.labelKey)}</span>
-                  </button>
-                ))}
-              </div>
 
-              {/* Trigger value */}
-              {trigger?.hasValue && (
-                <div>
+            {/* Trigger value */}
+            {trigger?.hasValue && (
+              <div>
+                <MiniSelect
+                  value={triggerValue}
+                  onChange={setTriggerValue}
+                  options={trigger.valueType === 'status' ? STATUS_OPTIONS : PRIORITY_OPTIONS}
+                  placeholder="..."
+                  t={t}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Connector */}
+        <div className="flex items-center justify-center gap-2">
+          <div className="flex-1 h-px bg-border" />
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[color:var(--color-ai)]/10 border border-[color:var(--color-ai)]/20">
+            <ArrowRight className="w-3 h-3 text-[color:var(--color-ai)]" />
+            <span className="text-[10px] font-bold text-[color:var(--color-ai)] uppercase tracking-wide">
+              THEN
+            </span>
+          </div>
+          <div className="flex-1 h-px bg-border" />
+        </div>
+
+        {/* THEN block */}
+        <div className="rounded-xl border border-border">
+          <div className="px-4 py-2.5 bg-muted/30 border-b border-border flex items-center gap-2 rounded-t-xl">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+              THEN
+            </span>
+            <span className="text-[11px] text-muted-foreground">
+              — {t('automationPage.action')}
+            </span>
+          </div>
+          <div className="p-4 space-y-3">
+            {/* Action selector */}
+            <div className="grid grid-cols-2 gap-2">
+              {ACTIONS.map((a) => (
+                <button
+                  key={a.id}
+                  type="button"
+                  onClick={() => {
+                    setActionId(a.id);
+                    setActionValue('');
+                  }}
+                  className={`flex items-start gap-2 p-2.5 rounded-lg border text-left transition-all ${
+                    actionId === a.id
+                      ? 'border-[color:var(--color-ai)]/50 bg-[color:var(--color-ai)]/5 ring-1 ring-[color:var(--color-ai)]/20'
+                      : 'border-border hover:border-border/80 hover:bg-muted/30'
+                  }`}
+                >
+                  <div className={`mt-0.5 p-1 rounded-md shrink-0 ${a.bg}`}>
+                    <a.icon className={`w-3 h-3 ${a.color}`} />
+                  </div>
+                  <span className="text-[11px] font-medium text-foreground leading-tight">
+                    {t(a.labelKey)}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {/* Action value */}
+            {action?.hasValue && (
+              <div>
+                {action.valueType === 'text' ? (
+                  <textarea
+                    value={actionValue}
+                    onChange={(e) => setActionValue(e.target.value)}
+                    placeholder="..."
+                    className="w-full px-3 py-2 rounded-lg border border-border bg-background text-[13px] text-foreground focus:outline-none focus:ring-2 focus:ring-[color:var(--color-ai)]/30 min-h-[80px] resize-none"
+                  />
+                ) : action.valueType === 'number' ? (
+                  <input
+                    type="number"
+                    value={actionValue}
+                    onChange={(e) => setActionValue(e.target.value)}
+                    placeholder="..."
+                    className="w-full px-3 py-2 rounded-lg border border-border bg-background text-[13px] text-foreground focus:outline-none focus:ring-2 focus:ring-[color:var(--color-ai)]/30"
+                  />
+                ) : action.valueType === 'user' ? (
                   <MiniSelect
-                    value={triggerValue}
-                    onChange={setTriggerValue}
-                    options={trigger.valueType === 'status' ? STATUS_OPTIONS : PRIORITY_OPTIONS}
+                    value={actionValue}
+                    onChange={setActionValue}
+                    options={members.map((m) => ({
+                      value: m.user_id,
+                      label: m.user?.full_name || m.user?.email || 'Unknown User',
+                    }))}
                     placeholder="..."
                     t={t}
                   />
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Connector */}
-          <div className="flex items-center justify-center gap-2">
-            <div className="flex-1 h-px bg-border" />
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[color:var(--color-ai)]/10 border border-[color:var(--color-ai)]/20">
-              <ArrowRight className="w-3 h-3 text-[color:var(--color-ai)]" />
-              <span className="text-[10px] font-bold text-[color:var(--color-ai)] uppercase tracking-wide">THEN</span>
-            </div>
-            <div className="flex-1 h-px bg-border" />
-          </div>
-
-          {/* THEN block */}
-          <div className="rounded-xl border border-border">
-            <div className="px-4 py-2.5 bg-muted/30 border-b border-border flex items-center gap-2 rounded-t-xl">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">THEN</span>
-              <span className="text-[11px] text-muted-foreground">— {t('automationPage.action')}</span>
-            </div>
-            <div className="p-4 space-y-3">
-              {/* Action selector */}
-              <div className="grid grid-cols-2 gap-2">
-                {ACTIONS.map(a => (
-                  <button
-                    key={a.id}
-                    type="button"
-                    onClick={() => { setActionId(a.id); setActionValue(''); }}
-                    className={`flex items-start gap-2 p-2.5 rounded-lg border text-left transition-all ${
-                      actionId === a.id
-                        ? 'border-[color:var(--color-ai)]/50 bg-[color:var(--color-ai)]/5 ring-1 ring-[color:var(--color-ai)]/20'
-                        : 'border-border hover:border-border/80 hover:bg-muted/30'
-                    }`}
-                  >
-                    <div className={`mt-0.5 p-1 rounded-md shrink-0 ${a.bg}`}>
-                      <a.icon className={`w-3 h-3 ${a.color}`} />
-                    </div>
-                    <span className="text-[11px] font-medium text-foreground leading-tight">{t(a.labelKey)}</span>
-                  </button>
-                ))}
+                ) : action.valueType === 'sprint' ? (
+                  <MiniSelect
+                    value={actionValue}
+                    onChange={setActionValue}
+                    options={sprints.map((s) => ({ value: s.id, label: s.name }))}
+                    placeholder="..."
+                    t={t}
+                  />
+                ) : (
+                  <MiniSelect
+                    value={actionValue}
+                    onChange={setActionValue}
+                    options={action.valueType === 'status' ? STATUS_OPTIONS : PRIORITY_OPTIONS}
+                    placeholder="..."
+                    t={t}
+                  />
+                )}
               </div>
-
-              {/* Action value */}
-              {action?.hasValue && (
-                <div>
-                  {action.valueType === 'text' ? (
-                    <textarea
-                      value={actionValue}
-                      onChange={e => setActionValue(e.target.value)}
-                      placeholder="..."
-                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-[13px] text-foreground focus:outline-none focus:ring-2 focus:ring-[color:var(--color-ai)]/30 min-h-[80px] resize-none"
-                    />
-                  ) : action.valueType === 'number' ? (
-                    <input
-                      type="number"
-                      value={actionValue}
-                      onChange={e => setActionValue(e.target.value)}
-                      placeholder="..."
-                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-[13px] text-foreground focus:outline-none focus:ring-2 focus:ring-[color:var(--color-ai)]/30"
-                    />
-                  ) : action.valueType === 'user' ? (
-                    <MiniSelect
-                      value={actionValue}
-                      onChange={setActionValue}
-                      options={members.map(m => ({ value: m.user_id, label: m.user?.full_name || m.user?.email || 'Unknown User' }))}
-                      placeholder="..."
-                      t={t}
-                    />
-                  ) : action.valueType === 'sprint' ? (
-                    <MiniSelect
-                      value={actionValue}
-                      onChange={setActionValue}
-                      options={sprints.map(s => ({ value: s.id, label: s.name }))}
-                      placeholder="..."
-                      t={t}
-                    />
-                  ) : (
-                    <MiniSelect
-                      value={actionValue}
-                      onChange={setActionValue}
-                      options={action.valueType === 'status' ? STATUS_OPTIONS : PRIORITY_OPTIONS}
-                      placeholder="..."
-                      t={t}
-                    />
-                  )}
-                </div>
-              )}
-            </div>
+            )}
           </div>
-
-        </form>
+        </div>
+      </form>
     </Modal>
   );
 }
 
 // ── Rule Card ─────────────────────────────────────────────────────────────────
 
-function RuleCard({ rule, members, sprints, onToggle, onEdit, onDelete, isDeleting, canManage, t }) {
+function RuleCard({
+  rule,
+  members,
+  sprints,
+  onToggle,
+  onEdit,
+  onDelete,
+  isDeleting,
+  canManage,
+  t,
+}) {
   const trigger = getTrigger(rule.trigger_event);
   const action = getAction(rule.actions?.type);
   const TrigIcon = trigger?.icon || Zap;
@@ -573,47 +648,55 @@ function RuleCard({ rule, members, sprints, onToggle, onEdit, onDelete, isDeleti
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       className={`group transition-all ${
-        rule.is_active
-          ? 'shadow-sm hover:shadow-md'
-          : 'border-border/50 opacity-60'
+        rule.is_active ? 'shadow-sm hover:shadow-md' : 'border-border/50 opacity-60'
       }`}
     >
       <div className="p-4">
         {/* Title row */}
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex items-center gap-2 min-w-0">
-            <div className={`p-1.5 rounded-lg shrink-0 ${rule.is_active ? 'bg-[color:var(--color-ai)]/10' : 'bg-muted'}`}>
-              <Workflow className={`w-3.5 h-3.5 ${rule.is_active ? 'text-[color:var(--color-ai)]' : 'text-muted-foreground'}`} />
+            <div
+              className={`p-1.5 rounded-lg shrink-0 ${rule.is_active ? 'bg-[color:var(--color-ai)]/10' : 'bg-muted'}`}
+            >
+              <Workflow
+                className={`w-3.5 h-3.5 ${rule.is_active ? 'text-[color:var(--color-ai)]' : 'text-muted-foreground'}`}
+              />
             </div>
             <span className="text-[13px] font-semibold text-foreground truncate">{rule.name}</span>
           </div>
 
           {/* Actions */}
           {canManage && (
-          <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button
-              onClick={() => onEdit(rule)}
-              className="p-1.5 rounded-md text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
-              title={t('common.edit', 'Edit')}
-            >
-              <Pencil className="w-3.5 h-3.5" />
-            </button>
-            <button
-              onClick={() => onDelete(rule)}
-              disabled={isDeleting}
-              className="p-1.5 rounded-md text-muted-foreground hover:bg-red-500/10 hover:text-red-500 transition-colors"
-              title={t('common.delete', 'Delete')}
-            >
-              {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
-            </button>
-          </div>
+            <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button
+                onClick={() => onEdit(rule)}
+                className="p-1.5 rounded-md text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
+                title={t('common.edit', 'Edit')}
+              >
+                <Pencil className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => onDelete(rule)}
+                disabled={isDeleting}
+                className="p-1.5 rounded-md text-muted-foreground hover:bg-red-500/10 hover:text-red-500 transition-colors"
+                title={t('common.delete', 'Delete')}
+              >
+                {isDeleting ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Trash2 className="w-3.5 h-3.5" />
+                )}
+              </button>
+            </div>
           )}
         </div>
 
         {/* IF → THEN visual */}
         <div className="flex items-center gap-2 flex-wrap">
           {/* Trigger chip */}
-          <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] font-medium ${trigger?.bg || 'bg-muted'} border-transparent`}>
+          <div
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] font-medium ${trigger?.bg || 'bg-muted'} border-transparent`}
+          >
             <TrigIcon className={`w-3 h-3 ${trigger?.color || 'text-muted-foreground'}`} />
             <span className="text-foreground">{triggerLabel(rule, t)}</span>
           </div>
@@ -625,7 +708,9 @@ function RuleCard({ rule, members, sprints, onToggle, onEdit, onDelete, isDeleti
           </div>
 
           {/* Action chip */}
-          <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] font-medium ${action?.bg || 'bg-muted'} border-transparent`}>
+          <div
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] font-medium ${action?.bg || 'bg-muted'} border-transparent`}
+          >
             <ActIcon className={`w-3 h-3 ${action?.color || 'text-muted-foreground'}`} />
             <span className="text-foreground">{actionLabel(rule, members, sprints, t)}</span>
           </div>
@@ -638,8 +723,12 @@ function RuleCard({ rule, members, sprints, onToggle, onEdit, onDelete, isDeleti
           {rule.is_active ? t('automationPage.status.active') : t('automationPage.status.inactive')}
         </span>
         <div className="flex items-center gap-2">
-          <span className={`text-[11px] font-medium ${rule.is_active ? 'text-[color:var(--color-ai)]' : 'text-muted-foreground/50'}`}>
-            {rule.is_active ? t('automationPage.status.turn_on') : t('automationPage.status.turn_off')}
+          <span
+            className={`text-[11px] font-medium ${rule.is_active ? 'text-[color:var(--color-ai)]' : 'text-muted-foreground/50'}`}
+          >
+            {rule.is_active
+              ? t('automationPage.status.turn_on')
+              : t('automationPage.status.turn_off')}
           </span>
           <Switch
             checked={rule.is_active}
@@ -661,11 +750,17 @@ function TemplateCard({ tpl, onUse, t }) {
   const ActIcon = action?.icon || CheckSquare;
 
   return (
-    <Card className="border-dashed bg-muted/20 p-3.5 hover:bg-muted/40 hover:border-border transition-all group cursor-pointer" onClick={() => onUse(tpl)}>
+    <Card
+      className="border-dashed bg-muted/20 p-3.5 hover:bg-muted/40 hover:border-border transition-all group cursor-pointer"
+      onClick={() => onUse(tpl)}
+    >
       <div className="flex items-start justify-between gap-2 mb-2.5">
         <p className="text-[12px] font-semibold text-foreground">{t(tpl.nameKey, tpl.name)}</p>
         <button
-          onClick={e => { e.stopPropagation(); onUse(tpl); }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onUse(tpl);
+          }}
           className="shrink-0 flex items-center gap-1 text-[10px] text-[color:var(--color-ai)] opacity-0 group-hover:opacity-100 transition-opacity font-medium"
         >
           <Copy className="w-3 h-3" />
@@ -673,14 +768,22 @@ function TemplateCard({ tpl, onUse, t }) {
         </button>
       </div>
       <div className="flex items-center gap-1.5 flex-wrap">
-        <div className={`flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium ${trigger?.bg}`}>
+        <div
+          className={`flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium ${trigger?.bg}`}
+        >
           <TrigIcon className={`w-2.5 h-2.5 ${trigger?.color}`} />
-          <span className="text-foreground/80">{trigger ? t(trigger.labelKey) : tpl.trigger_event}</span>
+          <span className="text-foreground/80">
+            {trigger ? t(trigger.labelKey) : tpl.trigger_event}
+          </span>
         </div>
         <ArrowRight className="w-2.5 h-2.5 text-muted-foreground/50" />
-        <div className={`flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium ${action?.bg}`}>
+        <div
+          className={`flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium ${action?.bg}`}
+        >
           <ActIcon className={`w-2.5 h-2.5 ${action?.color}`} />
-          <span className="text-foreground/80">{action ? t(action.labelKey) : tpl.actions?.type}</span>
+          <span className="text-foreground/80">
+            {action ? t(action.labelKey) : tpl.actions?.type}
+          </span>
         </div>
       </div>
     </Card>
@@ -702,7 +805,7 @@ export default function AutomationPage() {
     queryKey: ['projects'],
     queryFn: projectService.getProjects,
     staleTime: 5 * 60 * 1000,
-    select: data => data || [],
+    select: (data) => data || [],
   });
 
   // Sprints for the sprint action value selector
@@ -711,7 +814,7 @@ export default function AutomationPage() {
     queryFn: () => sprintService.getSprints(projectId),
     enabled: !!projectId,
     staleTime: 2 * 60 * 1000,
-    select: data => data || [],
+    select: (data) => data || [],
   });
 
   // Members for the user action value selector
@@ -720,7 +823,7 @@ export default function AutomationPage() {
     queryFn: () => projectService.getMembers(projectId),
     enabled: !!projectId,
     staleTime: 5 * 60 * 1000,
-    select: data => data || [],
+    select: (data) => data || [],
   });
 
   // Rules
@@ -729,7 +832,7 @@ export default function AutomationPage() {
     queryFn: () => automationService.getRules(projectId),
     enabled: !!projectId,
     staleTime: 30 * 1000,
-    select: data => data || [],
+    select: (data) => data || [],
   });
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ['automation-rules', projectId] });
@@ -737,21 +840,31 @@ export default function AutomationPage() {
   // Only the project owner or a PM (project.settings) may change rules
   const { user: currentUser } = useAuth();
   const { can } = useProjectPermissions(projectId);
-  const project = _projects.find(p => p.id === projectId);
+  const project = _projects.find((p) => p.id === projectId);
   const canManage = project?.owner_id === currentUser?.id || can('project.settings');
 
   // Create
   const createMutation = useMutation({
     mutationFn: (data) => automationService.createRule(projectId, data),
-    onSuccess: () => { invalidate(); setModalState(null); toast.success(t('automationPage.created', 'Automation rule created')); },
-    onError: (err) => toast.error(getApiError(err, t('automationPage.create_failed', 'Could not create the rule'))),
+    onSuccess: () => {
+      invalidate();
+      setModalState(null);
+      toast.success(t('automationPage.created', 'Automation rule created'));
+    },
+    onError: (err) =>
+      toast.error(getApiError(err, t('automationPage.create_failed', 'Could not create the rule'))),
   });
 
   // Update
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => automationService.updateRule(id, data),
-    onSuccess: () => { invalidate(); setModalState(null); toast.success(t('automationPage.updated', 'Rule updated')); },
-    onError: (err) => toast.error(getApiError(err, t('automationPage.update_failed', 'Update failed'))),
+    onSuccess: () => {
+      invalidate();
+      setModalState(null);
+      toast.success(t('automationPage.updated', 'Rule updated'));
+    },
+    onError: (err) =>
+      toast.error(getApiError(err, t('automationPage.update_failed', 'Update failed'))),
   });
 
   // Toggle
@@ -760,26 +873,35 @@ export default function AutomationPage() {
     onMutate: async (ruleId) => {
       await qc.cancelQueries({ queryKey: ['automation-rules', projectId] });
       const previousRules = qc.getQueryData(['automation-rules', projectId]);
-      qc.setQueryData(['automation-rules', projectId], (old) => 
-        old?.map(r => r.id === ruleId ? { ...r, is_active: !r.is_active } : r)
+      qc.setQueryData(['automation-rules', projectId], (old) =>
+        old?.map((r) => (r.id === ruleId ? { ...r, is_active: !r.is_active } : r))
       );
       return { previousRules };
     },
-    onError: (err, ruleId, context) => { 
+    onError: (err, ruleId, context) => {
       if (context?.previousRules) {
         qc.setQueryData(['automation-rules', projectId], context.previousRules);
       }
-      toast.error(getApiError(err, t('automationPage.toggle_failed', 'Could not change the status')));
+      toast.error(
+        getApiError(err, t('automationPage.toggle_failed', 'Could not change the status'))
+      );
     },
-    onSettled: () => invalidate()
+    onSettled: () => invalidate(),
   });
 
   // Delete
   const deleteMutation = useMutation({
     mutationFn: (ruleId) => automationService.deleteRule(ruleId),
     onMutate: (ruleId) => setDeletingId(ruleId),
-    onSuccess: () => { invalidate(); setDeletingId(null); toast.success(t('automationPage.deleted', 'Rule deleted')); },
-    onError: (err) => { toast.error(getApiError(err, t('automationPage.delete_failed', 'Delete failed'))); setDeletingId(null); },
+    onSuccess: () => {
+      invalidate();
+      setDeletingId(null);
+      toast.success(t('automationPage.deleted', 'Rule deleted'));
+    },
+    onError: (err) => {
+      toast.error(getApiError(err, t('automationPage.delete_failed', 'Delete failed')));
+      setDeletingId(null);
+    },
   });
 
   const handleSave = (formData) => {
@@ -791,10 +913,13 @@ export default function AutomationPage() {
   };
 
   const openCreate = (prefill = null) => {
-    setModalState({ mode: 'create', rule: prefill ? { ...prefill, name: t(prefill.nameKey, prefill.name), id: null } : null });
+    setModalState({
+      mode: 'create',
+      rule: prefill ? { ...prefill, name: t(prefill.nameKey, prefill.name), id: null } : null,
+    });
   };
 
-  const activeCount = rules.filter(r => r.is_active).length;
+  const activeCount = rules.filter((r) => r.is_active).length;
 
   return (
     <div className="max-w-4xl mx-auto pb-12">
@@ -806,7 +931,9 @@ export default function AutomationPage() {
               <Workflow className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-foreground tracking-tight">{t('automationPage.title')}</h1>
+              <h1 className="text-xl font-bold text-foreground tracking-tight">
+                {t('automationPage.title')}
+              </h1>
               <p className="text-[12px] text-muted-foreground mt-0.5">
                 {t('automationPage.subtitle')}
               </p>
@@ -829,17 +956,37 @@ export default function AutomationPage() {
         {!projectId ? (
           <div className="flex flex-col items-center justify-center h-full gap-3 text-center">
             <Workflow className="w-10 h-10 text-muted-foreground/30" />
-            <p className="text-[14px] text-muted-foreground">{t('automationPage.pick_project', 'Choose a project to see its automation rules')}</p>
+            <p className="text-[14px] text-muted-foreground">
+              {t('automationPage.pick_project', 'Choose a project to see its automation rules')}
+            </p>
           </div>
         ) : (
           <div className="max-w-3xl mx-auto space-y-6">
             {/* Stats row */}
             <div className="grid grid-cols-3 gap-3">
               {[
-                { label: t('automationPage.total_rules'), value: rules.length, icon: Workflow, color: 'text-[color:var(--color-ai)]', bg: 'bg-[color:var(--color-ai)]/10' },
-                { label: t('automationPage.status.active'), value: activeCount, icon: Zap, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-                { label: t('automationPage.status.inactive'), value: rules.length - activeCount, icon: ToggleLeft, color: 'text-muted-foreground', bg: 'bg-muted/50' },
-              ].map(stat => (
+                {
+                  label: t('automationPage.total_rules'),
+                  value: rules.length,
+                  icon: Workflow,
+                  color: 'text-[color:var(--color-ai)]',
+                  bg: 'bg-[color:var(--color-ai)]/10',
+                },
+                {
+                  label: t('automationPage.status.active'),
+                  value: activeCount,
+                  icon: Zap,
+                  color: 'text-emerald-500',
+                  bg: 'bg-emerald-500/10',
+                },
+                {
+                  label: t('automationPage.status.inactive'),
+                  value: rules.length - activeCount,
+                  icon: ToggleLeft,
+                  color: 'text-muted-foreground',
+                  bg: 'bg-muted/50',
+                },
+              ].map((stat) => (
                 <MotionCard
                   key={stat.label}
                   initial={{ opacity: 0, y: 6 }}
@@ -860,7 +1007,7 @@ export default function AutomationPage() {
             {/* Rules list */}
             {isLoading ? (
               <div className="space-y-3">
-                {[0,1,2].map(i => (
+                {[0, 1, 2].map((i) => (
                   <div key={i} className="h-24 rounded-xl bg-muted/30 animate-pulse" />
                 ))}
               </div>
@@ -870,7 +1017,9 @@ export default function AutomationPage() {
                   <Workflow className="w-6 h-6 text-muted-foreground/30" />
                 </div>
                 <div>
-                  <h3 className="text-[14px] font-medium text-foreground mt-4">{t('automationPage.no_rules')}</h3>
+                  <h3 className="text-[14px] font-medium text-foreground mt-4">
+                    {t('automationPage.no_rules')}
+                  </h3>
                   <p className="text-[12px] text-muted-foreground mt-1 mb-6 text-center max-w-sm">
                     {t('automationPage.no_rules_desc')}
                   </p>
@@ -893,7 +1042,7 @@ export default function AutomationPage() {
                 </div>
                 <div className="grid grid-cols-1 gap-3">
                   <AnimatePresence mode="popLayout">
-                    {rules.map(rule => (
+                    {rules.map((rule) => (
                       <RuleCard
                         key={rule.id}
                         rule={rule}
@@ -931,14 +1080,28 @@ export default function AutomationPage() {
             <Card className="bg-muted/20 p-4">
               <div className="flex items-center gap-2 mb-3">
                 <AlertCircle className="w-3.5 h-3.5 text-muted-foreground" />
-                <h3 className="text-[12px] font-semibold text-foreground">{t('automationPage.how_it_works')}</h3>
+                <h3 className="text-[12px] font-semibold text-foreground">
+                  {t('automationPage.how_it_works')}
+                </h3>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[11px] text-muted-foreground">
                 {[
-                  { step: '1', title: t('automationPage.step_1_title'), desc: t('automationPage.step_1_desc') },
-                  { step: '2', title: t('automationPage.step_2_title'), desc: t('automationPage.step_2_desc') },
-                  { step: '3', title: t('automationPage.step_3_title'), desc: t('automationPage.step_3_desc') },
-                ].map(item => (
+                  {
+                    step: '1',
+                    title: t('automationPage.step_1_title'),
+                    desc: t('automationPage.step_1_desc'),
+                  },
+                  {
+                    step: '2',
+                    title: t('automationPage.step_2_title'),
+                    desc: t('automationPage.step_2_desc'),
+                  },
+                  {
+                    step: '3',
+                    title: t('automationPage.step_3_title'),
+                    desc: t('automationPage.step_3_desc'),
+                  },
+                ].map((item) => (
                   <div key={item.step} className="flex gap-2">
                     <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[color:var(--color-ai)]/15 text-[color:var(--color-ai)] text-[10px] font-bold">
                       {item.step}
@@ -977,7 +1140,10 @@ export default function AutomationPage() {
           setDeleteTarget(null);
         }}
         title={t('automationPage.delete_title', 'Delete automation rule')}
-        description={t('automationPage.delete_desc', { name: deleteTarget?.name, defaultValue: 'Rule "{{name}}" will be permanently deleted.' })}
+        description={t('automationPage.delete_desc', {
+          name: deleteTarget?.name,
+          defaultValue: 'Rule "{{name}}" will be permanently deleted.',
+        })}
         isDeleting={deleteMutation.isPending}
       />
     </div>

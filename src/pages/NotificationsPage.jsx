@@ -3,11 +3,21 @@ import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import {
-  Bell, BellOff, Info, CheckCircle, AlertTriangle, XCircle,
-  UserCheck, Workflow, Check, CheckCheck, RefreshCw, Filter
+  Bell,
+  BellOff,
+  Info,
+  CheckCircle,
+  AlertTriangle,
+  XCircle,
+  UserCheck,
+  Workflow,
+  Check,
+  CheckCheck,
+  RefreshCw,
+  Filter,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { useTheme } from "@/contexts/useTheme";
+import { useTheme } from '@/contexts/useTheme';
 import notificationService from '@/services/notificationService';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -29,7 +39,7 @@ function formatDateGroup(dateStr, t, lang) {
 
   if (date.toDateString() === today.toDateString()) return t('common.today');
   if (date.toDateString() === yesterday.toDateString()) return t('common.yesterday');
-  
+
   const locale = lang === 'vi' ? viLocale : enLocale;
   return format(date, 'EEEE, d MMMM', { locale });
 }
@@ -37,15 +47,31 @@ function formatDateGroup(dateStr, t, lang) {
 function getNotifMeta(type) {
   switch (type) {
     case 'success':
-      return { Icon: CheckCircle, colorClass: 'bg-emerald-500/10 text-emerald-500', label: 'Success' };
+      return {
+        Icon: CheckCircle,
+        colorClass: 'bg-emerald-500/10 text-emerald-500',
+        label: 'Success',
+      };
     case 'warning':
-      return { Icon: AlertTriangle, colorClass: 'bg-amber-500/10 text-amber-500', label: 'Warning' };
+      return {
+        Icon: AlertTriangle,
+        colorClass: 'bg-amber-500/10 text-amber-500',
+        label: 'Warning',
+      };
     case 'error':
       return { Icon: XCircle, colorClass: 'bg-rose-500/10 text-rose-500', label: 'Error' };
     case 'assignment':
-      return { Icon: UserCheck, colorClass: 'bg-violet-500/10 text-violet-500', label: 'Assignment' };
+      return {
+        Icon: UserCheck,
+        colorClass: 'bg-violet-500/10 text-violet-500',
+        label: 'Assignment',
+      };
     case 'automation':
-      return { Icon: Workflow, colorClass: 'bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)]', label: 'Automation' };
+      return {
+        Icon: Workflow,
+        colorClass: 'bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)]',
+        label: 'Automation',
+      };
     default:
       return { Icon: Info, colorClass: 'bg-sky-500/10 text-sky-500', label: 'Info' };
   }
@@ -90,10 +116,15 @@ export default function NotificationsPage() {
     queryFn: () => notificationService.getUnreadCount(),
   });
 
-  const { data: rawData = [], isLoading, isError, refetch } = useQuery({
+  const {
+    data: rawData = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ['notifications', 'list', 50],
     queryFn: () => notificationService.getAll(50, 0),
-    select: (data) => (Array.isArray(data) ? data : data?.items ?? []),
+    select: (data) => (Array.isArray(data) ? data : (data?.items ?? [])),
   });
 
   // Apply filter
@@ -151,7 +182,9 @@ export default function NotificationsPage() {
           </div>
           <div className="flex flex-col justify-center">
             <div className="flex items-center gap-2.5 mb-1.5">
-              <h1 className="text-2xl font-bold text-foreground tracking-tight leading-none">{t('sidebar.notifications')}</h1>
+              <h1 className="text-2xl font-bold text-foreground tracking-tight leading-none">
+                {t('sidebar.notifications')}
+              </h1>
               {count > 0 && (
                 <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white leading-none">
                   {count > 99 ? '99+' : count}
@@ -159,7 +192,9 @@ export default function NotificationsPage() {
               )}
             </div>
             <p className="text-sm text-muted-foreground leading-none">
-              {count > 0 ? `${count} ${t('notifications.unread_notifs')}` : t('common.all_caught_up')}
+              {count > 0
+                ? `${count} ${t('notifications.unread_notifs')}`
+                : t('common.all_caught_up')}
             </p>
           </div>
         </div>
@@ -193,9 +228,12 @@ export default function NotificationsPage() {
         <Filter className="w-3.5 h-3.5 text-muted-foreground mr-1" />
         {getFilters(t).map((f) => {
           const isActive = filter === f.key;
-          const filterCount = f.key === 'all' ? rawData.length
-            : f.key === 'unread' ? count
-            : rawData.filter(n => n.entity_type === f.key).length;
+          const filterCount =
+            f.key === 'all'
+              ? rawData.length
+              : f.key === 'unread'
+                ? count
+                : rawData.filter((n) => n.entity_type === f.key).length;
           return (
             <button
               key={f.key}
@@ -208,9 +246,11 @@ export default function NotificationsPage() {
             >
               {f.label}
               {filterCount > 0 && (
-                <span className={`inline-flex h-3.5 min-w-[14px] items-center justify-center rounded-full px-0.5 text-[8px] font-bold ${
-                  isActive ? 'bg-background/20 text-background' : 'bg-rose-500/15 text-rose-500'
-                }`}>
+                <span
+                  className={`inline-flex h-3.5 min-w-[14px] items-center justify-center rounded-full px-0.5 text-[8px] font-bold ${
+                    isActive ? 'bg-background/20 text-background' : 'bg-rose-500/15 text-rose-500'
+                  }`}
+                >
                   {filterCount}
                 </span>
               )}
@@ -220,12 +260,16 @@ export default function NotificationsPage() {
       </div>
 
       {/* Notification List */}
-      <div className={`rounded-xl border border-border overflow-hidden ${isGlass ? 'bg-card/80 backdrop-blur-md' : 'bg-card'}`}>
+      <div
+        className={`rounded-xl border border-border overflow-hidden ${isGlass ? 'bg-card/80 backdrop-blur-md' : 'bg-card'}`}
+      >
         {isLoading ? (
           Array.from({ length: 5 }).map((_, i) => <NotifSkeleton key={i} />)
         ) : isError ? (
           <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-            <p className="text-sm font-medium text-foreground">{t('server.notification_unavailable')}</p>
+            <p className="text-sm font-medium text-foreground">
+              {t('server.notification_unavailable')}
+            </p>
             <Button variant="outline" size="sm" onClick={() => refetch()}>
               {t('notifications.retry', 'Retry')}
             </Button>
@@ -240,7 +284,9 @@ export default function NotificationsPage() {
                 {filter === 'unread' ? t('notifications.no_unread') : t('notifications.no_notifs')}
               </p>
               <p className="text-[12px] text-muted-foreground">
-                {filter === 'unread' ? t('common.all_caught_up') : t('notifications.will_let_you_know')}
+                {filter === 'unread'
+                  ? t('common.all_caught_up')
+                  : t('notifications.will_let_you_know')}
               </p>
             </div>
           </div>
@@ -275,14 +321,18 @@ export default function NotificationsPage() {
                     }`}
                   >
                     {/* Icon */}
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${colorClass}`}>
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${colorClass}`}
+                    >
                       <Icon className="w-4 h-4" />
                     </div>
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
-                        <p className={`text-[13px] font-medium leading-tight ${notif.is_read ? 'text-muted-foreground' : 'text-foreground'}`}>
+                        <p
+                          className={`text-[13px] font-medium leading-tight ${notif.is_read ? 'text-muted-foreground' : 'text-foreground'}`}
+                        >
                           {title}
                         </p>
                         <span className="text-[10px] text-muted-foreground/60 shrink-0 mt-0.5">
@@ -328,7 +378,10 @@ export default function NotificationsPage() {
                           {t('notifications.mark_read')}
                         </Button>
                       ) : (
-                        <div className="w-2 h-2 rounded-full bg-muted" title={t('notifications.read', 'Read')} />
+                        <div
+                          className="w-2 h-2 rounded-full bg-muted"
+                          title={t('notifications.read', 'Read')}
+                        />
                       )}
                       {!notif.is_read && (
                         <div className="w-2 h-2 rounded-full bg-[color:var(--color-ai)]" />

@@ -37,8 +37,7 @@
     "unknown_user": "Người dùng",
     "joined": "Ngày tham gia",
     "error_occurred": "Đã xảy ra lỗi",
-    "action_cannot_undo": "Hành động này không thể hoàn tác. Nhập ",
-    "to_confirm": " để xác nhận."
+    "clear": "Xóa"
   },
   "sidebar": {
     "dashboard": "Tổng quan",
@@ -104,7 +103,8 @@
     "register_error_fallback": "Đăng ký thất bại",
     "register_success_msg": "Đăng ký thành công",
     "invalid_email": "Email không hợp lệ",
-    "password_mismatch": "Mật khẩu không khớp"
+    "password_mismatch": "Mật khẩu không khớp",
+    "account_locked": "Tài khoản của bạn đã bị khóa tạm thời do đăng nhập sai quá nhiều lần. Vui lòng thử lại sau 15 phút."
   },
   "password": {
     "requires_uppercase": "Mật khẩu phải chứa ít nhất một chữ hoa.",
@@ -145,7 +145,10 @@
     "telegram_id_placeholder": "VD: -5171357396",
     "telegram_hint_1": "Mời Bot",
     "telegram_hint_2": "vào nhóm và dùng lệnh /start để nhận thông báo tự động.",
-    "remove_member_confirm": "{{name}} sẽ bị xóa khỏi project và không thể truy cập task nữa."
+    "remove_member_confirm": "{{name}} sẽ bị xóa khỏi project và không thể truy cập task nữa.",
+    "member_add_failed": "Không thể thêm thành viên",
+    "member_updated": "Đã cập nhật vai trò",
+    "workspace_suggestions": "Gợi ý từ Workspace"
   },
   "user": {
     "not_found": "Không tìm thấy người dùng."
@@ -232,36 +235,6 @@
   "notification": {
     "not_found": "Không tìm thấy thông báo.",
     "task": {
-      "assigned": {
-        "title": "👤 Việc mới cho bạn",
-        "message": "Bạn được giao task \"{{title}}\"."
-      },
-      "updated": {
-        "title": "🔄 Cập nhật Task",
-        "message": "Task \"{{title}}\" vừa được cập nhật."
-      },
-      "completed": {
-        "title": "✅ Task hoàn thành",
-        "message": "Task \"{{title}}\" đã được đánh dấu xong!"
-      },
-      "commented": {
-        "title": "💬 Bình luận mới",
-        "message": "{{actor_name}} đã bình luận: \"{{content}}\""
-      }
-    },
-    "project": {
-      "member_added": {
-        "title": "👋 Chào mừng",
-        "message": "Bạn đã được thêm vào dự án \"{{project_name}}\"."
-      }
-    },
-    "system": {
-      "alert": {
-        "title": "🔔 Thông báo hệ thống",
-        "message": "{{message}}"
-      }
-    },
-    "task": {
       "created": "📋 Task mới: {{title}}",
       "created_by": "Được tạo bởi {{actor}}",
       "updated": "✏️ Task cập nhật: {{title}}",
@@ -276,6 +249,18 @@
       "unblocked_message": "Tất cả task phụ thuộc đã hoàn thành. Bạn có thể bắt đầu làm!",
       "generic": "📋 {{title}}"
     },
+    "project": {
+      "member_added": "📥 Bạn được thêm vào project: {{name}}",
+      "added_by": "Thêm bởi {{actor}}",
+      "member_removed": "📤 Bạn bị xóa khỏi project: {{name}}",
+      "removed_by": "Xóa bởi {{actor}}"
+    },
+    "system": {
+      "alert": {
+        "title": "🔔 Thông báo hệ thống",
+        "message": "{{message}}"
+      }
+    },
     "sprint": {
       "started": "🏃 Sprint bắt đầu: {{name}}",
       "started_by": "Bắt đầu bởi {{actor}}",
@@ -286,12 +271,6 @@
       "created": "📋 Sprint mới: {{name}}",
       "created_by": "Tạo bởi {{actor}}",
       "generic": "🏃 {{name}}"
-    },
-    "project": {
-      "member_added": "📥 Bạn được thêm vào project: {{name}}",
-      "added_by": "Thêm bởi {{actor}}",
-      "member_removed": "📤 Bạn bị xóa khỏi project: {{name}}",
-      "removed_by": "Xóa bởi {{actor}}"
     },
     "automation": {
       "assigned_by_rule": "Tự động phân công bởi rule: {{rule}}",
@@ -356,7 +335,15 @@
     "current_members": "Danh sách thành viên",
     "added": "Đã thêm",
     "no_users_found": "Không tìm thấy người dùng",
-    "search_results": "Kết quả tìm kiếm"
+    "search_results": "Kết quả tìm kiếm",
+    "list": {
+      "overdue": "⚠️ Quá hạn",
+      "today": "📅 Hôm nay",
+      "this_week": "📆 Tuần này",
+      "next_week": "🗓️ Tuần tới",
+      "later": "📋 Sau đó",
+      "no_deadline": "📭 Chưa có deadline"
+    }
   },
   "taskDetail": {
     "ai_agree": "👍 Đồng ý",
@@ -984,12 +971,28 @@
     "owner_or_admin_required": "Chỉ chủ sở hữu hoặc admin của workspace mới có thể thực hiện thao tác này.",
     "member_already_exists": "Người dùng đã là thành viên của workspace này.",
     "member_not_found": "Không tìm thấy thành viên trong workspace này.",
-    "invitation_not_found": "Không tìm thấy lời mời."
+    "invitation_not_found": "Không tìm thấy lời mời.",
+    "roles": {
+      "Workspace_Admin": {
+        "name": "Quản trị viên",
+        "desc": "Toàn quyền quản trị cài đặt và thành viên workspace"
+      },
+      "Workspace_Member": {
+        "name": "Thành viên Workspace",
+        "desc": "Xem workspace và truy cập các dự án được phân công"
+      }
+    },
+    "permission_codes": {
+      "workspace_admin": "Toàn quyền quản trị Workspace",
+      "workspace_member_manage": "Quản lý thành viên Workspace"
+    },
+    "system_role_readonly": "Vai trò hệ thống này không thể chỉnh sửa."
   },
   "server": {
     "notification_unavailable": "Dịch vụ thông báo hiện không khả dụng. Vui lòng thử lại sau.",
     "db_unavailable": "Cơ sở dữ liệu tạm thời không khả dụng. Vui lòng thử lại sau.",
-    "conflict_error": "Đã xảy ra xung đột. Tài nguyên có thể đã tồn tại."
+    "conflict_error": "Đã xảy ra xung đột. Tài nguyên có thể đã tồn tại.",
+    "unexpected_error": "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại sau."
   },
   "role": {
     "project_owner": "Chủ dự án",
@@ -1160,6 +1163,16 @@
     "blocking_deps": "phụ thuộc chặn",
     "tasks_completed": "hoàn thành tuần này",
     "needs_attention": "cần xử lý",
-    "all_on_track": "đúng tiến độ"
+    "all_on_track": "đúng tiến độ",
+    "export_success": "Xuất PDF thành công! Kiểm tra thư mục tải về.",
+    "export_failed": "Xuất PDF thất bại. Vui lòng thử lại."
+  },
+  "chatbot": {
+    "connection_error": "_(Lỗi kết nối, vui lòng thử lại.)_",
+    "placeholder": "Hỏi về dự án, task, tiến độ...",
+    "greeting": "Xin chào! Tôi là trợ lý AI của dự án này. Bạn cần giúp gì?"
+  },
+  "taskList": {
+    "hidden_subtasks": "{{count}} subtask ẩn"
   }
 }

@@ -26,7 +26,7 @@ const epicService = {
 
   async deleteEpic(id) {
     await api.delete(`/epics/${id}`);
-  }
+  },
 };
 
 export default epicService;

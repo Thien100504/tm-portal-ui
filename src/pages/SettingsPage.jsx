@@ -1,6 +1,14 @@
-import { useTheme } from "@/contexts/useTheme";
-import { ACCENTS } from "@/contexts/themeConstants";
-import { Sun, Moon, Monitor, Sparkles, Square, PenTool, Settings as SettingsIcon } from 'lucide-react';
+import { useTheme } from '@/contexts/useTheme';
+import { ACCENTS } from '@/contexts/themeConstants';
+import {
+  Sun,
+  Moon,
+  Monitor,
+  Sparkles,
+  Square,
+  PenTool,
+  Settings as SettingsIcon,
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Switch } from '@/components/ui/Switch';
@@ -13,18 +21,29 @@ function cn(...classes) {
 export default function SettingsPage() {
   const { t } = useTranslation();
   const {
-    mode, setMode,
-    style, setStyle,
-    transparency, setTransparency,
-    blur, setBlur,
-    motionLevel, setMotionLevel,
-    motion, setMotion,
-    mouseGlow, setMouseGlow,
-    bgGrid, setBgGrid,
-    accent, setAccent,
+    mode,
+    setMode,
+    style,
+    setStyle,
+    transparency,
+    setTransparency,
+    blur,
+    setBlur,
+    motionLevel,
+    setMotionLevel,
+    motion,
+    setMotion,
+    mouseGlow,
+    setMouseGlow,
+    bgGrid,
+    setBgGrid,
+    accent,
+    setAccent,
+    radius,
+    setRadius,
   } = useTheme();
 
-  const glassOn = style === "glass";
+  const glassOn = style === 'glass';
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-12">
@@ -34,124 +53,143 @@ export default function SettingsPage() {
           <SettingsIcon className="w-6 h-6" />
         </div>
         <div className="flex flex-col justify-center">
-          <h1 className="text-2xl font-bold text-foreground tracking-tight leading-none mb-1.5">{t('settings.title')}</h1>
-          <p className="text-sm text-muted-foreground leading-none">
-            {t('settings.subtitle')}
-          </p>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight leading-none mb-1.5">
+            {t('settings.title')}
+          </h1>
+          <p className="text-sm text-muted-foreground leading-none">{t('settings.subtitle')}</p>
         </div>
       </div>
 
       {/* Body */}
       <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-            <Card className="shadow-sm">
-              <CardHeader className="p-5 pb-0">
-                <CardTitle className="text-sm">{t('settings.appearance')}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6 p-5">
-              
-              {/* Theme Mode */}
-              <Field label={t('settings.themeMode.title')} hint={t('settings.themeMode.hint')}>
-                <Segmented
-                  value={mode}
-                  onChange={setMode}
-                  options={[
-                    { value: "light", label: t('settings.themeMode.light'), icon: Sun },
-                    { value: "dark", label: t('settings.themeMode.dark'), icon: Moon },
-                    { value: "system", label: t('settings.themeMode.system'), icon: Monitor },
-                  ]}
-                />
-              </Field>
+        <Card className="shadow-sm">
+          <CardHeader className="p-5 pb-0">
+            <CardTitle className="text-sm">{t('settings.appearance')}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6 p-5">
+            {/* Theme Mode */}
+            <Field label={t('settings.themeMode.title')} hint={t('settings.themeMode.hint')}>
+              <Segmented
+                value={mode}
+                onChange={setMode}
+                options={[
+                  { value: 'light', label: t('settings.themeMode.light'), icon: Sun },
+                  { value: 'dark', label: t('settings.themeMode.dark'), icon: Moon },
+                  { value: 'system', label: t('settings.themeMode.system'), icon: Monitor },
+                ]}
+              />
+            </Field>
 
-              {/* Theme Style */}
-              <Field label={t('settings.themeStyle.title')} hint={t('settings.themeStyle.hint')}>
-                <Segmented
-                  value={style}
-                  onChange={setStyle}
-                  options={[
-                    { value: "standard", label: t('settings.themeStyle.standard'), icon: Square },
-                    { value: "glass", label: t('settings.themeStyle.glass'), icon: Sparkles },
-                    { value: "sketch", label: t('settings.themeStyle.sketch', { defaultValue: 'Sketch' }), icon: PenTool },
-                  ]}
-                />
-              </Field>
+            {/* Theme Style */}
+            <Field label={t('settings.themeStyle.title')} hint={t('settings.themeStyle.hint')}>
+              <Segmented
+                value={style}
+                onChange={setStyle}
+                options={[
+                  { value: 'standard', label: t('settings.themeStyle.standard'), icon: Square },
+                  { value: 'glass', label: t('settings.themeStyle.glass'), icon: Sparkles },
+                  {
+                    value: 'sketch',
+                    label: t('settings.themeStyle.sketch', { defaultValue: 'Sketch' }),
+                    icon: PenTool,
+                  },
+                ]}
+              />
+            </Field>
 
-              {/* Glass sliders */}
-              <Field
-                label={t('settings.transparency.title')}
-                hint={t('settings.transparency.hint')}
-                disabled={!glassOn}
-                value={`${transparency}%`}
-              >
-                <Slider value={transparency} onChange={setTransparency} disabled={!glassOn} />
-              </Field>
+            {/* Glass sliders */}
+            <Field
+              label={t('settings.transparency.title')}
+              hint={t('settings.transparency.hint')}
+              disabled={!glassOn}
+              value={`${transparency}%`}
+            >
+              <Slider value={transparency} onChange={setTransparency} disabled={!glassOn} />
+            </Field>
 
-              <Field
-                label={t('settings.blur.title')}
-                hint={t('settings.blur.hint')}
-                disabled={!glassOn}
-                value={`${blur}%`}
-              >
-                <Slider value={blur} onChange={setBlur} disabled={!glassOn} />
-              </Field>
+            <Field
+              label={t('settings.blur.title')}
+              hint={t('settings.blur.hint')}
+              disabled={!glassOn}
+              value={`${blur}%`}
+            >
+              <Slider value={blur} onChange={setBlur} disabled={!glassOn} />
+            </Field>
 
-              <Field
-                label={t('settings.motion.title')}
-                hint={t('settings.motion.hint')}
-                disabled={!motion}
-                value={`${motionLevel}%`}
-              >
-                <Slider value={motionLevel} onChange={setMotionLevel} disabled={!motion} />
-              </Field>
+            <Field
+              label={t('settings.radius.title', { defaultValue: 'Border Radius' })}
+              hint={t('settings.radius.hint', { defaultValue: 'Adjust corner roundness' })}
+              value={`${Math.round((radius / 24) * 100)}%`}
+            >
+              <Slider value={radius} min={0} max={24} onChange={setRadius} />
+            </Field>
 
-              {/* Motion toggle */}
-              <Field layout="row" label={t('settings.motionToggle.title')} hint={t('settings.motionToggle.hint')}>
-                <Switch checked={motion} onCheckedChange={setMotion} />
-              </Field>
+            <Field
+              label={t('settings.motion.title')}
+              hint={t('settings.motion.hint')}
+              disabled={!motion}
+              value={`${motionLevel}%`}
+            >
+              <Slider value={motionLevel} onChange={setMotionLevel} disabled={!motion} />
+            </Field>
 
-              {/* Mouse Glow toggle */}
-              <Field layout="row" label={t('settings.mouseGlow.title')} hint={t('settings.mouseGlow.hint')}>
-                <Switch checked={mouseGlow} onCheckedChange={setMouseGlow} />
-              </Field>
+            {/* Motion toggle */}
+            <Field
+              layout="row"
+              label={t('settings.motionToggle.title')}
+              hint={t('settings.motionToggle.hint')}
+            >
+              <Switch checked={motion} onCheckedChange={setMotion} />
+            </Field>
 
-              {/* Background Grid toggle */}
-              <Field layout="row" label={t('settings.bgGrid.title')} hint={t('settings.bgGrid.hint')}>
-                <Switch checked={bgGrid} onCheckedChange={setBgGrid} />
-              </Field>
+            {/* Mouse Glow toggle */}
+            <Field
+              layout="row"
+              label={t('settings.mouseGlow.title')}
+              hint={t('settings.mouseGlow.hint')}
+            >
+              <Switch checked={mouseGlow} onCheckedChange={setMouseGlow} />
+            </Field>
 
-              {/* Accent color */}
-              <Field label={t('settings.accent.title')} hint={t('settings.accent.hint')}>
-                <div className="flex flex-wrap gap-2">
-                  {Object.keys(ACCENTS).map((k) => {
-                    const a = ACCENTS[k];
-                    const active = accent === k;
-                    return (
-                      <button
-                        key={k}
-                        onClick={() => setAccent(k)}
-                        title={a.label}
-                        className={cn(
-                          "group flex items-center gap-2 rounded-full border px-2.5 py-1 text-[11px] transition-colors",
-                          active
-                            ? "border-[color:var(--color-ai)]/50 bg-[color:var(--color-ai)]/10 text-foreground"
-                            : "border-border text-muted-foreground hover:text-foreground",
-                        )}
-                      >
-                        <span
-                          className="size-3.5 rounded-full ring-1 ring-black/10"
-                          style={{ background: a.swatch }}
-                        />
-                        {a.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </Field>
-            </CardContent>
-            </Card>
+            {/* Background Grid toggle */}
+            <Field layout="row" label={t('settings.bgGrid.title')} hint={t('settings.bgGrid.hint')}>
+              <Switch checked={bgGrid} onCheckedChange={setBgGrid} />
+            </Field>
 
-            {/* Live preview */}
-            <ThemePreview t={t} />
-          </div>
+            {/* Accent color */}
+            <Field label={t('settings.accent.title')} hint={t('settings.accent.hint')}>
+              <div className="flex flex-wrap gap-2">
+                {Object.keys(ACCENTS).map((k) => {
+                  const a = ACCENTS[k];
+                  const active = accent === k;
+                  return (
+                    <button
+                      key={k}
+                      onClick={() => setAccent(k)}
+                      title={a.label}
+                      className={cn(
+                        'group flex items-center gap-2 rounded-full border px-2.5 py-1 text-[11px] transition-colors',
+                        active
+                          ? 'border-[color:var(--color-ai)]/50 bg-[color:var(--color-ai)]/10 text-foreground'
+                          : 'border-border text-muted-foreground hover:text-foreground'
+                      )}
+                    >
+                      <span
+                        className="size-3.5 rounded-full ring-1 ring-black/10"
+                        style={{ background: a.swatch }}
+                      />
+                      {a.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </Field>
+          </CardContent>
+        </Card>
+
+        {/* Live preview */}
+        <ThemePreview t={t} />
+      </div>
     </div>
   );
 }
@@ -160,10 +198,15 @@ export default function SettingsPage() {
 // Component internals
 // -------------------------------------------------------------
 
-function Field({ label, hint, children, disabled, value, layout = "col" }) {
-  if (layout === "row") {
+function Field({ label, hint, children, disabled, value, layout = 'col' }) {
+  if (layout === 'row') {
     return (
-      <div className={cn("flex items-center justify-between gap-4 py-1", disabled && "opacity-50 pointer-events-none")}>
+      <div
+        className={cn(
+          'flex items-center justify-between gap-4 py-1',
+          disabled && 'opacity-50 pointer-events-none'
+        )}
+      >
         <div className="flex-1 pr-4">
           <p className="text-[12.5px] font-medium tracking-tight text-foreground">{label}</p>
           {hint && <p className="text-[11px] text-muted-foreground leading-snug mt-0.5">{hint}</p>}
@@ -174,14 +217,16 @@ function Field({ label, hint, children, disabled, value, layout = "col" }) {
   }
 
   return (
-    <div className={cn("flex flex-col gap-2", disabled && "opacity-50 pointer-events-none")}>
+    <div className={cn('flex flex-col gap-2', disabled && 'opacity-50 pointer-events-none')}>
       <div className="flex items-baseline justify-between gap-3">
         <div>
           <p className="text-[12.5px] font-medium tracking-tight text-foreground">{label}</p>
           {hint && <p className="text-[11px] text-muted-foreground mt-0.5">{hint}</p>}
         </div>
         {value && (
-          <span className="font-mono text-[10.5px] tabular-nums text-muted-foreground">{value}</span>
+          <span className="font-mono text-[10.5px] tabular-nums text-muted-foreground">
+            {value}
+          </span>
         )}
       </div>
       <div>{children}</div>
@@ -198,7 +243,7 @@ function Slider({ value, onChange, disabled, min = 0, max = 100 }) {
           className="h-full rounded-full"
           style={{
             width: `${pct}%`,
-            background: "linear-gradient(90deg, var(--color-ai), var(--color-ai-soft))",
+            background: 'linear-gradient(90deg, var(--color-ai), var(--color-ai-soft))',
           }}
         />
       </div>
@@ -227,8 +272,10 @@ function Segmented({ value, onChange, options, disabled }) {
             disabled={disabled}
             onClick={() => onChange(o.value)}
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[12px] font-medium transition-colors",
-              active ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
+              'inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[12px] font-medium transition-colors',
+              active
+                ? 'bg-card text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
             )}
           >
             {Icon && <Icon className="w-3.5 h-3.5 shrink-0" />}
@@ -251,20 +298,24 @@ function ThemePreview({ t }) {
           <div className="flex items-center gap-2">
             <div
               className="w-6 h-6 rounded-md"
-              style={{ background: "linear-gradient(135deg, var(--color-ai), var(--color-ai-soft))" }}
+              style={{
+                background: 'linear-gradient(135deg, var(--color-ai), var(--color-ai-soft))',
+              }}
             />
             <div className="flex-1">
-              <p className="text-[11px] font-semibold text-foreground">{t('settings.preview.sidebar')}</p>
-              <p className="text-[10px] text-muted-foreground">{t('settings.preview.sidebarDesc')}</p>
+              <p className="text-[11px] font-semibold text-foreground">
+                {t('settings.preview.sidebar')}
+              </p>
+              <p className="text-[10px] text-muted-foreground">
+                {t('settings.preview.sidebarDesc')}
+              </p>
             </div>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
           </div>
         </div>
         <div className="glass-surface rounded-xl border border-border bg-card p-3">
           <p className="text-[11px] font-semibold text-foreground">{t('settings.preview.modal')}</p>
-          <p className="text-[10px] text-muted-foreground">
-            {t('settings.preview.modalDesc')}
-          </p>
+          <p className="text-[10px] text-muted-foreground">{t('settings.preview.modalDesc')}</p>
           <div className="mt-2 flex gap-1.5">
             <span className="rounded-md bg-[color:var(--color-ai)] px-2 py-0.5 text-[10px] font-medium text-white">
               {t('settings.preview.primary')}
@@ -276,9 +327,7 @@ function ThemePreview({ t }) {
         </div>
         <div className="rounded-xl border border-border bg-card p-3">
           <p className="text-[11px] font-semibold text-foreground">{t('settings.preview.card')}</p>
-          <p className="text-[10px] text-muted-foreground">
-            {t('settings.preview.cardDesc')}
-          </p>
+          <p className="text-[10px] text-muted-foreground">{t('settings.preview.cardDesc')}</p>
         </div>
       </div>
     </div>

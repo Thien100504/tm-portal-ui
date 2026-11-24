@@ -22,14 +22,14 @@ const originalInvalidateQueries = queryClient.invalidateQueries.bind(queryClient
 // Override invalidateQueries to automatically broadcast to other tabs
 queryClient.invalidateQueries = async (filters, options) => {
   const result = originalInvalidateQueries(filters, options);
-  
+
   if (!isReceivingBroadcast) {
     channel.postMessage({
       type: 'INVALIDATE',
-      filters: filters
+      filters: filters,
     });
   }
-  
+
   return result;
 };
 

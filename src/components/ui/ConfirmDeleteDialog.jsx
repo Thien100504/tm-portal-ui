@@ -45,7 +45,13 @@ export function ConfirmDeleteDialog({
       maxWidth="max-w-sm"
       footer={
         <div className="flex justify-end gap-2">
-          <Button type="button" variant="secondary" size="sm" onClick={onClose} disabled={isDeleting}>
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            onClick={onClose}
+            disabled={isDeleting}
+          >
             {t('common.cancel', { defaultValue: 'Cancel' })}
           </Button>
           <Button
@@ -61,14 +67,16 @@ export function ConfirmDeleteDialog({
       }
     >
       <div className="p-5 space-y-4">
-        <p className="text-[13px] text-foreground leading-relaxed">
-          {description}
-        </p>
+        <p className="text-[13px] text-foreground leading-relaxed">{description}</p>
 
         <div className="bg-[color:var(--color-destructive)]/5 border border-[color:var(--color-destructive)]/20 rounded-lg p-3">
           <p className="text-[12px] text-[color:var(--color-destructive)] font-medium">
-            {t('common.action_cannot_undo', { defaultValue: 'This action cannot be undone. Type ' })}
-            <code className="bg-[color:var(--color-destructive)]/10 px-1.5 py-0.5 rounded font-mono font-bold mx-1">{confirmWord}</code>
+            {t('common.action_cannot_undo', {
+              defaultValue: 'This action cannot be undone. Type ',
+            })}
+            <code className="bg-[color:var(--color-destructive)]/10 px-1.5 py-0.5 rounded font-mono font-bold mx-1">
+              {confirmWord}
+            </code>
             {t('common.to_confirm', { defaultValue: 'to confirm.' })}
           </p>
         </div>

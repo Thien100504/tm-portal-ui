@@ -34,14 +34,15 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <Toaster 
-        richColors 
-        position="top-right" 
+      <Toaster
+        richColors
+        position="top-right"
         toastOptions={{
-          className: 'bg-background/80 backdrop-blur-md border border-border shadow-xl rounded-xl text-foreground font-sans',
+          className:
+            'bg-background/80 backdrop-blur-md border border-border shadow-xl rounded-xl text-foreground font-sans',
           style: {
-            fontFamily: 'var(--font-sans)'
-          }
+            fontFamily: 'var(--font-sans)',
+          },
         }}
       />
       <Routes>
@@ -79,4 +80,3 @@ export default function App() {
     </BrowserRouter>
   );
 }
-

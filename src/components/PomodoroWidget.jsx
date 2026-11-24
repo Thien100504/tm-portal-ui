@@ -9,13 +9,19 @@ export default function PomodoroWidget({ myDayTasks = [] }) {
   const { t } = useTranslation();
 
   const {
-    mode, setMode,
-    timeLeft, duration,
-    isRunning, setIsRunning,
-    currentTask, setCurrentTask,
+    mode,
+    setMode,
+    timeLeft,
+    duration,
+    isRunning,
+    setIsRunning,
+    currentTask,
+    setCurrentTask,
     completedSessions,
-    soundType, setSoundType,
-    volume, setVolume,
+    soundType,
+    setSoundType,
+    volume,
+    setVolume,
     setIsFullscreen,
     setIsPipMode,
     handlePresetTime,
@@ -62,17 +68,27 @@ export default function PomodoroWidget({ myDayTasks = [] }) {
         <div className="flex flex-col items-center gap-3 mb-6 w-full justify-center">
           <div className="flex bg-muted/50 p-1 rounded-xl border border-border/40 w-full max-w-[240px]">
             <button
-              onClick={() => { setMode('focus'); handlePresetTime(25); }}
+              onClick={() => {
+                setMode('focus');
+                handlePresetTime(25);
+              }}
               className={`flex-1 whitespace-nowrap flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                mode === 'focus' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                mode === 'focus'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               <span>🎯</span> <span>{t('pomodoro.focus')}</span>
             </button>
             <button
-              onClick={() => { setMode('break'); handlePresetTime(5); }}
+              onClick={() => {
+                setMode('break');
+                handlePresetTime(5);
+              }}
               className={`flex-1 whitespace-nowrap flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                mode === 'break' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                mode === 'break'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               <span>☕</span> <span>{t('pomodoro.break')}</span>
@@ -97,10 +113,15 @@ export default function PomodoroWidget({ myDayTasks = [] }) {
 
         {/* Circular Clock */}
         <div className="relative w-40 h-40 flex items-center justify-center mb-5">
-          <svg className="w-full h-full transform -rotate-90 overflow-visible" viewBox="0 0 128 128">
+          <svg
+            className="w-full h-full transform -rotate-90 overflow-visible"
+            viewBox="0 0 128 128"
+          >
             <circle cx="64" cy="64" r="58" className="stroke-muted fill-none" strokeWidth="3" />
             <circle
-              cx="64" cy="64" r="58"
+              cx="64"
+              cy="64"
+              r="58"
               className="fill-none transition-all duration-300"
               stroke="var(--color-ai)"
               strokeWidth="4"
@@ -111,7 +132,9 @@ export default function PomodoroWidget({ myDayTasks = [] }) {
             />
           </svg>
           <div className="absolute flex flex-col items-center justify-center">
-            <span className="text-3xl font-bold font-mono text-foreground leading-none tracking-tight">{formatTime(timeLeft)}</span>
+            <span className="text-3xl font-bold font-mono text-foreground leading-none tracking-tight">
+              {formatTime(timeLeft)}
+            </span>
             <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mt-1.5">
               {mode === 'focus' ? t('pomodoro.focus') : t('pomodoro.break')}
             </span>
@@ -138,13 +161,31 @@ export default function PomodoroWidget({ myDayTasks = [] }) {
             {isRunning ? <Pause className="w-4 h-4 mr-1.5" /> : <Play className="w-4 h-4 mr-1.5" />}
             {isRunning ? t('pomodoro.btn_pause') : t('pomodoro.btn_start')}
           </Button>
-          <Button variant="outline" size="icon" onClick={handleReset} className="rounded-full w-9 h-9" title={t('pomodoro.btn_reset')}>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={handleReset}
+            className="rounded-full w-9 h-9"
+            title={t('pomodoro.btn_reset')}
+          >
             <RotateCcw className="w-4 h-4" />
           </Button>
-          <Button variant="outline" size="icon" onClick={() => setIsFullscreen(true)} className="rounded-full w-9 h-9" title={t('pomodoro.fullscreen')}>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setIsFullscreen(true)}
+            className="rounded-full w-9 h-9"
+            title={t('pomodoro.fullscreen')}
+          >
             <Maximize2 className="w-4 h-4" />
           </Button>
-          <Button variant="outline" size="icon" onClick={() => setIsPipMode(true)} className="rounded-full w-9 h-9" title={t('pomodoro.pip')}>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setIsPipMode(true)}
+            className="rounded-full w-9 h-9"
+            title={t('pomodoro.pip')}
+          >
             <PictureInPicture className="w-4 h-4" />
           </Button>
         </div>
@@ -170,7 +211,10 @@ export default function PomodoroWidget({ myDayTasks = [] }) {
             <div className="flex items-center gap-2 px-2">
               <span className="text-[10px] font-medium text-muted-foreground">Vol</span>
               <input
-                type="range" min="0" max="1" step="0.05"
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
                 value={volume}
                 onChange={(e) => setVolume(parseFloat(e.target.value))}
                 className="w-full h-1 bg-muted rounded-lg appearance-none cursor-pointer accent-[color:var(--color-ai)]"

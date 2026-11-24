@@ -4,15 +4,22 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { motion } from 'framer-motion';
-import { User as UserIcon, Mail, Lock, UserPlus, ArrowLeft, Sparkles, Sun, Moon } from 'lucide-react';
+import {
+  User as UserIcon,
+  Mail,
+  Lock,
+  UserPlus,
+  ArrowLeft,
+  Sparkles,
+  Sun,
+  Moon,
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
-import { useTheme } from "@/contexts/useTheme";
+import { useTheme } from '@/contexts/useTheme';
 import MouseGlowBackground from '@/components/MouseGlowBackground';
 import { Button } from '@/components/ui/Button';
 import { getApiError } from '@/lib/apiError';
-
-
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -64,7 +71,7 @@ export default function RegisterPage() {
   return (
     <MouseGlowBackground>
       {/* Top right floating toggles */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
@@ -106,8 +113,12 @@ export default function RegisterPage() {
         </div>
 
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1.5">{t('auth.register_title')}</h1>
-          <p className="text-[13px] text-muted-foreground font-medium">{t('auth.register_subtitle')}</p>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1.5">
+            {t('auth.register_title')}
+          </h1>
+          <p className="text-[13px] text-muted-foreground font-medium">
+            {t('auth.register_subtitle')}
+          </p>
         </div>
 
         {globalError && (
@@ -123,7 +134,9 @@ export default function RegisterPage() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-1.5">{t('auth.fullname')}</label>
+            <label className="block text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-1.5">
+              {t('auth.fullname')}
+            </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <UserIcon className="h-4 w-4 text-muted-foreground/60" />
@@ -132,18 +145,24 @@ export default function RegisterPage() {
                 type="text"
                 {...register('full_name')}
                 className={`block w-full pl-9 pr-3 py-2 text-[13px] bg-background border ${
-                  errors.full_name ? 'border-[color:var(--color-destructive)] focus:ring-[color:var(--color-destructive)]' : 'border-border focus:ring-[color:var(--color-primary)]'
+                  errors.full_name
+                    ? 'border-[color:var(--color-destructive)] focus:ring-[color:var(--color-destructive)]'
+                    : 'border-border focus:ring-[color:var(--color-primary)]'
                 } rounded-lg focus:outline-none focus:ring-1 text-foreground transition-all placeholder:text-muted-foreground/50`}
                 placeholder={t('auth.fullname_placeholder')}
               />
             </div>
             {errors.full_name && (
-              <p className="mt-1.5 text-[11px] font-medium text-[color:var(--color-destructive)]">{errors.full_name.message}</p>
+              <p className="mt-1.5 text-[11px] font-medium text-[color:var(--color-destructive)]">
+                {errors.full_name.message}
+              </p>
             )}
           </div>
 
           <div>
-            <label className="block text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-1.5">{t('auth.email')}</label>
+            <label className="block text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-1.5">
+              {t('auth.email')}
+            </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Mail className="h-4 w-4 text-muted-foreground/60" />
@@ -152,18 +171,24 @@ export default function RegisterPage() {
                 type="email"
                 {...register('email')}
                 className={`block w-full pl-9 pr-3 py-2 text-[13px] bg-background border ${
-                  errors.email ? 'border-[color:var(--color-destructive)] focus:ring-[color:var(--color-destructive)]' : 'border-border focus:ring-[color:var(--color-primary)]'
+                  errors.email
+                    ? 'border-[color:var(--color-destructive)] focus:ring-[color:var(--color-destructive)]'
+                    : 'border-border focus:ring-[color:var(--color-primary)]'
                 } rounded-lg focus:outline-none focus:ring-1 text-foreground transition-all placeholder:text-muted-foreground/50`}
                 placeholder={t('auth.email_placeholder')}
               />
             </div>
             {errors.email && (
-              <p className="mt-1.5 text-[11px] font-medium text-[color:var(--color-destructive)]">{errors.email.message}</p>
+              <p className="mt-1.5 text-[11px] font-medium text-[color:var(--color-destructive)]">
+                {errors.email.message}
+              </p>
             )}
           </div>
 
           <div>
-            <label className="block text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-1.5">{t('auth.password')}</label>
+            <label className="block text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-1.5">
+              {t('auth.password')}
+            </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Lock className="h-4 w-4 text-muted-foreground/60" />
@@ -172,18 +197,24 @@ export default function RegisterPage() {
                 type="password"
                 {...register('password')}
                 className={`block w-full pl-9 pr-3 py-2 text-[13px] bg-background border ${
-                  errors.password ? 'border-[color:var(--color-destructive)] focus:ring-[color:var(--color-destructive)]' : 'border-border focus:ring-[color:var(--color-primary)]'
+                  errors.password
+                    ? 'border-[color:var(--color-destructive)] focus:ring-[color:var(--color-destructive)]'
+                    : 'border-border focus:ring-[color:var(--color-primary)]'
                 } rounded-lg focus:outline-none focus:ring-1 text-foreground transition-all placeholder:text-muted-foreground/50`}
                 placeholder={t('auth.password_placeholder')}
               />
             </div>
             {errors.password && (
-              <p className="mt-1.5 text-[11px] font-medium text-[color:var(--color-destructive)]">{errors.password.message}</p>
+              <p className="mt-1.5 text-[11px] font-medium text-[color:var(--color-destructive)]">
+                {errors.password.message}
+              </p>
             )}
           </div>
 
           <div>
-            <label className="block text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-1.5">{t('auth.confirm_password')}</label>
+            <label className="block text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-1.5">
+              {t('auth.confirm_password')}
+            </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Lock className="h-4 w-4 text-muted-foreground/60" />
@@ -192,21 +223,21 @@ export default function RegisterPage() {
                 type="password"
                 {...register('confirmPassword')}
                 className={`block w-full pl-9 pr-3 py-2 text-[13px] bg-background border ${
-                  errors.confirmPassword ? 'border-[color:var(--color-destructive)] focus:ring-[color:var(--color-destructive)]' : 'border-border focus:ring-[color:var(--color-primary)]'
+                  errors.confirmPassword
+                    ? 'border-[color:var(--color-destructive)] focus:ring-[color:var(--color-destructive)]'
+                    : 'border-border focus:ring-[color:var(--color-primary)]'
                 } rounded-lg focus:outline-none focus:ring-1 text-foreground transition-all placeholder:text-muted-foreground/50`}
                 placeholder={t('auth.password_placeholder')}
               />
             </div>
             {errors.confirmPassword && (
-              <p className="mt-1.5 text-[11px] font-medium text-[color:var(--color-destructive)]">{errors.confirmPassword.message}</p>
+              <p className="mt-1.5 text-[11px] font-medium text-[color:var(--color-destructive)]">
+                {errors.confirmPassword.message}
+              </p>
             )}
           </div>
 
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full mt-4"
-          >
+          <Button type="submit" disabled={isSubmitting} className="w-full mt-4">
             {isSubmitting ? (
               <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
             ) : (
@@ -219,7 +250,10 @@ export default function RegisterPage() {
         </form>
 
         <div className="mt-6 text-center text-[12px] text-muted-foreground">
-          <Link to="/login" className="font-semibold text-foreground hover:text-[color:var(--color-primary)] inline-flex items-center group transition-colors">
+          <Link
+            to="/login"
+            className="font-semibold text-foreground hover:text-[color:var(--color-primary)] inline-flex items-center group transition-colors"
+          >
             <ArrowLeft className="w-3.5 h-3.5 mr-1 transform group-hover:-translate-x-1 transition-transform" />
             {t('auth.has_account')}
           </Link>
