@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function GlobalPomodoroManager() {
   const { t } = useTranslation();
-  
+
   // Audio Refs
   const audioCtxRef = useRef(null);
   const noiseSourceRef = useRef(null);
@@ -32,7 +32,7 @@ export default function GlobalPomodoroManager() {
     setSoundType,
     setMode,
     handleReset,
-    handlePresetTime
+    handlePresetTime,
   } = usePomodoroStore();
 
   // Timer Tick
@@ -55,26 +55,26 @@ export default function GlobalPomodoroManager() {
       if (ctx.state === 'suspended') {
         ctx.resume();
       }
-      
+
       stopSound();
-      
+
       if (type === 'none') return;
-      
+
       const bufferSize = 2 * ctx.sampleRate;
       const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const output = noiseBuffer.getChannelData(0);
-      
+
       let lastOut = 0.0;
       for (let i = 0; i < bufferSize; i++) {
         const white = Math.random() * 2 - 1;
         if (type === 'rain') {
           // Mix brown noise (deep rumble) with a bit of white noise (splashes)
-          const brown = (lastOut + (0.02 * white)) / 1.02;
+          const brown = (lastOut + 0.02 * white) / 1.02;
           lastOut = brown;
           output[i] = brown * 3.5 + white * 0.15;
         } else if (type === 'wind') {
           // Pink noise (soothing rush, like wind)
-          output[i] = (lastOut + (0.12 * white)) / 1.12;
+          output[i] = (lastOut + 0.12 * white) / 1.12;
           lastOut = output[i];
           output[i] *= 2.5;
         } else {
@@ -82,29 +82,29 @@ export default function GlobalPomodoroManager() {
           output[i] = white * 0.5;
         }
       }
-      
+
       const bufferSource = ctx.createBufferSource();
       bufferSource.buffer = noiseBuffer;
       bufferSource.loop = true;
-      
+
       const filter = ctx.createBiquadFilter();
       filter.type = 'lowpass';
       filter.frequency.value = type === 'rain' ? 800 : type === 'wind' ? 700 : 1800;
-      
+
       const gainNode = ctx.createGain();
       // Apply base volume depending on type
       const baseGain = type === 'rain' ? 0.08 : 0.06;
       gainNode.gain.setValueAtTime(baseGain * volume, ctx.currentTime);
-      
+
       bufferSource.connect(filter);
       filter.connect(gainNode);
       gainNode.connect(ctx.destination);
-      
+
       bufferSource.start();
       noiseSourceRef.current = bufferSource;
       gainNodeRef.current = gainNode;
     } catch (e) {
-      console.error("Failed to start focus sound:", e);
+      console.error('Failed to start focus sound:', e);
     }
   };
 
@@ -127,14 +127,18 @@ export default function GlobalPomodoroManager() {
       stopSound();
     }
     return () => stopSound();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRunning, soundType]);
 
   // Dynamic Volume
   useEffect(() => {
     if (gainNodeRef.current && audioCtxRef.current) {
       const baseGain = soundType === 'rain' ? 0.08 : 0.06;
-      gainNodeRef.current.gain.setTargetAtTime(baseGain * volume, audioCtxRef.current.currentTime, 0.1);
+      gainNodeRef.current.gain.setTargetAtTime(
+        baseGain * volume,
+        audioCtxRef.current.currentTime,
+        0.1
+      );
     }
   }, [volume, soundType]);
 
@@ -165,7 +169,7 @@ export default function GlobalPomodoroManager() {
       { type: 'rain', label: t('pomodoro.sounds.rain') },
       { type: 'wind', label: t('pomodoro.sounds.wind') },
       { type: 'white', label: t('pomodoro.sounds.white') },
-    ]
+    ],
   };
 
   const actions = {
@@ -177,7 +181,7 @@ export default function GlobalPomodoroManager() {
     formatTime,
     handlePresetTime,
     setVolume,
-    setMode
+    setMode,
   };
 
   return (

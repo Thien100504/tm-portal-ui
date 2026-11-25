@@ -27,7 +27,7 @@ export function useActiveWorkspace() {
     enable_time_tracking: true,
     enable_calendar: true,
     enable_reports: false,
-    theme: "glass",
+    theme: 'glass',
     ...(activeWorkspace?.settings || {}),
   };
 

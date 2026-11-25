@@ -37,8 +37,7 @@
     "unknown_user": "User",
     "joined": "Joined",
     "error_occurred": "An error occurred",
-    "action_cannot_undo": "This action cannot be undone. Type ",
-    "to_confirm": " to confirm."
+    "clear": "Clear"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -104,7 +103,8 @@
     "register_error_fallback": "Registration failed. Please try again.",
     "register_success_msg": "Registered successfully!",
     "invalid_email": "Invalid email",
-    "password_mismatch": "Password mismatch"
+    "password_mismatch": "Password mismatch",
+    "account_locked": "Your account has been temporarily locked due to too many failed login attempts. Please try again in 15 minutes."
   },
   "password": {
     "requires_uppercase": "Password must contain at least one uppercase letter.",
@@ -145,7 +145,10 @@
     "telegram_id_placeholder": "e.g., -5171357396",
     "telegram_hint_1": "Invite Bot",
     "telegram_hint_2": "to the group and send /start to receive automated notifications.",
-    "remove_member_confirm": "{{name}} will be removed from the project and cannot access tasks anymore."
+    "remove_member_confirm": "{{name}} will be removed from the project and cannot access tasks anymore.",
+    "member_add_failed": "Could not add the member",
+    "member_updated": "Role updated",
+    "workspace_suggestions": "Workspace suggestions"
   },
   "user": {
     "not_found": "User not found."
@@ -232,36 +235,6 @@
   "notification": {
     "not_found": "Notification not found.",
     "task": {
-      "assigned": {
-        "title": "👤 New task assigned",
-        "message": "You have been assigned to task \"{{title}}\"."
-      },
-      "updated": {
-        "title": "🔄 Task updated",
-        "message": "Task \"{{title}}\" has been updated."
-      },
-      "completed": {
-        "title": "✅ Task completed",
-        "message": "Task \"{{title}}\" has been marked as done!"
-      },
-      "commented": {
-        "title": "💬 New comment",
-        "message": "{{actor_name}} commented on task \"{{title}}\"."
-      }
-    },
-    "project": {
-      "member_added": {
-        "title": "👋 New member",
-        "message": "You have been added to project \"{{project_name}}\"."
-      }
-    },
-    "system": {
-      "alert": {
-        "title": "🔔 System Alert",
-        "message": "{{message}}"
-      }
-    },
-    "task": {
       "created": "📋 New task: {{title}}",
       "created_by": "Created by {{actor}}",
       "updated": "✏️ Task updated: {{title}}",
@@ -276,6 +249,18 @@
       "unblocked_message": "All dependencies are done. You can start now!",
       "generic": "📋 {{title}}"
     },
+    "project": {
+      "member_added": "📥 Added to project: {{name}}",
+      "added_by": "Added by {{actor}}",
+      "member_removed": "📤 Removed from project: {{name}}",
+      "removed_by": "Removed by {{actor}}"
+    },
+    "system": {
+      "alert": {
+        "title": "🔔 System Alert",
+        "message": "{{message}}"
+      }
+    },
     "sprint": {
       "started": "🏃 Sprint started: {{name}}",
       "started_by": "Started by {{actor}}",
@@ -286,12 +271,6 @@
       "created": "📋 New sprint: {{name}}",
       "created_by": "Created by {{actor}}",
       "generic": "🏃 {{name}}"
-    },
-    "project": {
-      "member_added": "📥 Added to project: {{name}}",
-      "added_by": "Added by {{actor}}",
-      "member_removed": "📤 Removed from project: {{name}}",
-      "removed_by": "Removed by {{actor}}"
     },
     "automation": {
       "assigned_by_rule": "Auto-assigned by rule: {{rule}}",
@@ -356,7 +335,15 @@
     "current_members": "Team members",
     "added": "Added",
     "no_users_found": "No users found",
-    "search_results": "Search results"
+    "search_results": "Search results",
+    "list": {
+      "overdue": "⚠️ Overdue",
+      "today": "📅 Today",
+      "this_week": "📆 This Week",
+      "next_week": "🗓️ Next Week",
+      "later": "📋 Later",
+      "no_deadline": "📭 No Deadline"
+    }
   },
   "taskDetail": {
     "ai_agree": "👍 Agree",
@@ -984,12 +971,28 @@
     "owner_or_admin_required": "Only the workspace owner or an admin can perform this action.",
     "member_already_exists": "User is already a member of this workspace.",
     "member_not_found": "Member not found in this workspace.",
-    "invitation_not_found": "Invitation not found."
+    "invitation_not_found": "Invitation not found.",
+    "roles": {
+      "Workspace_Admin": {
+        "name": "Workspace Admin",
+        "desc": "Full access to workspace settings and members"
+      },
+      "Workspace_Member": {
+        "name": "Workspace Member",
+        "desc": "Can view workspace and access assigned projects"
+      }
+    },
+    "permission_codes": {
+      "workspace_admin": "Full workspace administration",
+      "workspace_member_manage": "Manage workspace members"
+    },
+    "system_role_readonly": "This role cannot be modified."
   },
   "server": {
     "notification_unavailable": "Notification service is currently unavailable. Please try again later.",
     "db_unavailable": "Database is temporarily unavailable. Please try again later.",
-    "conflict_error": "A conflict occurred. The resource may already exist."
+    "conflict_error": "A conflict occurred. The resource may already exist.",
+    "unexpected_error": "An unexpected error occurred. Please try again later."
   },
   "role": {
     "project_owner": "Project Owner",
@@ -1160,6 +1163,16 @@
     "blocking_deps": "blocking dep(s)",
     "tasks_completed": "completed this week",
     "needs_attention": "needs attention",
-    "all_on_track": "all on track"
+    "all_on_track": "all on track",
+    "export_success": "PDF exported successfully! Check your downloads.",
+    "export_failed": "PDF export failed. Please try again."
+  },
+  "chatbot": {
+    "connection_error": "_(Connection error, please try again.)_",
+    "placeholder": "Ask about project, tasks, progress...",
+    "greeting": "Hello! I'm the AI assistant for this project. How can I help?"
+  },
+  "taskList": {
+    "hidden_subtasks": "{{count}} hidden subtask(s)"
   }
 }

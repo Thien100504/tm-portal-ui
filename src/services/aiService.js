@@ -24,9 +24,11 @@ const aiService = {
   async getLatestMetric(projectId, taskId, feature) {
     const res = await api.get(`/projects/${projectId}/ai-metrics`);
     const metrics = res.data?.recent || [];
-    return metrics.find(
-      (m) => m.task_id === taskId && m.feature === feature && m.status === 'generated'
-    ) || null;
+    return (
+      metrics.find(
+        (m) => m.task_id === taskId && m.feature === feature && m.status === 'generated'
+      ) || null
+    );
   },
 
   async submitFeedback(projectId, metricId, status, feedbackNote = null) {

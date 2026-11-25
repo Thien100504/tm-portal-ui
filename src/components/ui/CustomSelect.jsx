@@ -22,9 +22,10 @@ export default function CustomSelect({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      const isOutsideContainer = containerRef.current && !containerRef.current.contains(event.target);
+      const isOutsideContainer =
+        containerRef.current && !containerRef.current.contains(event.target);
       const isOutsideDropdown = dropdownRef.current && !dropdownRef.current.contains(event.target);
-      
+
       if (isOutsideContainer && isOutsideDropdown) {
         setIsOpen(false);
       }
@@ -68,10 +69,10 @@ export default function CustomSelect({
       };
 
       updatePosition();
-      
+
       window.addEventListener('scroll', updatePosition, true);
       window.addEventListener('resize', updatePosition);
-      
+
       return () => {
         window.removeEventListener('scroll', updatePosition, true);
         window.removeEventListener('resize', updatePosition);
@@ -79,7 +80,7 @@ export default function CustomSelect({
     }
   }, [isOpen]);
 
-  const selectedOption = options.find(opt => opt.value === value);
+  const selectedOption = options.find((opt) => opt.value === value);
 
   return (
     <div className={`relative w-full ${className}`} ref={containerRef}>
@@ -88,72 +89,77 @@ export default function CustomSelect({
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
         className={`w-full flex items-center justify-between px-3 py-2 bg-background border rounded-lg text-[13px] transition-colors shadow-sm focus:outline-none ${
-          disabled 
-            ? 'opacity-50 cursor-not-allowed border-border' 
-            : isOpen 
-              ? 'border-[color:var(--color-ai)] ring-1 ring-[color:var(--color-ai)]' 
+          disabled
+            ? 'opacity-50 cursor-not-allowed border-border'
+            : isOpen
+              ? 'border-[color:var(--color-ai)] ring-1 ring-[color:var(--color-ai)]'
               : 'border-border hover:border-[color:var(--color-ai)]/50 cursor-pointer'
         }`}
       >
         <div className="flex items-center gap-2 truncate">
           {icon && <div className="text-muted-foreground">{icon}</div>}
-          <span className={`truncate ${!selectedOption ? 'text-muted-foreground font-normal' : 'text-foreground font-medium'}`}>
-            {selectedOption ? selectedOption.label : (placeholder || t('common.select'))}
+          <span
+            className={`truncate ${!selectedOption ? 'text-muted-foreground font-normal' : 'text-foreground font-medium'}`}
+          >
+            {selectedOption ? selectedOption.label : placeholder || t('common.select')}
           </span>
         </div>
-        <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform duration-200 flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown
+          className={`w-4 h-4 text-muted-foreground transition-transform duration-200 flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
+        />
       </button>
 
-      {typeof document !== 'undefined' && createPortal(
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              ref={dropdownRef}
-              initial={{ opacity: 0, y: dropdownStyle.top === 'auto' ? 10 : -10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: dropdownStyle.top === 'auto' ? 10 : -10, scale: 0.95 }}
-              transition={{ duration: 0.15 }}
-              style={dropdownStyle}
-              className={`bg-card border border-border rounded-lg shadow-2xl overflow-hidden glass-surface ${dropdownClassName}`}
-            >
-              <div className="max-h-[220px] overflow-y-auto py-1 scrollbar-thin">
-                {options.length === 0 ? (
-                  <div className="px-3 py-3 text-[12px] text-muted-foreground text-center italic">
-                    {t('common.noData')}
-                  </div>
-                ) : (
-                  options.map((option) => {
-                    const isSelected = value === option.value;
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onMouseDown={(e) => {
-                          e.preventDefault(); // Prevent losing focus, which causes bugs
-                          onChange(option.value);
-                          setIsOpen(false);
-                        }}
-                        className={`w-full flex items-center justify-between px-3 py-2 text-[13px] transition-colors text-left ${
-                          isSelected 
-                            ? 'bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)] font-semibold' 
-                            : 'text-foreground hover:bg-muted'
-                        }`}
-                      >
-                        <div className="flex items-center gap-2 truncate pr-2">
-                          {option.icon && <span className="flex-shrink-0">{option.icon}</span>}
-                          <span className="truncate">{option.label}</span>
-                        </div>
-                        {isSelected && <Check className="w-3.5 h-3.5 flex-shrink-0" />}
-                      </button>
-                    );
-                  })
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>,
-        document.body
-      )}
+      {typeof document !== 'undefined' &&
+        createPortal(
+          <AnimatePresence>
+            {isOpen && (
+              <motion.div
+                ref={dropdownRef}
+                initial={{ opacity: 0, y: dropdownStyle.top === 'auto' ? 10 : -10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: dropdownStyle.top === 'auto' ? 10 : -10, scale: 0.95 }}
+                transition={{ duration: 0.15 }}
+                style={dropdownStyle}
+                className={`bg-card border border-border rounded-lg shadow-2xl overflow-hidden glass-surface ${dropdownClassName}`}
+              >
+                <div className="max-h-[220px] overflow-y-auto py-1 scrollbar-thin">
+                  {options.length === 0 ? (
+                    <div className="px-3 py-3 text-[12px] text-muted-foreground text-center italic">
+                      {t('common.noData')}
+                    </div>
+                  ) : (
+                    options.map((option) => {
+                      const isSelected = value === option.value;
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onMouseDown={(e) => {
+                            e.preventDefault(); // keep the focus, losing it breaks the selection
+                            onChange(option.value);
+                            setIsOpen(false);
+                          }}
+                          className={`w-full flex items-center justify-between px-3 py-2 text-[13px] transition-colors text-left ${
+                            isSelected
+                              ? 'bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)] font-semibold'
+                              : 'text-foreground hover:bg-muted'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2 truncate pr-2">
+                            {option.icon && <span className="flex-shrink-0">{option.icon}</span>}
+                            <span className="truncate">{option.label}</span>
+                          </div>
+                          {isSelected && <Check className="w-3.5 h-3.5 flex-shrink-0" />}
+                        </button>
+                      );
+                    })
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
+        )}
     </div>
   );
 }

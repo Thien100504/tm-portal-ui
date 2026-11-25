@@ -21,7 +21,7 @@ function Field({ label, hint, children }) {
 export default function ProfilePage() {
   const { t } = useTranslation();
   const { user, setUser } = useAuth();
-  
+
   const [formData, setFormData] = useState({
     full_name: '',
     password: '',
@@ -30,7 +30,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (user) {
-      setFormData(prev => ({ ...prev, full_name: user.full_name || '' }));
+      setFormData((prev) => ({ ...prev, full_name: user.full_name || '' }));
     }
   }, [user]);
 
@@ -44,7 +44,7 @@ export default function ProfilePage() {
       if (data.password && data.password !== data.confirm_password) {
         throw new Error(t('profile.password_mismatch', { defaultValue: 'Passwords do not match' }));
       }
-      
+
       const payload = { full_name: data.full_name };
       if (data.password) {
         payload.password = data.password;
@@ -53,12 +53,14 @@ export default function ProfilePage() {
     },
     onSuccess: (updatedUser) => {
       setUser(updatedUser);
-      setFormData(prev => ({ ...prev, password: '', confirm_password: '' }));
+      setFormData((prev) => ({ ...prev, password: '', confirm_password: '' }));
       toast.success(t('profile.update_success', { defaultValue: 'Profile updated successfully' }));
     },
     onError: (error) => {
-      toast.error(error.message || t('profile.update_error', { defaultValue: 'Failed to update profile' }));
-    }
+      toast.error(
+        error.message || t('profile.update_error', { defaultValue: 'Failed to update profile' })
+      );
+    },
   });
 
   const handleSubmit = (e) => {
@@ -78,7 +80,9 @@ export default function ProfilePage() {
             {t('profile.title', { defaultValue: 'Personal Profile' })}
           </h1>
           <p className="text-sm text-muted-foreground leading-none">
-            {t('profile.subtitle', { defaultValue: 'Manage your personal information and security' })}
+            {t('profile.subtitle', {
+              defaultValue: 'Manage your personal information and security',
+            })}
           </p>
         </div>
       </div>
@@ -93,13 +97,15 @@ export default function ProfilePage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-5">
-            
             <div className="flex items-center gap-6 pb-4 border-b border-border/50">
               <div className="relative group">
                 <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-[color:var(--color-primary)]/20 to-[color:var(--color-ai)]/20 flex items-center justify-center border-2 border-border text-2xl font-bold text-foreground">
                   {user?.full_name?.charAt(0)?.toUpperCase()}
                 </div>
-                <button type="button" className="absolute inset-0 bg-background/50 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity rounded-full flex flex-col items-center justify-center gap-1 text-[10px] font-medium text-foreground">
+                <button
+                  type="button"
+                  className="absolute inset-0 bg-background/50 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity rounded-full flex flex-col items-center justify-center gap-1 text-[10px] font-medium text-foreground"
+                >
                   <Camera className="w-4 h-4" />
                   Upload
                 </button>
@@ -123,7 +129,10 @@ export default function ProfilePage() {
               />
             </Field>
 
-            <Field label={t('profile.email', { defaultValue: 'Email Address' })} hint={t('profile.email_hint', { defaultValue: 'Email cannot be changed.' })}>
+            <Field
+              label={t('profile.email', { defaultValue: 'Email Address' })}
+              hint={t('profile.email_hint', { defaultValue: 'Email cannot be changed.' })}
+            >
               <input
                 type="email"
                 value={user?.email || ''}
@@ -142,7 +151,12 @@ export default function ProfilePage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-5">
-            <Field label={t('profile.new_password', { defaultValue: 'New Password' })} hint={t('profile.password_hint', { defaultValue: 'Leave blank to keep current password.' })}>
+            <Field
+              label={t('profile.new_password', { defaultValue: 'New Password' })}
+              hint={t('profile.password_hint', {
+                defaultValue: 'Leave blank to keep current password.',
+              })}
+            >
               <input
                 type="password"
                 name="password"
@@ -154,7 +168,9 @@ export default function ProfilePage() {
             </Field>
 
             {formData.password && (
-              <Field label={t('profile.confirm_password', { defaultValue: 'Confirm New Password' })}>
+              <Field
+                label={t('profile.confirm_password', { defaultValue: 'Confirm New Password' })}
+              >
                 <input
                   type="password"
                   name="confirm_password"
@@ -171,7 +187,11 @@ export default function ProfilePage() {
 
         <div className="flex justify-end gap-3 pt-2">
           <Button type="submit" disabled={updateMutation.isPending} className="min-w-[120px]">
-            {updateMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+            {updateMutation.isPending ? (
+              <Loader2 className="w-4 h-4 animate-spin mr-2" />
+            ) : (
+              <Save className="w-4 h-4 mr-2" />
+            )}
             {t('common.save_changes', { defaultValue: 'Save Changes' })}
           </Button>
         </div>

@@ -31,7 +31,9 @@ export function Modal({ onClose, title, icon, subtitle, maxWidth = 'max-w-md', f
               {icon}
               <div className="min-w-0">
                 <h2 className="text-sm font-semibold text-foreground truncate">{title}</h2>
-                {subtitle && <p className="text-xs text-muted-foreground mt-0.5 truncate">{subtitle}</p>}
+                {subtitle && (
+                  <p className="text-xs text-muted-foreground mt-0.5 truncate">{subtitle}</p>
+                )}
               </div>
             </div>
             <button
@@ -43,15 +45,11 @@ export function Modal({ onClose, title, icon, subtitle, maxWidth = 'max-w-md', f
           </div>
 
           {/* Body — scrollable (min-h-0 allows flex shrink below content height) */}
-          <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin">
-            {children}
-          </div>
+          <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin">{children}</div>
 
           {/* Footer — fixed bottom */}
           {footer && (
-            <div className="shrink-0 px-5 py-4 border-t border-border bg-muted/20">
-              {footer}
-            </div>
+            <div className="shrink-0 px-5 py-4 border-t border-border bg-muted/20">{footer}</div>
           )}
         </motion.div>
       </div>

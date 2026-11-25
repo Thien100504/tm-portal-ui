@@ -2,23 +2,30 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import {
-  Users, Settings, Shield, Plus, Search, Mail, Trash2, Loader2,
-} from 'lucide-react';
+import { Users, Settings, Shield, Plus, Search, Mail, Trash2, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
 import projectService from '@/services/projectService';
 import userService from '@/services/userService';
 import rbacService from '@/services/rbacService';
+import workspaceService from '@/services/workspaceService';
 import { useAuth } from '@/hooks/useAuth';
 import { useProjectPermissions } from '@/hooks/useProjectPermissions';
 
-import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/components/ui/Card';
 import CustomSelect from '@/components/ui/CustomSelect';
 import { ConfirmDeleteDialog } from '@/components/ui/ConfirmDeleteDialog';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/Table';
 
 export default function ProjectSettingsPage() {
   const { t } = useTranslation();
@@ -44,7 +51,11 @@ export default function ProjectSettingsPage() {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
         <Shield className="w-12 h-12 opacity-30 mb-3" />
-        <p className="text-sm font-medium">{t('project.no_settings_access', { defaultValue: 'You do not have permission to access project settings.' })}</p>
+        <p className="text-sm font-medium">
+          {t('project.no_settings_access', {
+            defaultValue: 'You do not have permission to access project settings.',
+          })}
+        </p>
       </div>
     );
   }
@@ -74,13 +85,13 @@ export default function ProjectSettingsPage() {
 
       {/* Tabs */}
       <div className="flex items-center gap-2 border-b border-border">
-        {tabs.map(tab => {
+        {tabs.map((tab) => {
           const Icon = tab.icon;
           return (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 rounded-t-lg transition-colors ${
                 activeTab === tab.id
                   ? 'border-[color:var(--color-primary)] text-[color:var(--color-primary)]'
                   : 'border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50'
@@ -95,12 +106,16 @@ export default function ProjectSettingsPage() {
 
       {/* Tab Content */}
       {activeTab === 'members' && (
-        <ProjectMembersTab projectId={projectId} project={project} currentUser={currentUser} isPM={isPM} />
+        <ProjectMembersTab
+          projectId={projectId}
+          project={project}
+          currentUser={currentUser}
+          isPM={isPM}
+        />
       )}
     </div>
   );
 }
-
 
 // ── Members Tab ────────────────────────────────────────────────────────
 function ProjectMembersTab({ projectId, project, currentUser, isPM }) {
@@ -127,15 +142,23 @@ function ProjectMembersTab({ projectId, project, currentUser, isPM }) {
     enabled: debouncedSearch.length > 1,
   });
 
-  const memberIds = new Set([project?.owner_id, ...members.map(m => m.user_id)]);
-  const defaultRoleId = roles.find(r => r.name === 'Member')?.id || roles[0]?.id || '';
+  const { data: wsMembers = [] } = useQuery({
+    queryKey: ['workspace-members', project?.workspace_id],
+    queryFn: () => workspaceService.getMembers(project.workspace_id),
+    enabled: !!project?.workspace_id,
+  });
+
+  const memberIds = new Set([project?.owner_id, ...members.map((m) => m.user_id)]);
+  const availableWsMembers = wsMembers.filter((m) => !memberIds.has(m.user_id)).slice(0, 5);
+  const defaultRoleId = roles.find((r) => r.name === 'Member')?.id || roles[0]?.id || '';
 
   const addMutation = useMutation({
     mutationFn: ({ userId, roleId }) => projectService.addMember(projectId, userId, roleId),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['members', projectId] });
       toast.success(t('project.member_added', { defaultValue: 'Member added' }));
-      setSearch(''); setDebouncedSearch('');
+      setSearch('');
+      setDebouncedSearch('');
     },
     onError: (err) => toast.error(t('common.error'), { description: err.translatedMessage || '' }),
   });
@@ -150,7 +173,8 @@ function ProjectMembersTab({ projectId, project, currentUser, isPM }) {
   });
 
   const updateRoleMutation = useMutation({
-    mutationFn: ({ userId, roleId }) => projectService.updateMember(projectId, userId, { role_id: roleId }),
+    mutationFn: ({ userId, roleId }) =>
+      projectService.updateMember(projectId, userId, { role_id: roleId }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['members', projectId] });
       toast.success(t('project.role_updated', { defaultValue: 'Role updated' }));
@@ -167,10 +191,18 @@ function ProjectMembersTab({ projectId, project, currentUser, isPM }) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold tracking-tight">{t('project.members_title', { defaultValue: 'Members' })}</h2>
-          <p className="text-sm text-muted-foreground">{t('project.members_desc', { defaultValue: 'Manage who has access to this project and their roles.' })}</p>
+          <h2 className="text-lg font-semibold tracking-tight">
+            {t('project.members_title', { defaultValue: 'Members' })}
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            {t('project.members_desc', {
+              defaultValue: 'Manage who has access to this project and their roles.',
+            })}
+          </p>
         </div>
-        <Badge variant="secondary" className="text-[10px] px-2 py-0.5 rounded-full font-mono">{members.length}</Badge>
+        <Badge variant="secondary" className="text-[10px] px-2 py-0.5 rounded-full font-mono">
+          {members.length}
+        </Badge>
       </div>
 
       {/* Add member search */}
@@ -180,32 +212,98 @@ function ProjectMembersTab({ projectId, project, currentUser, isPM }) {
             <Search className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
             <input
               type="text"
-              placeholder={t('project.search_add', { defaultValue: 'Search user by name or email to add...' })}
+              placeholder={t('project.search_add', {
+                defaultValue: 'Search user by name or email to add...',
+              })}
               value={search}
               onChange={handleSearchChange}
               className="w-full pl-9 pr-3 py-2 text-[13px] bg-background border border-border rounded-lg focus:outline-none focus:border-[color:var(--color-ai)] focus:ring-1 focus:ring-[color:var(--color-ai)] transition-all"
             />
           </div>
-          {debouncedSearch.length > 1 && searchResults.length > 0 && (
-            <div className="mt-3 space-y-1.5">
-              {searchResults.filter(u => !memberIds.has(u.id)).slice(0, 5).map(user => (
-                <div key={user.id} className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-muted/20 border border-border/50 hover:border-[color:var(--color-ai)]/30 transition-colors">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)] flex items-center justify-center font-bold text-[11px]">
-                      {user.full_name?.charAt(0).toUpperCase() || 'U'}
+
+          {debouncedSearch.length === 0 && availableWsMembers.length > 0 && (
+            <div className="mt-4">
+              <h3 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                {t('project.workspace_suggestions', { defaultValue: 'Workspace suggestions' })}
+              </h3>
+              <div className="space-y-1.5">
+                {availableWsMembers.map((wsMem) => (
+                  <div
+                    key={wsMem.user_id}
+                    className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-muted/10 border border-border/50 hover:border-[color:var(--color-primary)]/30 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[11px]">
+                        {wsMem.user?.full_name?.charAt(0).toUpperCase() || 'U'}
+                      </div>
+                      <div>
+                        <p className="text-[12px] font-medium text-foreground">
+                          {wsMem.user?.full_name}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground">{wsMem.user?.email}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-[12px] font-medium text-foreground">{user.full_name}</p>
-                      <p className="text-[10px] text-muted-foreground">{user.email}</p>
-                    </div>
+                    <Button
+                      size="xs"
+                      onClick={() =>
+                        addMutation.mutate({ userId: wsMem.user_id, roleId: defaultRoleId })
+                      }
+                      disabled={addMutation.isPending}
+                    >
+                      <Plus className="w-3 h-3" /> {t('common.add', { defaultValue: 'Add' })}
+                    </Button>
                   </div>
-                  <Button size="xs" onClick={() => addMutation.mutate({ userId: user.id, roleId: defaultRoleId })} disabled={addMutation.isPending}>
-                    <Plus className="w-3 h-3" /> {t('common.add', { defaultValue: 'Add' })}
-                  </Button>
-                </div>
-              ))}
-              {searchResults.filter(u => !memberIds.has(u.id)).length === 0 && (
-                <p className="text-xs text-muted-foreground text-center py-2">{t('project.all_already_members', { defaultValue: 'All results are already members' })}</p>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {debouncedSearch.length > 1 && (
+            <div className="mt-3 space-y-1.5">
+              {searchResults.length > 0 ? (
+                <>
+                  {searchResults
+                    .filter((u) => !memberIds.has(u.id))
+                    .slice(0, 5)
+                    .map((user) => (
+                      <div
+                        key={user.id}
+                        className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-muted/20 border border-border/50 hover:border-[color:var(--color-ai)]/30 transition-colors"
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 rounded-full bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)] flex items-center justify-center font-bold text-[11px]">
+                            {user.full_name?.charAt(0).toUpperCase() || 'U'}
+                          </div>
+                          <div>
+                            <p className="text-[12px] font-medium text-foreground">
+                              {user.full_name}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground">{user.email}</p>
+                          </div>
+                        </div>
+                        <Button
+                          size="xs"
+                          onClick={() =>
+                            addMutation.mutate({ userId: user.id, roleId: defaultRoleId })
+                          }
+                          disabled={addMutation.isPending}
+                        >
+                          <Plus className="w-3 h-3" /> {t('common.add', { defaultValue: 'Add' })}
+                        </Button>
+                      </div>
+                    ))}
+                  {searchResults.filter((u) => !memberIds.has(u.id)).length === 0 && (
+                    <p className="text-xs text-muted-foreground text-center py-2">
+                      {t('project.all_already_members', {
+                        defaultValue: 'All results are already members',
+                      })}
+                    </p>
+                  )}
+                </>
+              ) : (
+                <p className="text-xs text-muted-foreground text-center py-2">
+                  {t('common.no_results', { defaultValue: 'No users found' })}
+                </p>
               )}
             </div>
           )}
@@ -213,27 +311,29 @@ function ProjectMembersTab({ projectId, project, currentUser, isPM }) {
       )}
 
       {/* Members table */}
-      <Card className="border border-border overflow-hidden shadow-sm">
+      <Card className="border border-border shadow-sm">
         {isLoading ? (
-          <div className="py-12 flex justify-center"><Loader2 className="w-5 h-5 animate-spin text-[color:var(--color-ai)]" /></div>
+          <div className="py-12 flex justify-center">
+            <Loader2 className="w-5 h-5 animate-spin text-[color:var(--color-ai)]" />
+          </div>
         ) : (
-          <table className="w-full text-left text-sm">
-            <thead className="bg-muted/50 border-b border-border">
-              <tr>
-                <th className="p-4 font-semibold text-muted-foreground">{t('common.user', { defaultValue: 'User' })}</th>
-                <th className="p-4 font-semibold text-muted-foreground">{t('workspace.role', { defaultValue: 'Role' })}</th>
-                <th className="p-4 font-semibold text-muted-foreground">{t('common.joined', { defaultValue: 'Joined' })}</th>
-                <th className="p-4 font-semibold text-muted-foreground w-[60px]"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {members.map(member => {
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('common.user', { defaultValue: 'User' })}</TableHead>
+                <TableHead>{t('workspace.role', { defaultValue: 'Role' })}</TableHead>
+                <TableHead>{t('common.joined', { defaultValue: 'Joined' })}</TableHead>
+                <TableHead className="w-[60px]"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {members.map((member) => {
                 const isMemberOwner = member.user_id === project?.owner_id;
                 const isSelf = member.user_id === currentUser?.id;
 
                 return (
-                  <tr key={member.user_id} className="hover:bg-muted/10 transition-colors">
-                    <td className="p-4">
+                  <TableRow key={member.user_id}>
+                    <TableCell>
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[color:var(--color-primary)]/20 to-[color:var(--color-ai)]/20 text-[color:var(--color-ai)] flex items-center justify-center font-bold text-[11px]">
                           {member.user?.full_name?.charAt(0).toUpperCase() || 'U'}
@@ -241,32 +341,45 @@ function ProjectMembersTab({ projectId, project, currentUser, isPM }) {
                         <div>
                           <p className="font-medium text-foreground text-[13px] flex items-center gap-1.5">
                             {member.user?.full_name}
-                            {isMemberOwner && <Badge variant="glass" className="text-[8px] px-1 py-px bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)]">{t('project.owner_badge')}</Badge>}
-                            {isSelf && !isMemberOwner && <Badge variant="outline" className="text-[8px] px-1 py-px">{t('common.you')}</Badge>}
+                            {isMemberOwner && (
+                              <Badge
+                                variant="glass"
+                                className="text-[8px] px-1 py-px bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)]"
+                              >
+                                {t('project.owner_badge')}
+                              </Badge>
+                            )}
+                            {isSelf && !isMemberOwner && (
+                              <Badge variant="outline" className="text-[8px] px-1 py-px">
+                                {t('common.you')}
+                              </Badge>
+                            )}
                           </p>
                           <p className="text-[11px] text-muted-foreground flex items-center gap-1">
                             <Mail className="w-3 h-3" /> {member.user?.email}
                           </p>
                         </div>
                       </div>
-                    </td>
-                    <td className="p-4">
+                    </TableCell>
+                    <TableCell>
                       {isPM && !isMemberOwner ? (
                         <CustomSelect
-                          options={roles.map(r => ({ value: r.id, label: r.name }))}
+                          options={roles.map((r) => ({ value: r.id, label: r.name }))}
                           value={member.role_id || ''}
-                          onChange={(val) => updateRoleMutation.mutate({ userId: member.user_id, roleId: val })}
+                          onChange={(val) =>
+                            updateRoleMutation.mutate({ userId: member.user_id, roleId: val })
+                          }
                         />
                       ) : (
                         <Badge variant="outline" className="text-[10px] px-2 py-0.5 capitalize">
                           {member.role?.name || member.project_role}
                         </Badge>
                       )}
-                    </td>
-                    <td className="p-4 text-muted-foreground text-xs">
+                    </TableCell>
+                    <TableCell className="text-muted-foreground text-xs">
                       {member.joined_at ? format(new Date(member.joined_at), 'dd/MM/yyyy') : '-'}
-                    </td>
-                    <td className="p-4 text-right">
+                    </TableCell>
+                    <TableCell className="text-right">
                       {isPM && !isMemberOwner && !isSelf && (
                         <button
                           onClick={() => setRemoveTarget(member)}
@@ -276,24 +389,34 @@ function ProjectMembersTab({ projectId, project, currentUser, isPM }) {
                           {t('common.remove', { defaultValue: 'Remove' })}
                         </button>
                       )}
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 );
               })}
               {members.length === 0 && (
-                <tr><td colSpan={4} className="p-10 text-center text-muted-foreground text-xs">{t('project.no_members', { defaultValue: 'No members' })}</td></tr>
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center text-muted-foreground text-xs h-24">
+                    {t('project.no_members', { defaultValue: 'No members' })}
+                  </TableCell>
+                </TableRow>
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         )}
       </Card>
 
       <ConfirmDeleteDialog
         isOpen={!!removeTarget}
         onClose={() => setRemoveTarget(null)}
-        onConfirm={() => { removeMutation.mutate(removeTarget.user_id); setRemoveTarget(null); }}
+        onConfirm={() => {
+          removeMutation.mutate(removeTarget.user_id);
+          setRemoveTarget(null);
+        }}
         title={t('project.remove_member', { defaultValue: 'Remove member' })}
-        description={t('project.remove_member_confirm', { name: removeTarget?.user?.full_name, defaultValue: `${removeTarget?.user?.full_name} will be removed from the project and cannot access tasks anymore.` })}
+        description={t('project.remove_member_confirm', {
+          name: removeTarget?.user?.full_name,
+          defaultValue: `${removeTarget?.user?.full_name} will be removed from the project and cannot access tasks anymore.`,
+        })}
         isDeleting={removeMutation.isPending}
       />
     </div>

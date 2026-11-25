@@ -4,9 +4,22 @@ import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import {
-  Sparkles, Brain, Zap, RefreshCw,
-  CheckCircle2, AlertTriangle, AlertCircle, Info, Users, Timer, Target, Activity,
-  CheckSquare, Ban, Settings, PieChart,
+  Sparkles,
+  Brain,
+  Zap,
+  RefreshCw,
+  CheckCircle2,
+  AlertTriangle,
+  AlertCircle,
+  Info,
+  Users,
+  Timer,
+  Target,
+  Activity,
+  CheckSquare,
+  Ban,
+  Settings,
+  PieChart,
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { vi, enUS } from 'date-fns/locale';
@@ -15,7 +28,7 @@ import projectService from '@/services/projectService';
 import AIMetricsDashboard from '@/components/AIMetricsDashboard';
 import EditProjectModal from '@/components/EditProjectModal';
 import StatusBadge from '@/components/ui/StatusBadge';
-import { useTheme } from "@/contexts/useTheme";
+import { useTheme } from '@/contexts/useTheme';
 
 import { Card, MotionCard } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -26,31 +39,55 @@ import { useProjectPermissions } from '@/hooks/useProjectPermissions';
 // ── Constants ────────────────────────────────────────────────────────────────
 
 const INSIGHT_META = {
-  risk:    { icon: AlertCircle,   bg: 'bg-red-500/8',    border: 'border-red-500/20',   text: 'text-red-500',    badge: 'bg-red-500/10 text-red-500' },
-  warning: { icon: AlertTriangle, bg: 'bg-amber-500/8',  border: 'border-amber-500/20', text: 'text-amber-500',  badge: 'bg-amber-500/10 text-amber-500' },
-  success: { icon: CheckCircle2,  bg: 'bg-emerald-500/8',border: 'border-emerald-500/20',text: 'text-emerald-500',badge: 'bg-emerald-500/10 text-emerald-500' },
-  info:    { icon: Info,          bg: 'bg-blue-500/8',   border: 'border-blue-500/20',  text: 'text-blue-500',   badge: 'bg-blue-500/10 text-blue-500' },
+  risk: {
+    icon: AlertCircle,
+    bg: 'bg-red-500/8',
+    border: 'border-red-500/20',
+    text: 'text-red-500',
+    badge: 'bg-red-500/10 text-red-500',
+  },
+  warning: {
+    icon: AlertTriangle,
+    bg: 'bg-amber-500/8',
+    border: 'border-amber-500/20',
+    text: 'text-amber-500',
+    badge: 'bg-amber-500/10 text-amber-500',
+  },
+  success: {
+    icon: CheckCircle2,
+    bg: 'bg-emerald-500/8',
+    border: 'border-emerald-500/20',
+    text: 'text-emerald-500',
+    badge: 'bg-emerald-500/10 text-emerald-500',
+  },
+  info: {
+    icon: Info,
+    bg: 'bg-blue-500/8',
+    border: 'border-blue-500/20',
+    text: 'text-blue-500',
+    badge: 'bg-blue-500/10 text-blue-500',
+  },
 };
 
 const _INSIGHT_LABEL = {
-  risk:    'projectOverview.insight_labels.risk',
+  risk: 'projectOverview.insight_labels.risk',
   warning: 'projectOverview.insight_labels.warning',
   success: 'projectOverview.insight_labels.success',
-  info:    'projectOverview.insight_labels.info',
+  info: 'projectOverview.insight_labels.info',
 };
 
 const HEALTH_GRADIENT = {
-  green:  { from: '#22c55e', to: '#16a34a', glow: 'rgba(34,197,94,0.3)' },
-  blue:   { from: '#3b82f6', to: '#2563eb', glow: 'rgba(59,130,246,0.3)' },
+  green: { from: '#22c55e', to: '#16a34a', glow: 'rgba(34,197,94,0.3)' },
+  blue: { from: '#3b82f6', to: '#2563eb', glow: 'rgba(59,130,246,0.3)' },
   yellow: { from: '#f59e0b', to: '#d97706', glow: 'rgba(245,158,11,0.3)' },
-  red:    { from: '#ef4444', to: '#dc2626', glow: 'rgba(239,68,68,0.3)' },
+  red: { from: '#ef4444', to: '#dc2626', glow: 'rgba(239,68,68,0.3)' },
 };
 
 const WORKLOAD_STYLE = {
-  low:      { bar: 'bg-muted',            text: 'text-muted-foreground' },
-  normal:   { bar: 'bg-emerald-500',      text: 'text-emerald-600' },
-  high:     { bar: 'bg-amber-500',        text: 'text-amber-600' },
-  critical: { bar: 'bg-red-500',          text: 'text-red-600' },
+  low: { bar: 'bg-muted', text: 'text-muted-foreground' },
+  normal: { bar: 'bg-emerald-500', text: 'text-emerald-600' },
+  high: { bar: 'bg-amber-500', text: 'text-amber-600' },
+  critical: { bar: 'bg-red-500', text: 'text-red-600' },
 };
 
 // ── Health Score Gauge ────────────────────────────────────────────────────────
@@ -71,15 +108,27 @@ function HealthGauge({ score, color, label }) {
           </linearGradient>
           <filter id="health-glow">
             <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-            <feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
           </filter>
         </defs>
         {/* Track */}
-        <circle cx="84" cy="84" r={r} fill="none" stroke="currentColor"
-          strokeWidth="10" className="text-muted/20" />
+        <circle
+          cx="84"
+          cy="84"
+          r={r}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="10"
+          className="text-muted/20"
+        />
         {/* Arc */}
         <motion.circle
-          cx="84" cy="84" r={r}
+          cx="84"
+          cy="84"
+          r={r}
           fill="none"
           stroke="url(#health-grad)"
           strokeWidth="10"
@@ -92,8 +141,15 @@ function HealthGauge({ score, color, label }) {
           transition={{ duration: 1.2, ease: 'easeOut', delay: 0.3 }}
         />
         {/* Score */}
-        <text x="84" y="76" textAnchor="middle" fill="currentColor"
-          fontSize="34" fontWeight="700" className="fill-foreground">
+        <text
+          x="84"
+          y="76"
+          textAnchor="middle"
+          fill="currentColor"
+          fontSize="34"
+          fontWeight="700"
+          className="fill-foreground"
+        >
           {score}
         </text>
         <text x="84" y="98" textAnchor="middle" fontSize="12" className="fill-muted-foreground">
@@ -176,17 +232,37 @@ function StatusDistribution({ data, t }) {
   if (!total_tasks) return null;
 
   const bars = [
-    { key: 'todo',        count: todo_tasks,        label: t('dashboard.status.todo'),       color: 'bg-muted-foreground/30' },
-    { key: 'in_progress', count: in_progress_tasks,  label: t('dashboard.status.in_progress'),    color: 'bg-[color:var(--color-ai)]' },
-    { key: 'review',      count: review_tasks,        label: t('dashboard.status.review'),      color: 'bg-amber-500' },
-    { key: 'done',        count: done_tasks,          label: t('projectOverview.stats.completed'),  color: 'bg-emerald-500' },
+    {
+      key: 'todo',
+      count: todo_tasks,
+      label: t('dashboard.status.todo'),
+      color: 'bg-muted-foreground/30',
+    },
+    {
+      key: 'in_progress',
+      count: in_progress_tasks,
+      label: t('dashboard.status.in_progress'),
+      color: 'bg-[color:var(--color-ai)]',
+    },
+    {
+      key: 'review',
+      count: review_tasks,
+      label: t('dashboard.status.review'),
+      color: 'bg-amber-500',
+    },
+    {
+      key: 'done',
+      count: done_tasks,
+      label: t('projectOverview.stats.completed'),
+      color: 'bg-emerald-500',
+    },
   ];
 
   return (
     <div className="space-y-3">
       {/* Stacked bar */}
       <div className="flex h-3 rounded-full overflow-hidden gap-px bg-muted/20">
-        {bars.map(b => {
+        {bars.map((b) => {
           const pct = total_tasks ? (b.count / total_tasks) * 100 : 0;
           return pct > 0 ? (
             <motion.div
@@ -201,7 +277,7 @@ function StatusDistribution({ data, t }) {
       </div>
       {/* Legend */}
       <div className="grid grid-cols-4 gap-2">
-        {bars.map(b => (
+        {bars.map((b) => (
           <div key={b.key} className="flex items-center gap-1.5">
             <div className={`w-2 h-2 rounded-full shrink-0 ${b.color}`} />
             <div>
@@ -219,7 +295,7 @@ function StatusDistribution({ data, t }) {
 
 function TeamWorkload({ members, t }) {
   if (!members?.length) return null;
-  const maxCount = Math.max(...members.map(m => m.task_count), 1);
+  const maxCount = Math.max(...members.map((m) => m.task_count), 1);
 
   return (
     <div className="space-y-2.5">
@@ -239,7 +315,9 @@ function TeamWorkload({ members, t }) {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-[12px] font-medium text-foreground truncate">{m.full_name}</span>
+                <span className="text-[12px] font-medium text-foreground truncate">
+                  {m.full_name}
+                </span>
                 <div className="flex items-center gap-2 shrink-0 ml-2">
                   {m.overdue_count > 0 && (
                     <span className="text-[10px] text-red-500 font-medium">
@@ -260,7 +338,10 @@ function TeamWorkload({ members, t }) {
                 />
               </div>
               <p className="text-[10px] text-muted-foreground mt-0.5">
-                {t('projectOverview.team.workload_desc', { active: m.task_count, in_progress: m.in_progress_count })}
+                {t('projectOverview.team.workload_desc', {
+                  active: m.task_count,
+                  in_progress: m.in_progress_count,
+                })}
               </p>
             </div>
           </motion.div>
@@ -287,13 +368,20 @@ function AISummaryCard({ summary, recommendations, isPowered, isGlass, t }) {
           <Brain className="w-4 h-4 text-[color:var(--color-ai)]" />
         </div>
         <div>
-          <h3 className="text-[13px] font-semibold text-foreground">{t('projectOverview.ai_analysis.title')}</h3>
+          <h3 className="text-[13px] font-semibold text-foreground">
+            {t('projectOverview.ai_analysis.title')}
+          </h3>
           {isPowered && (
-            <p className="text-[10px] text-[color:var(--color-ai-soft)]">{t('projectOverview.ai_analysis.powered_by')}</p>
+            <p className="text-[10px] text-[color:var(--color-ai-soft)]">
+              {t('projectOverview.ai_analysis.powered_by')}
+            </p>
           )}
         </div>
         {isPowered && (
-          <Badge variant="glass" className="ml-auto flex items-center gap-1 text-[color:var(--color-ai-soft)] border-[color:var(--color-ai)]/20">
+          <Badge
+            variant="glass"
+            className="ml-auto flex items-center gap-1 text-[color:var(--color-ai-soft)] border-[color:var(--color-ai)]/20"
+          >
             <Sparkles className="w-2.5 h-2.5" />
             {t('projectOverview.ai_analysis.ai_generated')}
           </Badge>
@@ -349,29 +437,38 @@ function SprintCard({ sprint, t }) {
           <Target className="w-4 h-4 text-[color:var(--color-ai)]" />
           <span className="text-[13px] font-semibold text-foreground">{sprint.sprint_name}</span>
         </div>
-        <Badge variant="glass" className={`${
-          sprint.is_on_track
-            ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
-            : 'bg-amber-500/10 text-amber-600 border-amber-500/20'
-        }`}>
-          {sprint.is_on_track ? t('projectOverview.sprint.on_track') : t('projectOverview.sprint.needs_speed')}
+        <Badge
+          variant="glass"
+          className={`${
+            sprint.is_on_track
+              ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
+              : 'bg-amber-500/10 text-amber-600 border-amber-500/20'
+          }`}
+        >
+          {sprint.is_on_track
+            ? t('projectOverview.sprint.on_track')
+            : t('projectOverview.sprint.needs_speed')}
         </Badge>
       </div>
 
       <div className="grid grid-cols-3 gap-3 mb-3 text-center">
         <div>
           <p className="text-xl font-bold text-foreground">{pct.toFixed(0)}%</p>
-          <p className="text-[10px] text-muted-foreground">{t('projectOverview.sprint.completed')}</p>
+          <p className="text-[10px] text-muted-foreground">
+            {t('projectOverview.sprint.completed')}
+          </p>
         </div>
         <div>
           <p className="text-xl font-bold text-foreground">{sprint.velocity}</p>
-          <p className="text-[10px] text-muted-foreground">{t('projectOverview.sprint.task_done')}</p>
+          <p className="text-[10px] text-muted-foreground">
+            {t('projectOverview.sprint.task_done')}
+          </p>
         </div>
         <div>
-          <p className="text-xl font-bold text-foreground">
-            {sprint.days_remaining ?? '–'}
+          <p className="text-xl font-bold text-foreground">{sprint.days_remaining ?? '–'}</p>
+          <p className="text-[10px] text-muted-foreground">
+            {t('projectOverview.sprint.days_remaining')}
           </p>
-          <p className="text-[10px] text-muted-foreground">{t('projectOverview.sprint.days_remaining')}</p>
         </div>
       </div>
 
@@ -402,7 +499,7 @@ function LoadingSkeleton() {
           <Skeleton className="w-24 h-5" />
         </div>
         <div className="md:col-span-2 grid grid-cols-2 gap-3 content-start">
-          {[0, 1, 2, 3].map(i => (
+          {[0, 1, 2, 3].map((i) => (
             <div key={i} className="rounded-xl border border-border bg-card p-4">
               <Skeleton className="w-24 h-3 mb-2" />
               <Skeleton className="w-12 h-7" />
@@ -411,7 +508,7 @@ function LoadingSkeleton() {
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {[0, 1, 2, 3].map(i => (
+        {[0, 1, 2, 3].map((i) => (
           <div key={i} className="rounded-xl border border-border bg-card p-4">
             <Skeleton className="w-32 h-4 mb-2" />
             <Skeleton className="w-full h-3" />
@@ -457,11 +554,14 @@ export default function ProjectOverviewPage() {
   });
 
   const lastUpdated = dataUpdatedAt
-    ? formatDistanceToNow(new Date(dataUpdatedAt), { addSuffix: true, locale: i18n.language === 'vi' ? vi : enUS })
+    ? formatDistanceToNow(new Date(dataUpdatedAt), {
+        addSuffix: true,
+        locale: i18n.language === 'vi' ? vi : enUS,
+      })
     : null;
 
-  const riskCount = insights?.insights?.filter(c => c.type === 'risk').length || 0;
-  const warningCount = insights?.insights?.filter(c => c.type === 'warning').length || 0;
+  const riskCount = insights?.insights?.filter((c) => c.type === 'risk').length || 0;
+  const warningCount = insights?.insights?.filter((c) => c.type === 'warning').length || 0;
 
   return (
     <div className="max-w-5xl mx-auto pb-12">
@@ -524,7 +624,9 @@ export default function ProjectOverviewPage() {
         {!projectId ? (
           <div className="flex flex-col items-center justify-center h-full gap-3 text-center">
             <Sparkles className="w-10 h-10 text-[color:var(--color-ai)]/40" />
-            <p className="text-[14px] text-muted-foreground">{t('projectOverview.select_project')}</p>
+            <p className="text-[14px] text-muted-foreground">
+              {t('projectOverview.select_project')}
+            </p>
           </div>
         ) : isLoading ? (
           <LoadingSkeleton />
@@ -533,7 +635,10 @@ export default function ProjectOverviewPage() {
             <AlertCircle className="w-10 h-10 text-red-500/40" />
             <p className="text-[14px] text-muted-foreground">{t('ai_insights.no_data')}</p>
             <p className="text-[12px] text-muted-foreground/80">{t('ai_insights.no_data_desc')}</p>
-            <button onClick={() => refetch()} className="text-[12px] text-[color:var(--color-ai)] hover:underline mt-2">
+            <button
+              onClick={() => refetch()}
+              className="text-[12px] text-[color:var(--color-ai)] hover:underline mt-2"
+            >
               {t('ai_insights.analyze_btn')}
             </button>
           </div>
@@ -552,9 +657,14 @@ export default function ProjectOverviewPage() {
               >
                 <AlertTriangle className="w-4 h-4 shrink-0" />
                 {riskCount > 0
-                  ? t('projectOverview.details.banner_risks', { riskCount, andWarning: warningCount > 0 ? t('projectOverview.details.and_warnings', { warningCount }) : '' })
-                  : t('projectOverview.details.banner_warnings', { warningCount })
-                }
+                  ? t('projectOverview.details.banner_risks', {
+                      riskCount,
+                      andWarning:
+                        warningCount > 0
+                          ? t('projectOverview.details.and_warnings', { warningCount })
+                          : '',
+                    })
+                  : t('projectOverview.details.banner_warnings', { warningCount })}
               </motion.div>
             )}
 
@@ -576,7 +686,10 @@ export default function ProjectOverviewPage() {
                   label={t(`ai_insights.health_label.${insights.health_label}`)}
                 />
                 <p className="text-[11px] text-muted-foreground mt-2 text-center">
-                  {t('projectOverview.health_desc', { total: insights.total_tasks, members: insights.team_insights.length })}
+                  {t('projectOverview.health_desc', {
+                    total: insights.total_tasks,
+                    members: insights.team_insights.length,
+                  })}
                 </p>
               </MotionCard>
 
@@ -587,7 +700,9 @@ export default function ProjectOverviewPage() {
                   value={insights.total_tasks}
                   icon={CheckSquare}
                   color="bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)]"
-                  sub={t('projectOverview.stats.completion_rate', { rate: insights.completion_rate.toFixed(0) })}
+                  sub={t('projectOverview.stats.completion_rate', {
+                    rate: insights.completion_rate.toFixed(0),
+                  })}
                   delay={0.05}
                 />
                 <StatCard
@@ -595,23 +710,41 @@ export default function ProjectOverviewPage() {
                   value={insights.done_tasks}
                   icon={CheckCircle2}
                   color="bg-emerald-500/10 text-emerald-500"
-                  sub={t('projectOverview.stats.in_progress', { count: insights.in_progress_tasks })}
+                  sub={t('projectOverview.stats.in_progress', {
+                    count: insights.in_progress_tasks,
+                  })}
                   delay={0.1}
                 />
                 <StatCard
                   label={t('projectOverview.stats.overdue')}
                   value={insights.overdue_tasks}
                   icon={Timer}
-                  color={insights.overdue_tasks > 0 ? 'bg-red-500/10 text-red-500' : 'bg-muted text-muted-foreground'}
-                  sub={insights.overdue_tasks > 0 ? t('projectOverview.stats.needs_action') : t('projectOverview.stats.all_on_track')}
+                  color={
+                    insights.overdue_tasks > 0
+                      ? 'bg-red-500/10 text-red-500'
+                      : 'bg-muted text-muted-foreground'
+                  }
+                  sub={
+                    insights.overdue_tasks > 0
+                      ? t('projectOverview.stats.needs_action')
+                      : t('projectOverview.stats.all_on_track')
+                  }
                   delay={0.15}
                 />
                 <StatCard
                   label={t('projectOverview.stats.blocked')}
                   value={insights.blocked_tasks}
                   icon={Ban}
-                  color={insights.blocked_tasks > 0 ? 'bg-amber-500/10 text-amber-500' : 'bg-muted text-muted-foreground'}
-                  sub={insights.blocked_tasks > 0 ? t('projectOverview.stats.dependency_not_done') : t('projectOverview.stats.no_blocked')}
+                  color={
+                    insights.blocked_tasks > 0
+                      ? 'bg-amber-500/10 text-amber-500'
+                      : 'bg-muted text-muted-foreground'
+                  }
+                  sub={
+                    insights.blocked_tasks > 0
+                      ? t('projectOverview.stats.dependency_not_done')
+                      : t('projectOverview.stats.no_blocked')
+                  }
                   delay={0.2}
                 />
               </div>
@@ -626,7 +759,9 @@ export default function ProjectOverviewPage() {
             >
               <div className="flex items-center gap-2 mb-3">
                 <Activity className="w-4 h-4 text-[color:var(--color-ai)]" />
-                <h2 className="text-[13px] font-semibold text-foreground">{t('projectOverview.status_distribution')}</h2>
+                <h2 className="text-[13px] font-semibold text-foreground">
+                  {t('projectOverview.status_distribution')}
+                </h2>
               </div>
               <StatusDistribution data={insights} t={t} />
             </MotionCard>
@@ -648,16 +783,22 @@ export default function ProjectOverviewPage() {
                   <>
                     <div className="flex items-center gap-2 mb-2.5">
                       <Target className="w-3.5 h-3.5 text-[color:var(--color-ai)]" />
-                      <h2 className="text-[13px] font-semibold text-foreground">{t('projectOverview.sprint.current')}</h2>
+                      <h2 className="text-[13px] font-semibold text-foreground">
+                        {t('projectOverview.sprint.current')}
+                      </h2>
                     </div>
                     <SprintCard sprint={insights.active_sprint} t={t} />
                   </>
                 ) : (
-                  <Card className={`border-dashed p-5 flex flex-col items-center justify-center gap-2 text-center h-full min-h-[120px] ${
-                    isGlass ? 'bg-muted/20' : 'bg-card'
-                  }`}>
+                  <Card
+                    className={`border-dashed p-5 flex flex-col items-center justify-center gap-2 text-center h-full min-h-[120px] ${
+                      isGlass ? 'bg-muted/20' : 'bg-card'
+                    }`}
+                  >
                     <Target className="w-6 h-6 text-muted-foreground/40" />
-                    <p className="text-[12px] text-muted-foreground">{t('projectOverview.sprint.no_sprint')}</p>
+                    <p className="text-[12px] text-muted-foreground">
+                      {t('projectOverview.sprint.no_sprint')}
+                    </p>
                   </Card>
                 )}
               </div>
@@ -670,12 +811,16 @@ export default function ProjectOverviewPage() {
                     {t('projectOverview.team.workload')}
                   </h2>
                   <span className="text-[10px] text-muted-foreground ml-auto">
-                    {t('projectOverview.team.members_count', { count: insights.team_insights.length })}
+                    {t('projectOverview.team.members_count', {
+                      count: insights.team_insights.length,
+                    })}
                   </span>
                 </div>
                 <Card className="p-4">
                   {insights.team_insights.length === 0 ? (
-                    <p className="text-[12px] text-muted-foreground text-center py-4">{t('projectOverview.team.no_members')}</p>
+                    <p className="text-[12px] text-muted-foreground text-center py-4">
+                      {t('projectOverview.team.no_members')}
+                    </p>
                   ) : (
                     <TeamWorkload members={insights.team_insights} t={t} />
                   )}
@@ -688,10 +833,20 @@ export default function ProjectOverviewPage() {
               <div>
                 <div className="flex items-center gap-2 mb-2.5">
                   <Sparkles className="w-3.5 h-3.5 text-[color:var(--color-ai)]" />
-                  <h2 className="text-[13px] font-semibold text-foreground">{t('projectOverview.details.title')}</h2>
+                  <h2 className="text-[13px] font-semibold text-foreground">
+                    {t('projectOverview.details.title')}
+                  </h2>
                   <span className="ml-auto text-[10px] text-muted-foreground">
-                    {riskCount > 0 && <span className="text-red-500 mr-1">{t('projectOverview.details.risk_count', { count: riskCount })}</span>}
-                    {warningCount > 0 && <span className="text-amber-500">{t('projectOverview.details.warning_count', { count: warningCount })}</span>}
+                    {riskCount > 0 && (
+                      <span className="text-red-500 mr-1">
+                        {t('projectOverview.details.risk_count', { count: riskCount })}
+                      </span>
+                    )}
+                    {warningCount > 0 && (
+                      <span className="text-amber-500">
+                        {t('projectOverview.details.warning_count', { count: warningCount })}
+                      </span>
+                    )}
                   </span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -708,10 +863,18 @@ export default function ProjectOverviewPage() {
 
             <div className="pt-2 pb-4 text-center">
               <p className="text-[10px] text-muted-foreground/60">
-                {t('projectOverview.analyzed_at', { time: new Date(insights.generated_at).toLocaleString(i18n.language === 'vi' ? 'vi-VN' : 'en-US', {
-                  day: '2-digit', month: '2-digit', year: 'numeric',
-                  hour: '2-digit', minute: '2-digit',
-                }) })}
+                {t('projectOverview.analyzed_at', {
+                  time: new Date(insights.generated_at).toLocaleString(
+                    i18n.language === 'vi' ? 'vi-VN' : 'en-US',
+                    {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    }
+                  ),
+                })}
                 {insights.ai_powered && ` · ${t('projectOverview.ai_narrative')}`}
               </p>
             </div>

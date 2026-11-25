@@ -43,19 +43,20 @@ export default function BulkActionBar({ count, onDelete, onClear, isDeleting, ch
 
       {/* Delete (only offered when the user may delete tasks) */}
       {onDelete && (
-      <button
-        onClick={onDelete}
-        disabled={isDeleting}
-        className="flex items-center gap-1.5 text-[11px] font-medium text-[color:var(--color-destructive)]
+        <button
+          onClick={onDelete}
+          disabled={isDeleting}
+          className="flex items-center gap-1.5 text-[11px] font-medium text-[color:var(--color-destructive)]
                    hover:bg-[color:var(--color-destructive)]/10 px-2.5 py-1.5 rounded-md transition-colors
                    disabled:opacity-50"
-      >
-        {isDeleting
-          ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
-          : <Trash2 className="w-3.5 h-3.5" />
-        }
-        {t('sprintBoard.bulk.delete', { count })}
-      </button>
+        >
+          {isDeleting ? (
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+          ) : (
+            <Trash2 className="w-3.5 h-3.5" />
+          )}
+          {t('sprintBoard.bulk.delete', { count })}
+        </button>
       )}
 
       {/* Clear */}

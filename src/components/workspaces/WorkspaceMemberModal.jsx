@@ -30,7 +30,7 @@ export default function WorkspaceMemberModal({ isOpen, mode, member, onClose }) 
     if (mode === 'edit' && member) {
       setRoleId(member.role_id || '');
     } else if (roles.length > 0 && !roleId) {
-      const viewerRole = roles.find(r => r.name.toLowerCase() === 'viewer') || roles[0];
+      const viewerRole = roles.find((r) => r.name.toLowerCase() === 'viewer') || roles[0];
       setRoleId(viewerRole?.id || '');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,12 +82,7 @@ export default function WorkspaceMemberModal({ isOpen, mode, member, onClose }) 
           <Button type="button" variant="secondary" size="sm" onClick={onClose}>
             {t('common.cancel')}
           </Button>
-          <Button
-            type="submit"
-            form="workspace-member-form"
-            disabled={isSubmitting}
-            size="sm"
-          >
+          <Button type="submit" form="workspace-member-form" disabled={isSubmitting} size="sm">
             {isSubmitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
             {mode === 'invite' ? t('workspace.send_invite') : t('common.save')}
           </Button>
@@ -104,7 +99,9 @@ export default function WorkspaceMemberModal({ isOpen, mode, member, onClose }) 
 
         {mode === 'invite' ? (
           <div>
-            <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">{t('common.email')} <span className="text-destructive">*</span></label>
+            <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">
+              {t('common.email')} <span className="text-destructive">*</span>
+            </label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
@@ -119,7 +116,9 @@ export default function WorkspaceMemberModal({ isOpen, mode, member, onClose }) 
           </div>
         ) : (
           <div>
-            <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">{t('common.user')}</label>
+            <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">
+              {t('common.user')}
+            </label>
             <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg border border-border/50">
               <div className="w-8 h-8 rounded-full bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)] flex items-center justify-center font-bold text-[11px]">
                 {member.user?.full_name?.charAt(0).toUpperCase() || 'U'}
@@ -133,9 +132,14 @@ export default function WorkspaceMemberModal({ isOpen, mode, member, onClose }) 
         )}
 
         <div>
-          <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">{t('workspace.role')} <span className="text-destructive">*</span></label>
+          <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">
+            {t('workspace.role')} <span className="text-destructive">*</span>
+          </label>
           <CustomSelect
-            options={roles.map(r => ({ value: r.id, label: r.name + (r.is_system_default ? ' (Default)' : '') }))}
+            options={roles.map((r) => ({
+              value: r.id,
+              label: r.name + (r.is_system_default ? ' (Default)' : ''),
+            }))}
             value={roleId}
             onChange={setRoleId}
             placeholder={t('common.select')}

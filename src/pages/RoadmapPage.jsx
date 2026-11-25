@@ -5,8 +5,17 @@ import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Calendar, Layers, Plus, Trash2, Edit3, Loader2,
-  CheckCircle2, Circle, Clock, ChevronRight, ChevronDown
+  Calendar,
+  Layers,
+  Plus,
+  Trash2,
+  Edit3,
+  Loader2,
+  CheckCircle2,
+  Circle,
+  Clock,
+  ChevronRight,
+  ChevronDown,
 } from 'lucide-react';
 import epicService from '@/services/epicService';
 import projectService from '@/services/projectService';
@@ -66,20 +75,20 @@ export default function RoadmapPage() {
     },
     onError: (err) => {
       toast.error(getApiError(err, t('roadmap.delete_error')));
-    }
+    },
   });
 
   const getEpicStats = (epicId) => {
-    const epicTasks = tasks.filter(t => t.epic_id === epicId && !t.is_deleted);
+    const epicTasks = tasks.filter((t) => t.epic_id === epicId && !t.is_deleted);
     const total = epicTasks.length;
-    const completed = epicTasks.filter(t => t.status === 'done').length;
+    const completed = epicTasks.filter((t) => t.status === 'done').length;
     const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
     return { total, completed, progress, tasks: epicTasks };
   };
 
   const handleDelete = (epicId, e) => {
     e.stopPropagation();
-    setDeleteTarget(epics.find(ep => ep.id === epicId) || { id: epicId });
+    setDeleteTarget(epics.find((ep) => ep.id === epicId) || { id: epicId });
   };
 
   const handleEdit = (epic, e) => {
@@ -107,13 +116,12 @@ export default function RoadmapPage() {
             <h1 className="text-xl font-bold tracking-tight text-foreground">
               {t('roadmap.title')}
             </h1>
-            <p className="text-[12px] text-muted-foreground mt-0.5">
-              {t('roadmap.subtitle')}
-            </p>
+            <p className="text-[12px] text-muted-foreground mt-0.5">{t('roadmap.subtitle')}</p>
           </div>
         </div>
         <Button
-          disabled={!canManage} onClick={() => setShowCreateModal(true)}
+          disabled={!canManage}
+          onClick={() => setShowCreateModal(true)}
           className="rounded-xl flex items-center gap-1.5 shadow-sm"
         >
           <Plus className="w-4 h-4" /> {t('roadmap.create_epic')}
@@ -133,7 +141,8 @@ export default function RoadmapPage() {
             </div>
             <Button
               variant="outline"
-              disabled={!canManage} onClick={() => setShowCreateModal(true)}
+              disabled={!canManage}
+              onClick={() => setShowCreateModal(true)}
               className="mt-2 text-xs rounded-xl"
             >
               {t('roadmap.create_now')}
@@ -153,13 +162,19 @@ export default function RoadmapPage() {
               >
                 <div className="p-4 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-1.5 h-8 rounded-full" style={{ backgroundColor: epicColor }} />
+                    <div
+                      className="w-1.5 h-8 rounded-full"
+                      style={{ backgroundColor: epicColor }}
+                    />
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="font-bold text-sm text-foreground truncate max-w-[200px] sm:max-w-md">
                           {epic.name}
                         </span>
-                        <Badge variant="outline" className="text-[9px] uppercase font-mono px-1 py-0.5 leading-none">
+                        <Badge
+                          variant="outline"
+                          className="text-[9px] uppercase font-mono px-1 py-0.5 leading-none"
+                        >
                           {epic.status}
                         </Badge>
                       </div>
@@ -174,7 +189,13 @@ export default function RoadmapPage() {
                     {epic.due_date && (
                       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                         <Calendar className="w-3.5 h-3.5" />
-                        <span>{t('roadmap.due_date', { date: new Date(epic.due_date).toLocaleDateString(i18n.language === 'vi' ? 'vi-VN' : 'en-US') })}</span>
+                        <span>
+                          {t('roadmap.due_date', {
+                            date: new Date(epic.due_date).toLocaleDateString(
+                              i18n.language === 'vi' ? 'vi-VN' : 'en-US'
+                            ),
+                          })}
+                        </span>
                       </div>
                     )}
 
@@ -193,26 +214,32 @@ export default function RoadmapPage() {
 
                     {/* Actions */}
                     <div className="flex items-center gap-1">
-                      {canManage && (<>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={(e) => handleEdit(epic, e)}
-                        className="w-8 h-8 rounded-lg text-muted-foreground hover:text-foreground"
-                      >
-                        <Edit3 className="w-3.5 h-3.5" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={(e) => handleDelete(epic.id, e)}
-                        className="w-8 h-8 rounded-lg text-muted-foreground hover:text-rose-500"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </Button>
-                      </>)}
+                      {canManage && (
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => handleEdit(epic, e)}
+                            className="w-8 h-8 rounded-lg text-muted-foreground hover:text-foreground"
+                          >
+                            <Edit3 className="w-3.5 h-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => handleDelete(epic.id, e)}
+                            className="w-8 h-8 rounded-lg text-muted-foreground hover:text-rose-500"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        </>
+                      )}
                       <span className="text-muted-foreground/50 ml-1">
-                        {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                        {isExpanded ? (
+                          <ChevronDown className="w-4 h-4" />
+                        ) : (
+                          <ChevronRight className="w-4 h-4" />
+                        )}
                       </span>
                     </div>
                   </div>
@@ -232,12 +259,20 @@ export default function RoadmapPage() {
                           {t('roadmap.linked_tasks', { count: total })}
                         </p>
                         {epicTasks.length === 0 ? (
-                          <p className="text-xs text-muted-foreground py-2 italic">{t('roadmap.no_linked_tasks_hint', 'No tasks are linked to this Epic yet. Assign the Epic in the task details.')}</p>
+                          <p className="text-xs text-muted-foreground py-2 italic">
+                            {t(
+                              'roadmap.no_linked_tasks_hint',
+                              'No tasks are linked to this Epic yet. Assign the Epic in the task details.'
+                            )}
+                          </p>
                         ) : (
-                          epicTasks.map(t => {
+                          epicTasks.map((t) => {
                             const isDone = t.status === 'done';
                             return (
-                              <div key={t.id} className="flex items-center justify-between p-2.5 rounded-lg border border-border/40 bg-background/50 hover:bg-background/80 transition-colors">
+                              <div
+                                key={t.id}
+                                className="flex items-center justify-between p-2.5 rounded-lg border border-border/40 bg-background/50 hover:bg-background/80 transition-colors"
+                              >
                                 <div className="flex items-center gap-2.5 min-w-0">
                                   {isDone ? (
                                     <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
@@ -246,7 +281,9 @@ export default function RoadmapPage() {
                                   ) : (
                                     <Circle className="w-4 h-4 text-muted-foreground/50 shrink-0" />
                                   )}
-                                  <span className={`text-[12px] font-medium truncate ${isDone ? 'line-through text-muted-foreground/75' : 'text-foreground'}`}>
+                                  <span
+                                    className={`text-[12px] font-medium truncate ${isDone ? 'line-through text-muted-foreground/75' : 'text-foreground'}`}
+                                  >
                                     {t.title}
                                   </span>
                                 </div>
@@ -297,7 +334,10 @@ export default function RoadmapPage() {
           setDeleteTarget(null);
         }}
         title={t('roadmap.delete_title', 'Delete Epic')}
-        description={t('roadmap.delete_desc', { name: deleteTarget?.name, defaultValue: 'Epic "{{name}}" will be permanently deleted.' })}
+        description={t('roadmap.delete_desc', {
+          name: deleteTarget?.name,
+          defaultValue: 'Epic "{{name}}" will be permanently deleted.',
+        })}
         isDeleting={deleteMutation.isPending}
       />
     </div>
@@ -316,15 +356,20 @@ function EpicFormModal({ workspaceId, projectId, epic, onClose }) {
   const isEdit = !!epic;
 
   const mutation = useMutation({
-    mutationFn: (data) => isEdit ? epicService.updateEpic(epic.id, data) : epicService.createEpic(data),
+    mutationFn: (data) =>
+      isEdit ? epicService.updateEpic(epic.id, data) : epicService.createEpic(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['epics', projectId] });
-      toast.success(isEdit ? t('roadmap.update_success', 'Epic updated!') : t('roadmap.create_success', 'Epic created!'));
+      toast.success(
+        isEdit
+          ? t('roadmap.update_success', 'Epic updated!')
+          : t('roadmap.create_success', 'Epic created!')
+      );
       onClose();
     },
     onError: (err) => {
       toast.error(getApiError(err, t('roadmap.save_error', 'Could not save the Epic!')));
-    }
+    },
   });
 
   const handleSubmit = (e) => {
@@ -337,15 +382,26 @@ function EpicFormModal({ workspaceId, projectId, epic, onClose }) {
       status,
       due_date: dueDate || (isEdit ? null : undefined),
       workspace_id: workspaceId,
-      project_id: projectId
+      project_id: projectId,
     });
   };
 
-  const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#6366f1', '#14b8a6'];
+  const COLORS = [
+    '#3b82f6',
+    '#10b981',
+    '#f59e0b',
+    '#ef4444',
+    '#8b5cf6',
+    '#ec4899',
+    '#6366f1',
+    '#14b8a6',
+  ];
 
   return (
     <Modal
-      title={isEdit ? t('roadmap.edit_epic', 'Edit Epic') : t('roadmap.create_epic', 'Create New Epic')}
+      title={
+        isEdit ? t('roadmap.edit_epic', 'Edit Epic') : t('roadmap.create_epic', 'Create New Epic')
+      }
       onClose={onClose}
       maxWidth="max-w-sm"
       footer={
@@ -411,10 +467,7 @@ function EpicFormModal({ workspaceId, projectId, epic, onClose }) {
             <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">
               {t('roadmap.due_label', 'Due date')}
             </label>
-            <DatePicker
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-            />
+            <DatePicker value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
           </div>
         </div>
         <div>

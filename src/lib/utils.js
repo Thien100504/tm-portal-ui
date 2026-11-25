@@ -1,5 +1,5 @@
-import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 /**
  * Merges Tailwind CSS classes, resolving conflicts using tailwind-merge.

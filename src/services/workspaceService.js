@@ -51,7 +51,7 @@ const workspaceService = {
 
   async cancelInvitation(workspaceId, inviteId) {
     await api.delete(`/workspaces/${workspaceId}/invitations/${inviteId}`);
-  }
+  },
 };
 
 export default workspaceService;

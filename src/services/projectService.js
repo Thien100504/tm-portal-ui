@@ -12,7 +12,9 @@ function cleanProject(data) {
 
 const projectService = {
   async getProjects(workspaceId) {
-    const res = await api.get('/projects', { params: workspaceId ? { workspace_id: workspaceId } : {} });
+    const res = await api.get('/projects', {
+      params: workspaceId ? { workspace_id: workspaceId } : {},
+    });
     return res.data;
   },
 
@@ -30,7 +32,7 @@ const projectService = {
     const activeWorkspaceId = localStorage.getItem('active-workspace-id');
     const payload = {
       ...cleanProject(data),
-      workspace_id: activeWorkspaceId || undefined
+      workspace_id: activeWorkspaceId || undefined,
     };
     const res = await api.post('/projects', payload);
     return res.data;
@@ -48,7 +50,7 @@ const projectService = {
   async addMember(projectId, userId, roleId, projectRole = 'member') {
     const res = await api.post(`/projects/${projectId}/members`, {
       user_id: userId,
-      role_id: roleId,
+      role_id: roleId || undefined,
       project_role: projectRole,
     });
     return res.data;

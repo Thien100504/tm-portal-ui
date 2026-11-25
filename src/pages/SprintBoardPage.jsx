@@ -8,10 +8,21 @@ import { AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import {
-  Goal, Plus, Clock, Play, Square, BarChart2,
-  User as UserIcon, Loader2, Pencil, Check,
-  Inbox, Calendar, GripVertical,
-  ChevronRight, ChevronDown,
+  Goal,
+  Plus,
+  Clock,
+  Play,
+  Square,
+  BarChart2,
+  User as UserIcon,
+  Loader2,
+  Pencil,
+  Check,
+  Inbox,
+  Calendar,
+  GripVertical,
+  ChevronRight,
+  ChevronDown,
 } from 'lucide-react';
 import sprintService from '@/services/sprintService';
 import taskService from '@/services/taskService';
@@ -31,27 +42,27 @@ import { StatusBadge } from '@/components/ui/StatusBadge';
 
 // ── Priority dot config ────────────────────────────────────────────────
 const PRIORITY_DOT = {
-  high:   'bg-[color:var(--color-destructive)]',
+  high: 'bg-[color:var(--color-destructive)]',
   medium: 'bg-[color:var(--color-warning)]',
-  low:    'bg-[color:var(--color-success)]',
+  low: 'bg-[color:var(--color-success)]',
 };
 
 // Left-border accent for subtask rows (mirrors parent priority)
 const PRIORITY_ACCENT = {
-  high:   'border-l-2 border-l-[color:var(--color-destructive)]/50',
+  high: 'border-l-2 border-l-[color:var(--color-destructive)]/50',
   medium: 'border-l-2 border-l-[color:var(--color-warning)]/50',
-  low:    'border-l-2 border-l-[color:var(--color-success)]/50',
+  low: 'border-l-2 border-l-[color:var(--color-success)]/50',
 };
 
 const _SPRINT_STATUS_CLASS = {
-  planning:  'bg-muted text-muted-foreground',
-  active:    'bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]',
+  planning: 'bg-muted text-muted-foreground',
+  active: 'bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]',
   completed: 'bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)]',
 };
 
 const _SPRINT_STATUS_KEY = {
-  planning:  'sprintBoard.status.planning',
-  active:    'sprintBoard.status.active',
+  planning: 'sprintBoard.status.planning',
+  active: 'sprintBoard.status.active',
   completed: 'sprintBoard.status.completed',
 };
 
@@ -59,7 +70,9 @@ const _SPRINT_STATUS_KEY = {
 // Column layout (all shrink-0 except title):
 //   [drag 3.5] [toggle/chevron/spacer 3.5] [dot 2] [title flex-1] [deadline 16] [who 6] [status 20]
 function TaskRow({
-  task, index, membersMap,
+  task,
+  index,
+  membersMap,
   isSubtask = false,
   hasChildren = false,
   isChildrenCollapsed = false,
@@ -91,15 +104,20 @@ function TaskRow({
           ref={provided.innerRef}
           {...provided.draggableProps}
           onClick={(e) => {
-            if (e.ctrlKey || e.metaKey) { e.preventDefault(); onToggleSelect?.(); }
-            else if (!snapshot.isDragging) { onOpen?.(task); }
+            if (e.ctrlKey || e.metaKey) {
+              e.preventDefault();
+              onToggleSelect?.();
+            } else if (!snapshot.isDragging) {
+              onOpen?.(task);
+            }
           }}
           className={`flex items-center gap-2 px-3 cursor-pointer select-none transition-colors
-            ${isSubtask
-              ? `py-2 border-t border-border/40 hover:bg-muted/50
+            ${
+              isSubtask
+                ? `py-2 border-t border-border/40 hover:bg-muted/50
                  ${isSelected ? 'bg-[color:var(--color-ai)]/10' : 'bg-muted/30'}
                  ${PRIORITY_ACCENT[parentPriority] ?? 'border-l-2 border-l-border/30'}`
-              : `py-3 hover:bg-muted/20 ${isSelected ? 'bg-[color:var(--color-ai)]/8' : 'bg-transparent'}`
+                : `py-3 hover:bg-muted/20 ${isSelected ? 'bg-[color:var(--color-ai)]/8' : 'bg-transparent'}`
             }
             ${snapshot.isDragging ? 'shadow-xl ring-1 ring-[color:var(--color-ai)] rounded-xl bg-card z-50' : ''}
           `}
@@ -107,26 +125,32 @@ function TaskRow({
           {/* Drag handle / selection indicator */}
           <div
             {...provided.dragHandleProps}
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
             className={`shrink-0 cursor-grab active:cursor-grabbing transition-colors
               ${isSelected ? 'text-[color:var(--color-ai)]' : 'text-muted-foreground/25 hover:text-muted-foreground'}
             `}
           >
-            {isSelected
-              ? <Check className="w-3.5 h-3.5" />
-              : <GripVertical className="w-3.5 h-3.5" />
-            }
+            {isSelected ? (
+              <Check className="w-3.5 h-3.5" />
+            ) : (
+              <GripVertical className="w-3.5 h-3.5" />
+            )}
           </div>
 
           {/* Collapse toggle | subtask chevron | leaf spacer */}
           {hasChildren ? (
             <button
-              onClick={e => { e.stopPropagation(); onToggleCollapse?.(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleCollapse?.();
+              }}
               className="shrink-0 w-3.5 h-3.5 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground transition-colors"
             >
-              {isChildrenCollapsed
-                ? <ChevronRight className="w-3.5 h-3.5" />
-                : <ChevronDown className="w-3.5 h-3.5" />}
+              {isChildrenCollapsed ? (
+                <ChevronRight className="w-3.5 h-3.5" />
+              ) : (
+                <ChevronDown className="w-3.5 h-3.5" />
+              )}
             </button>
           ) : isSubtask ? (
             <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/30 shrink-0" />
@@ -135,20 +159,26 @@ function TaskRow({
           )}
 
           {/* Priority dot */}
-          <div className={`w-2 h-2 rounded-full shrink-0 ${PRIORITY_DOT[task.priority] || 'bg-muted-foreground/30'}`} />
+          <div
+            className={`w-2 h-2 rounded-full shrink-0 ${PRIORITY_DOT[task.priority] || 'bg-muted-foreground/30'}`}
+          />
 
           {/* Title */}
-          <span className={`flex-1 min-w-0 truncate
+          <span
+            className={`flex-1 min-w-0 truncate
             ${isSubtask ? 'text-[11px] font-normal text-muted-foreground' : 'text-[12px] font-medium text-foreground'}
             ${task.status === 'done' ? 'line-through opacity-40' : ''}
-          `}>
+          `}
+          >
             {task.title}
           </span>
 
           {/* Deadline */}
-          <span className={`shrink-0 w-16 text-right text-[10px] font-mono flex items-center justify-end gap-1
+          <span
+            className={`shrink-0 w-16 text-right text-[10px] font-mono flex items-center justify-end gap-1
             ${!task.deadline ? 'invisible' : isOverdue ? 'text-[color:var(--color-destructive)]' : 'text-muted-foreground/60'}
-          `}>
+          `}
+          >
             <Clock className="w-3 h-3" />
             {task.deadline ? format(new Date(task.deadline), 'dd/MM', { locale: vi }) : '—'}
           </span>
@@ -162,13 +192,20 @@ function TaskRow({
               {assigneeName.charAt(0).toUpperCase()}
             </div>
           ) : (
-            <div className="w-6 h-6 rounded-full bg-background border border-dashed border-border flex items-center justify-center shrink-0" title={t('sprintBoard.unassigned')}>
+            <div
+              className="w-6 h-6 rounded-full bg-background border border-dashed border-border flex items-center justify-center shrink-0"
+              title={t('sprintBoard.unassigned')}
+            >
               <UserIcon className="w-3 h-3 text-muted-foreground/30" />
             </div>
           )}
 
           {/* Status */}
-          <StatusBadge type="task" status={task.status} className="w-20 justify-center border-none" />
+          <StatusBadge
+            type="task"
+            status={task.status}
+            className="w-20 justify-center border-none"
+          />
         </div>
       )}
     </Draggable>
@@ -182,10 +219,18 @@ function TaskListHeader({ t }) {
       <div className="w-3.5 shrink-0" />
       <div className="w-3.5 shrink-0" />
       <div className="w-2 shrink-0" />
-      <span className="flex-1 text-[10px] font-mono text-muted-foreground uppercase tracking-widest">{t('sprintBoard.headers.task')}</span>
-      <span className="w-16 text-right text-[10px] font-mono text-muted-foreground uppercase tracking-widest hidden sm:block">{t('sprintBoard.headers.deadline')}</span>
-      <span className="w-6 text-center text-[10px] font-mono text-muted-foreground uppercase tracking-widest">{t('sprintBoard.headers.who')}</span>
-      <span className="w-20 text-center text-[10px] font-mono text-muted-foreground uppercase tracking-widest">{t('sprintBoard.headers.status')}</span>
+      <span className="flex-1 text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
+        {t('sprintBoard.headers.task')}
+      </span>
+      <span className="w-16 text-right text-[10px] font-mono text-muted-foreground uppercase tracking-widest hidden sm:block">
+        {t('sprintBoard.headers.deadline')}
+      </span>
+      <span className="w-6 text-center text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
+        {t('sprintBoard.headers.who')}
+      </span>
+      <span className="w-20 text-center text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
+        {t('sprintBoard.headers.status')}
+      </span>
     </div>
   );
 }
@@ -197,27 +242,29 @@ function TaskListHeader({ t }) {
 function SprintTaskList({ tasks, allTasks, membersMap, onOpen, selectedIds, onToggleSelect, t }) {
   const [collapsed, setCollapsed] = useState({});
 
-  const parents = useMemo(() => tasks.filter(t => !t.parent_task_id), [tasks]);
+  const parents = useMemo(() => tasks.filter((t) => !t.parent_task_id), [tasks]);
 
   const childrenMap = useMemo(() => {
     const map = {};
-    tasks.filter(t => t.parent_task_id).forEach(t => {
-      if (!map[t.parent_task_id]) map[t.parent_task_id] = [];
-      map[t.parent_task_id].push(t);
-    });
+    tasks
+      .filter((t) => t.parent_task_id)
+      .forEach((t) => {
+        if (!map[t.parent_task_id]) map[t.parent_task_id] = [];
+        map[t.parent_task_id].push(t);
+      });
     return map;
   }, [tasks]);
 
-  const parentIds = useMemo(() => new Set(parents.map(p => p.id)), [parents]);
+  const parentIds = useMemo(() => new Set(parents.map((p) => p.id)), [parents]);
   const orphaned = useMemo(
-    () => tasks.filter(t => t.parent_task_id && !parentIds.has(t.parent_task_id)),
-    [tasks, parentIds],
+    () => tasks.filter((t) => t.parent_task_id && !parentIds.has(t.parent_task_id)),
+    [tasks, parentIds]
   );
 
   const orphanedGroups = useMemo(() => {
     const groups = [];
     const map = {};
-    orphaned.forEach(t => {
+    orphaned.forEach((t) => {
       if (!map[t.parent_task_id]) {
         map[t.parent_task_id] = [];
         groups.push({ parentId: t.parent_task_id, children: map[t.parent_task_id] });
@@ -230,21 +277,23 @@ function SprintTaskList({ tasks, allTasks, membersMap, onOpen, selectedIds, onTo
   // Flat id-list → index map for DnD (must be sequential 0,1,2…)
   const indexMap = useMemo(() => {
     const ids = [];
-    parents.forEach(p => {
+    parents.forEach((p) => {
       ids.push(p.id);
-      if (!collapsed[p.id]) (childrenMap[p.id] || []).forEach(c => ids.push(c.id));
+      if (!collapsed[p.id]) (childrenMap[p.id] || []).forEach((c) => ids.push(c.id));
     });
-    orphanedGroups.forEach(g => {
-      g.children.forEach(c => ids.push(c.id));
+    orphanedGroups.forEach((g) => {
+      g.children.forEach((c) => ids.push(c.id));
     });
     const map = {};
-    ids.forEach((id, i) => { map[id] = i; });
+    ids.forEach((id, i) => {
+      map[id] = i;
+    });
     return map;
   }, [parents, childrenMap, orphanedGroups, collapsed]);
 
   return (
     <>
-      {parents.map(parent => {
+      {parents.map((parent) => {
         const children = childrenMap[parent.id] || [];
         const hasChildren = children.length > 0;
         const isCollapsed = !!collapsed[parent.id];
@@ -264,7 +313,7 @@ function SprintTaskList({ tasks, allTasks, membersMap, onOpen, selectedIds, onTo
               isSubtask={false}
               hasChildren={hasChildren}
               isChildrenCollapsed={isCollapsed}
-              onToggleCollapse={() => setCollapsed(c => ({ ...c, [parent.id]: !c[parent.id] }))}
+              onToggleCollapse={() => setCollapsed((c) => ({ ...c, [parent.id]: !c[parent.id] }))}
               onOpen={onOpen}
               isSelected={selectedIds?.has(parent.id)}
               onToggleSelect={() => onToggleSelect?.(parent.id)}
@@ -281,7 +330,7 @@ function SprintTaskList({ tasks, allTasks, membersMap, onOpen, selectedIds, onTo
             )}
 
             {/* Subtask rows — visually nested inside the group card */}
-            {visibleChildren.map(child => (
+            {visibleChildren.map((child) => (
               <TaskRow
                 key={child.id}
                 task={child}
@@ -301,8 +350,8 @@ function SprintTaskList({ tasks, allTasks, membersMap, onOpen, selectedIds, onTo
       })}
 
       {/* Orphaned subtasks: parent is in another sprint/backlog */}
-      {orphanedGroups.map(group => {
-        const parentTask = allTasks?.find(t => t.id === group.parentId);
+      {orphanedGroups.map((group) => {
+        const parentTask = allTasks?.find((t) => t.id === group.parentId);
         return (
           <div
             key={`orphaned-group-${group.parentId}`}
@@ -315,7 +364,7 @@ function SprintTaskList({ tasks, allTasks, membersMap, onOpen, selectedIds, onTo
                 </span>
               </div>
             )}
-            {group.children.map(task => (
+            {group.children.map((task) => (
               <TaskRow
                 key={task.id}
                 task={task}
@@ -340,10 +389,10 @@ function SprintTaskList({ tasks, allTasks, membersMap, onOpen, selectedIds, onTo
 // ── Edit sprint inline form ────────────────────────────────────────────
 function EditSprintForm({ sprint, onSave, onCancel, t }) {
   const [form, setForm] = useState({
-    name:       sprint.name,
-    goal:       sprint.goal || '',
+    name: sprint.name,
+    goal: sprint.goal || '',
     start_date: sprint.start_date || '',
-    end_date:   sprint.end_date || '',
+    end_date: sprint.end_date || '',
   });
 
   return (
@@ -352,26 +401,45 @@ function EditSprintForm({ sprint, onSave, onCancel, t }) {
         <input
           autoFocus
           value={form.name}
-          onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+          onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
           placeholder={t('sprintBoard.form.name_placeholder')}
           className="flex-1 bg-background border border-border rounded-md px-3 py-1.5 text-sm outline-none focus:border-[color:var(--color-ai)]"
         />
         <input
           value={form.goal}
-          onChange={e => setForm(f => ({ ...f, goal: e.target.value }))}
+          onChange={(e) => setForm((f) => ({ ...f, goal: e.target.value }))}
           placeholder={t('sprintBoard.form.goal_placeholder')}
           className="flex-1 bg-background border border-border rounded-md px-3 py-1.5 text-sm outline-none focus:border-[color:var(--color-ai)]"
         />
       </div>
       <div className="flex gap-2 items-center">
         <div className="flex items-center gap-1.5">
-          <label className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest shrink-0">{t('sprintBoard.form.plan')}</label>
-          <DatePicker size="sm" value={form.start_date} onChange={e => setForm(f => ({ ...f, start_date: e.target.value }))} />
+          <label className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest shrink-0">
+            {t('sprintBoard.form.plan')}
+          </label>
+          <DatePicker
+            size="sm"
+            value={form.start_date}
+            onChange={(e) => setForm((f) => ({ ...f, start_date: e.target.value }))}
+          />
           <span className="text-muted-foreground text-xs">→</span>
-          <DatePicker size="sm" value={form.end_date} onChange={e => setForm(f => ({ ...f, end_date: e.target.value }))} />
+          <DatePicker
+            size="sm"
+            value={form.end_date}
+            onChange={(e) => setForm((f) => ({ ...f, end_date: e.target.value }))}
+          />
         </div>
         <div className="flex gap-1.5 ml-auto">
-          <Button size="sm" onClick={() => onSave({ name: form.name.trim(), goal: form.goal.trim() || null, start_date: form.start_date || null, end_date: form.end_date || null })}
+          <Button
+            size="sm"
+            onClick={() =>
+              onSave({
+                name: form.name.trim(),
+                goal: form.goal.trim() || null,
+                start_date: form.start_date || null,
+                end_date: form.end_date || null,
+              })
+            }
             disabled={!form.name.trim()}
             className="flex items-center gap-1"
           >
@@ -406,7 +474,7 @@ export default function SprintBoardPage() {
   const [selectedIds, setSelectedIds] = useState(new Set());
 
   const toggleSelect = useCallback((id) => {
-    setSelectedIds(prev => {
+    setSelectedIds((prev) => {
       const next = new Set(prev);
       next.has(id) ? next.delete(id) : next.add(id);
       return next;
@@ -416,7 +484,9 @@ export default function SprintBoardPage() {
   const clearSelection = useCallback(() => setSelectedIds(new Set()), []);
 
   useEffect(() => {
-    const handler = (e) => { if (e.key === 'Escape') clearSelection(); };
+    const handler = (e) => {
+      if (e.key === 'Escape') clearSelection();
+    };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [clearSelection]);
@@ -444,13 +514,14 @@ export default function SprintBoardPage() {
   });
 
   const membersMap = useMemo(
-    () => Object.fromEntries(members.map(m => [m.user_id, m.user])),
-    [members],
+    () => Object.fromEntries(members.map((m) => [m.user_id, m.user])),
+    [members]
   );
 
   // ── Mutations ──────────────────────────────────────────────────────
   const createSprintMutation = useMutation({
-    onError: (err) => toast.error(t('common.error'), { description: getApiError(err, t('common.error')) }),
+    onError: (err) =>
+      toast.error(t('common.error'), { description: getApiError(err, t('common.error')) }),
     mutationFn: (name) => sprintService.createSprint(projectId, { name }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['sprints', projectId] });
@@ -461,7 +532,8 @@ export default function SprintBoardPage() {
   });
 
   const updateSprintMutation = useMutation({
-    onError: (err) => toast.error(t('common.error'), { description: getApiError(err, t('common.error')) }),
+    onError: (err) =>
+      toast.error(t('common.error'), { description: getApiError(err, t('common.error')) }),
     mutationFn: ({ sprintId, data }) => sprintService.updateSprint(sprintId, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['sprints', projectId] });
@@ -479,9 +551,10 @@ export default function SprintBoardPage() {
     onError: (err) => {
       const rawDetail = err.response?.data?.detail;
       toast.error(t('common.error'), {
-        description: rawDetail === 'sprint.error_already_active'
-          ? t('sprintBoard.already_active')
-          : getApiError(err, t('common.error')),
+        description:
+          rawDetail === 'sprint.error_already_active'
+            ? t('sprintBoard.already_active')
+            : getApiError(err, t('common.error')),
       });
     },
   });
@@ -495,9 +568,10 @@ export default function SprintBoardPage() {
     onError: (err) => {
       const rawDetail = err.response?.data?.detail;
       toast.error(t('common.error'), {
-        description: rawDetail === 'sprint.error_already_active'
-          ? t('sprintBoard.reopen_error')
-          : getApiError(err, t('common.error')),
+        description:
+          rawDetail === 'sprint.error_already_active'
+            ? t('sprintBoard.reopen_error')
+            : getApiError(err, t('common.error')),
       });
     },
   });
@@ -508,11 +582,11 @@ export default function SprintBoardPage() {
       await qc.cancelQueries({ queryKey: ['tasks', projectId] });
       const previousTasks = qc.getQueryData(['tasks', projectId]);
       qc.setQueryData(['tasks', projectId], (old = []) =>
-        old.map(t => {
+        old.map((t) => {
           if (t.id === taskId) return { ...t, sprint_id: sprintId };
           if (t.parent_task_id === taskId) return { ...t, sprint_id: sprintId };
           return t;
-        }),
+        })
       );
       return { previousTasks };
     },
@@ -524,11 +598,11 @@ export default function SprintBoardPage() {
   });
 
   const bulkDeleteMutation = useMutation({
-    mutationFn: (ids) => Promise.all([...ids].map(id => taskService.deleteTask(id))),
+    mutationFn: (ids) => Promise.all([...ids].map((id) => taskService.deleteTask(id))),
     onMutate: async (ids) => {
       await qc.cancelQueries({ queryKey: ['tasks', projectId] });
       const previous = qc.getQueryData(['tasks', projectId]);
-      qc.setQueryData(['tasks', projectId], (old = []) => old.filter(t => !ids.has(t.id)));
+      qc.setQueryData(['tasks', projectId], (old = []) => old.filter((t) => !ids.has(t.id)));
       return { previous };
     },
     onError: (_, __, context) => {
@@ -546,10 +620,10 @@ export default function SprintBoardPage() {
   const onDragEnd = ({ destination, source, draggableId }) => {
     if (!destination || destination.droppableId === source.droppableId) return;
     const newSprintId = destination.droppableId === 'backlog' ? null : destination.droppableId;
-    
+
     if (selectedIds?.has(draggableId) && selectedIds.size > 1) {
       // Bulk move all selected tasks
-      [...selectedIds].forEach(id => {
+      [...selectedIds].forEach((id) => {
         moveTaskMutation.mutate({ taskId: id, sprintId: newSprintId });
       });
       clearSelection();
@@ -561,16 +635,19 @@ export default function SprintBoardPage() {
   };
 
   // ── Helpers ────────────────────────────────────────────────────────
-  const getSprintTasks = (sprintId) => tasks.filter(t => t.sprint_id === sprintId);
-  const backlogTasks = useMemo(() => tasks.filter(t => !t.sprint_id && t.status !== 'done'), [tasks]);
+  const getSprintTasks = (sprintId) => tasks.filter((t) => t.sprint_id === sprintId);
+  const backlogTasks = useMemo(
+    () => tasks.filter((t) => !t.sprint_id && t.status !== 'done'),
+    [tasks]
+  );
 
-  const endingSprint = endingSprintId ? sprints.find(s => s.id === endingSprintId) : null;
+  const endingSprint = endingSprintId ? sprints.find((s) => s.id === endingSprintId) : null;
 
-  if (!projectId) return <div className="p-6 text-muted-foreground">{t('sprintBoard.no_project')}</div>;
+  if (!projectId)
+    return <div className="p-6 text-muted-foreground">{t('sprintBoard.no_project')}</div>;
 
   return (
     <div className="flex flex-col h-[calc(100vh-var(--layout-offset))]">
-
       {/* ── Page header ───────────────────────────────────────────── */}
       <div className="flex items-center justify-between pb-4 shrink-0">
         <div className="flex items-center gap-3">
@@ -578,8 +655,12 @@ export default function SprintBoardPage() {
             <Goal className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-foreground tracking-tight">{t('sprintBoard.title')}</h1>
-            <p className="text-[12px] text-muted-foreground mt-0.5">{t('sprintBoard.management')}</p>
+            <h1 className="text-xl font-bold text-foreground tracking-tight">
+              {t('sprintBoard.title')}
+            </h1>
+            <p className="text-[12px] text-muted-foreground mt-0.5">
+              {t('sprintBoard.management')}
+            </p>
           </div>
         </div>
         {can('sprint.manage') && (
@@ -596,50 +677,72 @@ export default function SprintBoardPage() {
       {isCreating && (
         <form
           className="mb-4 bg-card p-3 rounded-lg border border-border shadow-sm flex items-center gap-2 shrink-0"
-          onSubmit={e => { e.preventDefault(); if (newSprintName.trim()) createSprintMutation.mutate(newSprintName.trim()); }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (newSprintName.trim()) createSprintMutation.mutate(newSprintName.trim());
+          }}
         >
-          <input autoFocus value={newSprintName} onChange={e => setNewSprintName(e.target.value)}
+          <input
+            autoFocus
+            value={newSprintName}
+            onChange={(e) => setNewSprintName(e.target.value)}
             placeholder={t('sprintBoard.form.name_placeholder')}
             className="flex-1 bg-background border border-border rounded-md px-3 py-1.5 text-sm outline-none focus:border-[color:var(--color-ai)]"
             disabled={createSprintMutation.isPending}
           />
-          <Button type="submit" disabled={!newSprintName.trim() || createSprintMutation.isPending}
+          <Button
+            type="submit"
+            disabled={!newSprintName.trim() || createSprintMutation.isPending}
             className="flex items-center gap-1.5"
           >
-            {createSprintMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Check className="w-3.5 h-3.5" /> {t('sprintBoard.form.save')}</>}
+            {createSprintMutation.isPending ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <>
+                <Check className="w-3.5 h-3.5" /> {t('sprintBoard.form.save')}
+              </>
+            )}
           </Button>
-          <Button type="button" variant="ghost" onClick={() => { setIsCreating(false); setNewSprintName(''); }}>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => {
+              setIsCreating(false);
+              setNewSprintName('');
+            }}
+          >
             {t('sprintBoard.form.cancel')}
           </Button>
         </form>
       )}
 
       {/* ── Content ───────────────────────────────────────────────── */}
-      {(isLoadingSprints || isLoadingTasks) ? (
+      {isLoadingSprints || isLoadingTasks ? (
         <div className="flex-1 flex items-center justify-center">
           <Loader2 className="w-6 h-6 animate-spin text-[color:var(--color-ai)]" />
         </div>
       ) : (
         <DragDropContext onDragEnd={onDragEnd}>
           <div className="flex-1 overflow-y-auto space-y-3 pb-6">
-
             {/* ── Sprint sections ──────────────────────────────── */}
-            {sprints.map(sprint => {
+            {sprints.map((sprint) => {
               const sprintTasks = getSprintTasks(sprint.id);
-              const doneCount = sprintTasks.filter(t => t.status === 'done').length;
+              const doneCount = sprintTasks.filter((t) => t.status === 'done').length;
               const total = sprintTasks.length;
-              const pct = total > 0 ? Math.round(doneCount / total * 100) : 0;
+              const pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
               const isCollapsed = sprintCollapsed[sprint.id];
               const isEditing = editingSprintId === sprint.id;
 
               return (
-                <div key={sprint.id} className="mb-6 bg-muted/10 border border-border/40 rounded-2xl overflow-hidden">
-
+                <div
+                  key={sprint.id}
+                  className="mb-6 bg-muted/10 border border-border/40 rounded-2xl overflow-hidden"
+                >
                   {/* Sprint header */}
                   {isEditing ? (
                     <EditSprintForm
                       sprint={sprint}
-                      onSave={data => updateSprintMutation.mutate({ sprintId: sprint.id, data })}
+                      onSave={(data) => updateSprintMutation.mutate({ sprintId: sprint.id, data })}
                       onCancel={() => setEditingSprintId(null)}
                       t={t}
                     />
@@ -648,39 +751,78 @@ export default function SprintBoardPage() {
                       {/* Row 1: Name + Status + Actions */}
                       <div className="flex items-center gap-3 px-4 py-3">
                         <button
-                          onClick={() => setSprintCollapsed(c => ({ ...c, [sprint.id]: !c[sprint.id] }))}
+                          onClick={() =>
+                            setSprintCollapsed((c) => ({ ...c, [sprint.id]: !c[sprint.id] }))
+                          }
                           className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
                         >
-                          {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                          {isCollapsed ? (
+                            <ChevronRight className="w-4 h-4" />
+                          ) : (
+                            <ChevronDown className="w-4 h-4" />
+                          )}
                         </button>
 
-                        <h3 className="font-semibold text-sm text-foreground truncate">{sprint.name}</h3>
-                        <StatusBadge type="sprint" status={sprint.status} className="border-none shrink-0" />
+                        <h3 className="font-semibold text-sm text-foreground truncate">
+                          {sprint.name}
+                        </h3>
+                        <StatusBadge
+                          type="sprint"
+                          status={sprint.status}
+                          className="border-none shrink-0"
+                        />
 
                         <div className="flex-1" />
 
                         <div className="flex items-center gap-1.5 shrink-0">
-                          <Button variant="ghost" size="icon" onClick={() => setChartSprint(sprint)} title={t('sprintBoard.actions.report')} className="h-7 w-7 text-muted-foreground hover:text-foreground">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setChartSprint(sprint)}
+                            title={t('sprintBoard.actions.report')}
+                            className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                          >
                             <BarChart2 className="w-3.5 h-3.5" />
                           </Button>
                           {can('sprint.manage') && sprint.status !== 'completed' && (
-                            <Button variant="ghost" size="icon" onClick={() => setEditingSprintId(sprint.id)} title={t('common.edit')} className="h-7 w-7 text-muted-foreground hover:text-foreground">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setEditingSprintId(sprint.id)}
+                              title={t('common.edit')}
+                              className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                            >
                               <Pencil className="w-3.5 h-3.5" />
                             </Button>
                           )}
                           {can('sprint.manage') && sprint.status === 'planning' && (
-                            <Button size="sm" onClick={() => startSprintMutation.mutate(sprint.id)} disabled={startSprintMutation.isPending} className="h-7 text-xs">
+                            <Button
+                              size="sm"
+                              onClick={() => startSprintMutation.mutate(sprint.id)}
+                              disabled={startSprintMutation.isPending}
+                              className="h-7 text-xs"
+                            >
                               <Play className="w-3 h-3" /> {t('sprintBoard.actions.start')}
                             </Button>
                           )}
                           {can('sprint.manage') && sprint.status === 'active' && (
-                            <Button size="sm" variant="destructive" onClick={() => setEndingSprintId(sprint.id)} className="h-7 text-xs">
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => setEndingSprintId(sprint.id)}
+                              className="h-7 text-xs"
+                            >
                               <Square className="w-3 h-3" /> {t('sprintBoard.actions.end')}
                             </Button>
                           )}
                           {can('sprint.manage') && sprint.status === 'completed' && (
-                            <Button size="sm" variant="outline" onClick={() => reopenSprintMutation.mutate(sprint.id)} disabled={reopenSprintMutation.isPending}
-                              className="h-7 text-xs hover:text-[color:var(--color-warning)] hover:bg-[color:var(--color-warning)]/10 hover:border-[color:var(--color-warning)]/30">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => reopenSprintMutation.mutate(sprint.id)}
+                              disabled={reopenSprintMutation.isPending}
+                              className="h-7 text-xs hover:text-[color:var(--color-warning)] hover:bg-[color:var(--color-warning)]/10 hover:border-[color:var(--color-warning)]/30"
+                            >
                               <Play className="w-3 h-3" /> {t('sprintBoard.actions.reopen')}
                             </Button>
                           )}
@@ -692,22 +834,26 @@ export default function SprintBoardPage() {
                         {(sprint.start_date || sprint.end_date) && (
                           <span className="flex items-center gap-1 shrink-0">
                             <Calendar className="w-3 h-3" />
-                            {sprint.start_date && format(new Date(sprint.start_date), 'dd/MM', { locale: vi })}
-                            {sprint.end_date && ` → ${format(new Date(sprint.end_date), 'dd/MM/yyyy', { locale: vi })}`}
+                            {sprint.start_date &&
+                              format(new Date(sprint.start_date), 'dd/MM', { locale: vi })}
+                            {sprint.end_date &&
+                              ` → ${format(new Date(sprint.end_date), 'dd/MM/yyyy', { locale: vi })}`}
                           </span>
                         )}
                         {sprint.goal && (
-                          <span className="italic truncate hidden md:block">
-                            {sprint.goal}
-                          </span>
+                          <span className="italic truncate hidden md:block">{sprint.goal}</span>
                         )}
                         <div className="flex-1" />
                         <div className="flex items-center gap-2 shrink-0">
                           <div className="w-24 h-1.5 bg-muted rounded-full overflow-hidden hidden sm:block">
-                            <div className="h-full bg-[color:var(--color-success)] rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
+                            <div
+                              className="h-full bg-[color:var(--color-success)] rounded-full transition-all duration-500"
+                              style={{ width: `${pct}%` }}
+                            />
                           </div>
                           <span className="font-mono font-medium whitespace-nowrap">
-                            {doneCount}/{total} <span className="text-muted-foreground/50">({pct}%)</span>
+                            {doneCount}/{total}{' '}
+                            <span className="text-muted-foreground/50">({pct}%)</span>
                           </span>
                         </div>
                       </div>
@@ -716,7 +862,10 @@ export default function SprintBoardPage() {
 
                   {/* Task list (collapsible) */}
                   {!isCollapsed && (
-                    <Droppable droppableId={sprint.id} isDropDisabled={sprint.status === 'completed'}>
+                    <Droppable
+                      droppableId={sprint.id}
+                      isDropDisabled={sprint.status === 'completed'}
+                    >
                       {(provided, snapshot) => (
                         <div
                           ref={provided.innerRef}
@@ -728,11 +877,21 @@ export default function SprintBoardPage() {
 
                           {sprintTasks.length === 0 && (
                             <p className="text-xs text-muted-foreground italic text-center py-5">
-                              {sprint.status === 'completed' ? t('sprintBoard.empty.completed') : t('sprintBoard.empty.drag_here')}
+                              {sprint.status === 'completed'
+                                ? t('sprintBoard.empty.completed')
+                                : t('sprintBoard.empty.drag_here')}
                             </p>
                           )}
 
-                          <SprintTaskList tasks={sprintTasks} allTasks={tasks} membersMap={membersMap} onOpen={setSelectedTask} selectedIds={selectedIds} onToggleSelect={toggleSelect} t={t} />
+                          <SprintTaskList
+                            tasks={sprintTasks}
+                            allTasks={tasks}
+                            membersMap={membersMap}
+                            onOpen={setSelectedTask}
+                            selectedIds={selectedIds}
+                            onToggleSelect={toggleSelect}
+                            t={t}
+                          />
                           {provided.placeholder}
                         </div>
                       )}
@@ -748,14 +907,18 @@ export default function SprintBoardPage() {
                 <Inbox className="w-4 h-4 text-muted-foreground shrink-0" />
                 <h3 className="font-semibold text-sm flex items-center gap-2">
                   Backlog
-                  <Badge variant="secondary" className="px-1.5 py-0.5 rounded-full font-mono text-[10px]">
+                  <Badge
+                    variant="secondary"
+                    className="px-1.5 py-0.5 rounded-full font-mono text-[10px]"
+                  >
                     {backlogTasks.length}
                   </Badge>
                 </h3>
                 <div className="flex-1" />
                 {can('task.create') && (
                   <Button
-                    variant="outline" size="sm"
+                    variant="outline"
+                    size="sm"
                     onClick={() => setIsCreateTaskOpen(true)}
                     className="flex items-center gap-1.5 h-7 text-xs"
                   >
@@ -779,13 +942,20 @@ export default function SprintBoardPage() {
 
                     {backlogTasks.length > 0 && <TaskListHeader t={t} />}
 
-                    <SprintTaskList tasks={backlogTasks} allTasks={tasks} membersMap={membersMap} onOpen={setSelectedTask} selectedIds={selectedIds} onToggleSelect={toggleSelect} t={t} />
+                    <SprintTaskList
+                      tasks={backlogTasks}
+                      allTasks={tasks}
+                      membersMap={membersMap}
+                      onOpen={setSelectedTask}
+                      selectedIds={selectedIds}
+                      onToggleSelect={toggleSelect}
+                      t={t}
+                    />
                     {provided.placeholder}
                   </div>
                 )}
               </Droppable>
             </div>
-
           </div>
         </DragDropContext>
       )}
@@ -811,7 +981,9 @@ export default function SprintBoardPage() {
             onClose={() => setSelectedTask(null)}
           />
         )}
-        {chartSprint && <BurndownChartModal sprint={chartSprint} onClose={() => setChartSprint(null)} />}
+        {chartSprint && (
+          <BurndownChartModal sprint={chartSprint} onClose={() => setChartSprint(null)} />
+        )}
         {endingSprint && (
           <EndSprintModal
             sprint={endingSprint}

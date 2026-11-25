@@ -2,7 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import rbacService from '@/services/rbacService';
 
 export function useProjectPermissions(projectId) {
-  const { data: permissions = [], isLoading, error } = useQuery({
+  const {
+    data: permissions = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['rbac', 'permissions', projectId],
     queryFn: () => rbacService.getMyPermissions(projectId),
     enabled: !!projectId, // Only fetch if we have a context
@@ -18,6 +22,6 @@ export function useProjectPermissions(projectId) {
     permissions,
     can,
     isLoading,
-    error
+    error,
   };
 }
