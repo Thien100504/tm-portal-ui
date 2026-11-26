@@ -433,7 +433,8 @@
   animation: pulse-soft 2.4s ease-in-out infinite;
 }
 .animate-fade-up {
-  animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* backwards, not both: a lingering transform makes drag-and-drop cards offset from the cursor */
+  animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
 @layer utilities {
