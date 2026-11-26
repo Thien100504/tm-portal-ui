@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import DatePicker from '@/components/ui/DatePicker';
 import PriorityBadge from '@/components/ui/PriorityBadge';
+import TaskTypeBadge from '@/components/ui/TaskTypeBadge';
+import { TASK_TYPES } from '@/lib/taskTypes';
 import { createPortal } from 'react-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -11,6 +13,7 @@ import {
   Clock,
   User as UserIcon,
   Flag,
+  Shapes,
   CheckSquare,
   MessageSquare,
   Loader2,
@@ -194,6 +197,7 @@ export default function TaskDetailModal({ task, projectId, onClose }) {
     setDraftTask({
       title: taskDetail?.title || '',
       description: taskDetail?.description || '',
+      type: taskDetail?.type || 'task',
       priority: taskDetail?.priority || 'medium',
       deadline: taskDetail?.deadline ? new Date(taskDetail.deadline).toISOString() : null,
       assignee_id: taskDetail?.assignee_id || null,
@@ -660,6 +664,23 @@ export default function TaskDetailModal({ task, projectId, onClose }) {
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-muted/30 border border-border/60 rounded-lg p-3">
+                    <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-1.5">
+                      <Shapes className="w-3.5 h-3.5" /> {t('taskType.label')}
+                    </div>
+                    {isEditing ? (
+                      <CustomSelect
+                        options={TASK_TYPES.filter(
+                          (type) => type !== 'story' || !taskDetail?.parent_task_id
+                        ).map((value) => ({ value, label: t(`taskType.${value}`) }))}
+                        value={draftTask.type || 'task'}
+                        onChange={(val) => setDraftTask({ ...draftTask, type: val })}
+                      />
+                    ) : (
+                      <TaskTypeBadge type={taskDetail?.type} showLabel />
+                    )}
+                  </div>
+
                   <div className="bg-muted/30 border border-border/60 rounded-lg p-3">
                     <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-1.5">
                       <Flag className="w-3.5 h-3.5" /> {t('taskDetail.priority')}

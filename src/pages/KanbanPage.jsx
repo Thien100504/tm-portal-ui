@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import PriorityBadge from '@/components/ui/PriorityBadge';
+import TaskTypeBadge from '@/components/ui/TaskTypeBadge';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
@@ -141,6 +142,7 @@ const TaskCard = React.memo(function TaskCard({
             {/* Priority + Overdue */}
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-1.5">
+                <TaskTypeBadge type={task.type} />
                 <PriorityBadge priority={task.priority} size="sm" />
                 {task.story_points != null && (
                   <span
@@ -308,6 +310,7 @@ export default function KanbanPage() {
   const [isMembersModalOpen, setIsMembersModalOpen] = useState(false);
   const [filters, setFilters] = useState({
     search: '',
+    types: [],
     priorities: [],
     assignees: [],
     isOverdue: false,
@@ -586,6 +589,9 @@ export default function KanbanPage() {
       if (filters.search) {
         const query = filters.search.toLowerCase();
         matches = matches && task.title.toLowerCase().includes(query);
+      }
+      if (filters.types?.length > 0) {
+        matches = matches && filters.types.includes(task.type || 'task');
       }
       if (filters.priorities?.length > 0) {
         matches = matches && filters.priorities.includes(task.priority);

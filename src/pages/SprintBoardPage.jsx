@@ -39,6 +39,7 @@ import BulkActionBar from '@/components/BulkActionBar';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { StatusBadge } from '@/components/ui/StatusBadge';
+import TaskTypeBadge from '@/components/ui/TaskTypeBadge';
 
 // ── Priority dot config ────────────────────────────────────────────────
 const PRIORITY_DOT = {
@@ -170,6 +171,7 @@ function TaskRow({
             ${task.status === 'done' ? 'line-through opacity-40' : ''}
           `}
           >
+            <TaskTypeBadge type={task.type} className="mr-1.5 align-middle" />
             {task.title}
           </span>
 

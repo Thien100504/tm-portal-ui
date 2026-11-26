@@ -164,7 +164,8 @@
     "error_dependencies_not_done": "Blocked by dependencies: dependent tasks are not yet done. Only a PM can override.",
     "error_self_dependency": "A task cannot depend on itself.",
     "error_circular_dependency": "Circular dependency detected (A → B → A).",
-    "error_assignee_not_member": "The assignee is not a member of this project."
+    "error_assignee_not_member": "The assignee is not a member of this project.",
+    "story_cannot_be_subtask": "A story cannot be a subtask."
   },
   "sprint": {
     "error_end_before_start": "The end date must be after the start date",
@@ -1174,5 +1175,11 @@
   },
   "taskList": {
     "hidden_subtasks": "{{count}} hidden subtask(s)"
+  },
+  "taskType": {
+    "label": "Type",
+    "story": "Story",
+    "task": "Task",
+    "bug": "Bug"
   }
 }

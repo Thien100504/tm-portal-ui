@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import PriorityBadge from '@/components/ui/PriorityBadge';
+import TaskTypeBadge from '@/components/ui/TaskTypeBadge';
 import { useTranslation } from 'react-i18next';
 import { format, isToday, isThisWeek, isPast, startOfDay, addWeeks } from 'date-fns';
 import { vi, enUS } from 'date-fns/locale';
@@ -175,6 +176,7 @@ function TaskRow({
             isDone ? 'line-through' : '',
           ].join(' ')}
         >
+          <TaskTypeBadge type={task.type} className="mr-1.5 align-middle" />
           {task.title}
         </span>
         {hasChildren && (
