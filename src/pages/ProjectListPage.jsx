@@ -16,6 +16,8 @@ import { MotionCard } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
 import { useWorkspaceStore } from '@/store/workspaceStore';
+import { useActiveWorkspace } from '@/hooks/useActiveWorkspace';
+import NoWorkspaceState from '@/components/workspaces/NoWorkspaceState';
 
 function CreateProjectModal({ onClose }) {
   const { t } = useTranslation();
@@ -143,10 +145,13 @@ export default function ProjectListPage() {
   const [showCreate, setShowCreate] = useState(false);
 
   const activeWorkspaceId = useWorkspaceStore((state) => state.activeWorkspaceId);
+  const { workspaces, isLoading: workspacesLoading } = useActiveWorkspace();
+  const noWorkspace = !workspacesLoading && workspaces.length === 0;
 
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ['projects', activeWorkspaceId],
     queryFn: () => projectService.getProjects(activeWorkspaceId),
+    enabled: !noWorkspace,
   });
 
   return (
@@ -169,15 +174,19 @@ export default function ProjectListPage() {
             </p>
           </div>
         </div>
-        <Button
-          onClick={() => setShowCreate(true)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-sm"
-        >
-          <Plus className="w-4 h-4" /> {t('projectList.create_new')}
-        </Button>
+        {!noWorkspace && (
+          <Button
+            onClick={() => setShowCreate(true)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-sm"
+          >
+            <Plus className="w-4 h-4" /> {t('projectList.create_new')}
+          </Button>
+        )}
       </div>
 
-      {isLoading ? (
+      {noWorkspace ? (
+        <NoWorkspaceState />
+      ) : isLoading || workspacesLoading ? (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="w-8 h-8 text-[color:var(--color-ai)] animate-spin" />
         </div>

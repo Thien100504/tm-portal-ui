@@ -32,6 +32,7 @@ import { Card, MotionCard } from '@/components/ui/Card';
 import { toast } from 'sonner';
 
 import { useActiveWorkspace } from '@/hooks/useActiveWorkspace';
+import NoWorkspaceState from '@/components/workspaces/NoWorkspaceState';
 import PomodoroWidget from '@/components/PomodoroWidget';
 
 // ── Helpers ─────────────────────────────────────────────────────────
@@ -137,8 +138,14 @@ export default function DashboardPage() {
         ? t('dashboard.greeting.afternoon')
         : t('dashboard.greeting.evening');
 
-  const { activeWorkspace, activeWorkspaceId } = useActiveWorkspace();
+  const {
+    activeWorkspace,
+    activeWorkspaceId,
+    workspaces,
+    isLoading: workspacesLoading,
+  } = useActiveWorkspace();
   const isPersonalMode = activeWorkspace?.type === 'personal';
+  const noWorkspace = !workspacesLoading && workspaces.length === 0;
 
   // Personal stats — every user (or scoped to the workspace)
   const { data: personal, isLoading: personalLoading } = useQuery({
@@ -171,9 +178,13 @@ export default function DashboardPage() {
     onError: (err) => toast.error(getApiError(err, t('common.error'))),
   });
 
+  // System admins keep the system-wide stats; everyone else has nothing to show yet
+  if (noWorkspace && !isAdmin) return <NoWorkspaceState />;
+
   // ── Render ─────────────────────────────────────────────────────────
   return (
     <div className="space-y-4">
+      {noWorkspace && <NoWorkspaceState compact />}
       {/* Greeting with tab switcher */}
       <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
         <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}>
