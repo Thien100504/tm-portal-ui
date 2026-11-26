@@ -1,6 +1,7 @@
 import axios from 'axios';
 import i18n from './i18n';
 import { useAuthStore } from '@/store/authStore';
+import { CLIENT_ID } from './clientId';
 
 const API_BASE_URL = '/api/v1';
 
@@ -81,6 +82,9 @@ api.interceptors.request.use(
     const token = getAccessToken();
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    if (config.headers) {
+      config.headers['X-Client-Id'] = CLIENT_ID;
     }
     return config;
   },

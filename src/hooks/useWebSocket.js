@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useAuthStore } from '@/store/authStore';
 import api, { getAccessToken } from '@/lib/axios';
+import { CLIENT_ID } from '@/lib/clientId';
 import { useQueryClient } from '@tanstack/react-query';
 
 const PING_INTERVAL_MS = 25_000; // send ping every 25s
@@ -135,8 +136,8 @@ export function useWebSocket(projectId = null, onNotification = null) {
           const data = JSON.parse(event.data);
 
           if (data.action === 'invalidate' && data.entity === 'tasks') {
-            const currentUser = useAuthStore.getState().user;
-            if (data.actor_id && currentUser && data.actor_id === currentUser.id) return;
+            // Skip only the tab that made the change; the user's other tabs must refresh.
+            if (data.client_id && data.client_id === CLIENT_ID) return;
             queryClient.invalidateQueries({ queryKey: ['tasks', projectId] });
             queryClient.invalidateQueries({ queryKey: ['task'] });
           }
