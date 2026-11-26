@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Loader2, User as UserIcon, Flag, Shapes } from 'lucide-react';
+import { Loader2, User as UserIcon, Flag, Shapes, Layers, BookOpen } from 'lucide-react';
 import DatePicker from '@/components/ui/DatePicker';
 import { useTranslation } from 'react-i18next';
 import taskService from '@/services/taskService';
@@ -11,22 +11,29 @@ import { toast } from 'sonner';
 import { useActiveWorkspace } from '@/hooks/useActiveWorkspace';
 import { getApiError } from '@/lib/apiError';
 import { TASK_TYPES } from '@/lib/taskTypes';
+import { useTaskHierarchy } from '@/hooks/useTaskHierarchy';
 
 export default function CreateTaskModal({
   projectId,
   sprintId,
   defaultStatus,
   initialDeadline,
+  defaultType,
+  defaultEpicId,
+  defaultParentId,
   members = [],
   onClose,
 }) {
   const { t } = useTranslation();
   const qc = useQueryClient();
   const { settings } = useActiveWorkspace();
+  const { epicOptions, storyOptionsFor, tasksById } = useTaskHierarchy(projectId);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    type: 'task',
+    type: defaultType || 'task',
+    epic_id: defaultEpicId || '',
+    parent_task_id: defaultParentId || '',
     priority: 'medium',
     assignee_id: '',
     deadline: initialDeadline || '',
@@ -42,7 +49,13 @@ export default function CreateTaskModal({
     { value: 'done', label: t('kanban.columns.done') },
   ];
 
-  const TYPE_OPTIONS = TASK_TYPES.map((value) => ({ value, label: t(`taskType.${value}`) }));
+  const TYPE_OPTIONS = TASK_TYPES.filter(
+    (type) => type !== 'story' || !formData.parent_task_id
+  ).map((value) => ({ value, label: t(`taskType.${value}`) }));
+
+  // A task under a story lives in the story's epic
+  const parentStory = formData.parent_task_id ? tasksById[formData.parent_task_id] : null;
+  const shownEpicId = parentStory ? parentStory.epic_id || '' : formData.epic_id;
 
   const PRIORITY_OPTIONS = [
     { value: 'high', label: t('taskDetail.priority_high') },
@@ -95,6 +108,11 @@ export default function CreateTaskModal({
     }
 
     if (sprintId) payload.sprint_id = sprintId;
+    if (formData.parent_task_id && formData.type !== 'story') {
+      payload.parent_task_id = formData.parent_task_id;
+    } else if (formData.epic_id) {
+      payload.epic_id = formData.epic_id;
+    }
     if (formData.assignee_id) payload.assignee_id = formData.assignee_id;
     if (formData.deadline) {
       const d = new Date(`${formData.deadline}T23:59:59`);
@@ -173,6 +191,36 @@ export default function CreateTaskModal({
               onChange={(val) => setFormData({ ...formData, type: val })}
             />
           </div>
+
+          <div>
+            <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mb-1.5">
+              <Layers className="w-3 h-3" /> {t('hierarchy.epic')}
+            </label>
+            <CustomSelect
+              options={epicOptions}
+              value={shownEpicId}
+              disabled={!!parentStory}
+              onChange={(val) => setFormData({ ...formData, epic_id: val })}
+            />
+            {parentStory && (
+              <p className="text-[10px] text-muted-foreground mt-1">
+                {t('hierarchy.follows_story')}
+              </p>
+            )}
+          </div>
+
+          {formData.type !== 'story' && (
+            <div>
+              <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mb-1.5">
+                <BookOpen className="w-3 h-3" /> {t('hierarchy.story')}
+              </label>
+              <CustomSelect
+                options={storyOptionsFor(null)}
+                value={formData.parent_task_id}
+                onChange={(val) => setFormData({ ...formData, parent_task_id: val })}
+              />
+            </div>
+          )}
 
           <div>
             <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mb-1.5">

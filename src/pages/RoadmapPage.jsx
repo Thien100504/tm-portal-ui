@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import DatePicker from '@/components/ui/DatePicker';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -16,11 +16,16 @@ import {
   Clock,
   ChevronRight,
   ChevronDown,
+  Link2,
+  Unlink,
+  Search,
+  Inbox,
 } from 'lucide-react';
 import epicService from '@/services/epicService';
 import projectService from '@/services/projectService';
 import { useAuth } from '@/hooks/useAuth';
 import { useProjectPermissions } from '@/hooks/useProjectPermissions';
+import { useTaskHierarchy } from '@/hooks/useTaskHierarchy';
 import { getApiError } from '@/lib/apiError';
 import taskService from '@/services/taskService';
 import { Button } from '@/components/ui/Button';
@@ -28,8 +33,91 @@ import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import CustomSelect from '@/components/ui/CustomSelect';
 import { Modal } from '@/components/ui/Modal';
+import TaskTypeBadge from '@/components/ui/TaskTypeBadge';
+import CreateTaskModal from '@/components/CreateTaskModal';
+import TaskDetailModal from '@/components/TaskDetailModal';
 import { toast } from 'sonner';
 import { ConfirmDeleteDialog } from '@/components/ui/ConfirmDeleteDialog';
+
+const NO_EPIC = '__none__';
+
+// A story that has tasks is a container; its progress comes from those tasks
+function progressOf(items, childrenOf) {
+  const work = items.filter((task) => !(task.type === 'story' && childrenOf(task.id).length));
+  const done = work.filter((task) => task.status === 'done').length;
+  return {
+    total: work.length,
+    done,
+    percent: work.length ? Math.round((done / work.length) * 100) : 0,
+  };
+}
+
+function ProgressBar({ percent, done, total, color }) {
+  return (
+    <div className="flex items-center gap-3 w-40 sm:w-48">
+      <div className="flex-1 bg-muted rounded-full h-1.5 overflow-hidden">
+        <div
+          className="h-full rounded-full transition-all duration-500"
+          style={{ width: `${percent}%`, backgroundColor: color }}
+        />
+      </div>
+      <span className="text-[11px] font-mono font-bold text-foreground w-16 text-right">
+        {percent}% ({done}/{total})
+      </span>
+    </div>
+  );
+}
+
+function StatusIcon({ status }) {
+  if (status === 'done') return <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />;
+  if (status === 'in_progress')
+    return <Clock className="w-4 h-4 text-[color:var(--color-ai)] shrink-0 animate-pulse-soft" />;
+  return <Circle className="w-4 h-4 text-muted-foreground/50 shrink-0" />;
+}
+
+function TaskLine({ task, onOpen, onUnlink, unlinkTitle, children, leading }) {
+  const { t, i18n } = useTranslation();
+  const isDone = task.status === 'done';
+  return (
+    <div className="flex items-center justify-between gap-2 p-2.5 rounded-lg border border-border/40 bg-background/50 hover:bg-background/80 transition-colors">
+      <div className="flex items-center gap-2 min-w-0">
+        {leading}
+        <StatusIcon status={task.status} />
+        <TaskTypeBadge type={task.type} />
+        <button
+          type="button"
+          onClick={() => onOpen(task)}
+          className={`text-[12px] font-medium truncate text-left hover:underline ${isDone ? 'line-through text-muted-foreground/75' : 'text-foreground'}`}
+        >
+          {task.title}
+        </button>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        {children}
+        <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded-md bg-muted text-muted-foreground">
+          {t(`kanban.columns.${task.status}`, task.status)}
+        </span>
+        {task.deadline && (
+          <span className="hidden sm:inline text-[10px] text-muted-foreground">
+            {new Date(task.deadline).toLocaleDateString(i18n.language === 'vi' ? 'vi-VN' : 'en-US')}
+          </span>
+        )}
+        {onUnlink && (
+          <Button
+            variant="ghost"
+            size="icon"
+            title={unlinkTitle}
+            aria-label={unlinkTitle}
+            onClick={() => onUnlink(task)}
+            className="w-7 h-7 rounded-lg text-muted-foreground hover:text-rose-500"
+          >
+            <Unlink className="w-3.5 h-3.5" />
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function RoadmapPage() {
   const { id: projectId } = useParams();
@@ -39,8 +127,11 @@ export default function RoadmapPage() {
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingEpic, setEditingEpic] = useState(null);
-  const [expandedEpicId, setExpandedEpicId] = useState(null);
+  const [expanded, setExpanded] = useState(() => new Set());
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [createCtx, setCreateCtx] = useState(null);
+  const [linkCtx, setLinkCtx] = useState(null);
+  const [openTask, setOpenTask] = useState(null);
 
   // Same rule as the API: the project owner or a member with project.settings
   const { user: currentUser } = useAuth();
@@ -51,26 +142,40 @@ export default function RoadmapPage() {
     enabled: !!projectId,
   });
   const canManage = project?.owner_id === currentUser?.id || can('project.settings');
+  const canCreate = can('task.create');
+  const canEdit = can('task.update');
 
-  // Fetch Epics
-  const { data: epics = [], isLoading: epicsLoading } = useQuery({
-    queryKey: ['epics', projectId],
-    queryFn: () => epicService.getEpics({ projectId }),
-    enabled: !!projectId,
+  const { epics, tasks, isLoading } = useTaskHierarchy(projectId);
+
+  const { data: members = [] } = useQuery({
+    queryKey: ['members', projectId],
+    queryFn: () => projectService.getMembers(projectId),
+    enabled: !!projectId && !!createCtx,
   });
 
-  // Fetch Tasks to calculate progress and show linked tasks
-  const { data: tasks = [], isLoading: tasksLoading } = useQuery({
-    queryKey: ['tasks', projectId],
-    queryFn: () => taskService.getTasks(projectId),
-    enabled: !!projectId,
-  });
+  const tree = useMemo(() => {
+    const children = {};
+    tasks.forEach((task) => {
+      if (task.parent_task_id) (children[task.parent_task_id] ||= []).push(task);
+    });
+    const childrenOf = (id) => children[id] || [];
+    const groupOf = (epicId) => {
+      const inGroup = tasks.filter((task) => (task.epic_id || NO_EPIC) === epicId);
+      const top = inGroup.filter((task) => !task.parent_task_id);
+      return {
+        stories: top.filter((task) => task.type === 'story'),
+        loose: top.filter((task) => task.type !== 'story'),
+        progress: progressOf(inGroup, childrenOf),
+      };
+    };
+    return { childrenOf, groupOf };
+  }, [tasks]);
 
-  // Delete Epic Mutation
   const deleteMutation = useMutation({
     mutationFn: (epicId) => epicService.deleteEpic(epicId),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['epics', projectId] });
+      qc.invalidateQueries({ queryKey: ['tasks', projectId] });
       toast.success(t('roadmap.delete_success'));
     },
     onError: (err) => {
@@ -78,13 +183,21 @@ export default function RoadmapPage() {
     },
   });
 
-  const getEpicStats = (epicId) => {
-    const epicTasks = tasks.filter((t) => t.epic_id === epicId && !t.is_deleted);
-    const total = epicTasks.length;
-    const completed = epicTasks.filter((t) => t.status === 'done').length;
-    const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
-    return { total, completed, progress, tasks: epicTasks };
-  };
+  // Attach/detach: { epic_id } for an epic, { parent_task_id } for a story
+  const moveMutation = useMutation({
+    mutationFn: ({ taskId, data }) => taskService.updateTask(taskId, data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['tasks', projectId] });
+    },
+    onError: (err) => toast.error(getApiError(err, t('common.error'))),
+  });
+
+  const toggle = (id) =>
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
 
   const handleDelete = (epicId, e) => {
     e.stopPropagation();
@@ -96,13 +209,105 @@ export default function RoadmapPage() {
     setEditingEpic(epic);
   };
 
-  if (epicsLoading || tasksLoading) {
+  if (isLoading) {
     return (
       <div className="flex h-[60vh] items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-[color:var(--color-ai)]" />
       </div>
     );
   }
+
+  const noEpic = tree.groupOf(NO_EPIC);
+  const groups = [
+    ...epics.map((epic) => ({ epic, id: epic.id })),
+    ...(noEpic.stories.length || noEpic.loose.length ? [{ epic: null, id: NO_EPIC }] : []),
+  ];
+
+  const renderStory = (story, epicId) => {
+    const kids = tree.childrenOf(story.id);
+    const isOpen = expanded.has(story.id);
+    const p = progressOf(kids, () => []);
+    return (
+      <div key={story.id} className="space-y-1.5">
+        <TaskLine
+          task={story}
+          onOpen={setOpenTask}
+          onUnlink={
+            canEdit && epicId !== NO_EPIC
+              ? (task) => moveMutation.mutate({ taskId: task.id, data: { epic_id: null } })
+              : undefined
+          }
+          unlinkTitle={t('hierarchy.remove_from_epic')}
+          leading={
+            <button
+              type="button"
+              onClick={() => toggle(story.id)}
+              aria-label={t('hierarchy.toggle_story')}
+              className="text-muted-foreground/60 hover:text-foreground"
+            >
+              {isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+            </button>
+          }
+        >
+          {kids.length > 0 && (
+            <span className="text-[10px] font-mono text-muted-foreground">
+              {p.done}/{p.total}
+            </span>
+          )}
+        </TaskLine>
+        {isOpen && (
+          <div className="ml-6 pl-3 border-l border-border/60 space-y-1.5">
+            {kids.length === 0 && (
+              <p className="text-[11px] text-muted-foreground italic py-1">
+                {t('hierarchy.story_empty')}
+              </p>
+            )}
+            {kids.map((task) => (
+              <TaskLine
+                key={task.id}
+                task={task}
+                onOpen={setOpenTask}
+                onUnlink={
+                  canEdit
+                    ? (x) => moveMutation.mutate({ taskId: x.id, data: { parent_task_id: null } })
+                    : undefined
+                }
+                unlinkTitle={t('hierarchy.remove_from_story')}
+              />
+            ))}
+            <div className="flex gap-2 pt-0.5">
+              {canCreate && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 text-[11px]"
+                  onClick={() =>
+                    setCreateCtx({
+                      type: 'task',
+                      epicId: story.epic_id,
+                      parentId: story.id,
+                    })
+                  }
+                >
+                  <Plus className="w-3.5 h-3.5" /> {t('hierarchy.add_task')}
+                </Button>
+              )}
+              {canEdit && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 text-[11px]"
+                  onClick={() => setLinkCtx({ story })}
+                >
+                  <Link2 className="w-3.5 h-3.5" /> {t('hierarchy.link_existing')}
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -116,7 +321,7 @@ export default function RoadmapPage() {
             <h1 className="text-xl font-bold tracking-tight text-foreground">
               {t('roadmap.title')}
             </h1>
-            <p className="text-[12px] text-muted-foreground mt-0.5">{t('roadmap.subtitle')}</p>
+            <p className="text-[12px] text-muted-foreground mt-0.5">{t('hierarchy.subtitle')}</p>
           </div>
         </div>
         <Button
@@ -128,9 +333,9 @@ export default function RoadmapPage() {
         </Button>
       </div>
 
-      {/* Epics List */}
+      {/* Epic → Story → Task tree */}
       <div className="space-y-3">
-        {epics.length === 0 ? (
+        {groups.length === 0 ? (
           <Card className="p-8 text-center glass-surface flex flex-col items-center justify-center gap-3">
             <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
               <Layers className="w-6 h-6 text-muted-foreground/50" />
@@ -149,18 +354,24 @@ export default function RoadmapPage() {
             </Button>
           </Card>
         ) : (
-          epics.map((epic) => {
-            const { total, completed, progress, tasks: epicTasks } = getEpicStats(epic.id);
-            const isExpanded = expandedEpicId === epic.id;
-            const epicColor = epic.color || '#3b82f6';
+          groups.map(({ epic, id }) => {
+            const { stories, loose, progress } = tree.groupOf(id);
+            const isExpanded = expanded.has(id);
+            const epicColor = epic?.color || '#94a3b8';
+            const epicId = epic?.id || null;
 
             return (
               <Card
-                key={epic.id}
-                onClick={() => setExpandedEpicId(isExpanded ? null : epic.id)}
-                className="overflow-hidden glass-surface border border-border/60 hover:border-border transition-all duration-300 shadow-sm cursor-pointer"
+                key={id}
+                className={`overflow-hidden glass-surface border border-border/60 hover:border-border transition-all duration-300 shadow-sm ${epic ? '' : 'border-dashed'}`}
               >
-                <div className="p-4 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => toggle(id)}
+                  onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && toggle(id)}
+                  className="p-4 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between cursor-pointer"
+                >
                   <div className="flex items-center gap-3 min-w-0">
                     <div
                       className="w-1.5 h-8 rounded-full"
@@ -168,25 +379,31 @@ export default function RoadmapPage() {
                     />
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
+                        {!epic && <Inbox className="w-4 h-4 text-muted-foreground" />}
                         <span className="font-bold text-sm text-foreground truncate max-w-[200px] sm:max-w-md">
-                          {epic.name}
+                          {epic ? epic.name : t('hierarchy.no_epic_group')}
                         </span>
-                        <Badge
-                          variant="outline"
-                          className="text-[9px] uppercase font-mono px-1 py-0.5 leading-none"
-                        >
-                          {epic.status}
-                        </Badge>
+                        {epic && (
+                          <Badge
+                            variant="outline"
+                            className="text-[9px] uppercase font-mono px-1 py-0.5 leading-none"
+                          >
+                            {epic.status}
+                          </Badge>
+                        )}
                       </div>
                       <p className="text-xs text-muted-foreground/80 mt-1 line-clamp-1">
-                        {epic.description || t('roadmap.no_description')}
+                        {epic
+                          ? epic.description || t('roadmap.no_description')
+                          : t('hierarchy.no_epic_desc')}
+                        {' · '}
+                        {t('hierarchy.counts', { stories: stories.length, tasks: loose.length })}
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end shrink-0">
-                    {/* Date */}
-                    {epic.due_date && (
+                    {epic?.due_date && (
                       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                         <Calendar className="w-3.5 h-3.5" />
                         <span>
@@ -199,26 +416,20 @@ export default function RoadmapPage() {
                       </div>
                     )}
 
-                    {/* Progress */}
-                    <div className="flex items-center gap-3 w-40 sm:w-48">
-                      <div className="flex-1 bg-muted rounded-full h-1.5 overflow-hidden">
-                        <div
-                          className="h-full rounded-full transition-all duration-500"
-                          style={{ width: `${progress}%`, backgroundColor: epicColor }}
-                        />
-                      </div>
-                      <span className="text-[11px] font-mono font-bold text-foreground w-12 text-right">
-                        {progress}% ({completed}/{total})
-                      </span>
-                    </div>
+                    <ProgressBar
+                      percent={progress.percent}
+                      done={progress.done}
+                      total={progress.total}
+                      color={epicColor}
+                    />
 
-                    {/* Actions */}
                     <div className="flex items-center gap-1">
-                      {canManage && (
+                      {epic && canManage && (
                         <>
                           <Button
                             variant="ghost"
                             size="icon"
+                            aria-label={t('roadmap.edit_epic')}
                             onClick={(e) => handleEdit(epic, e)}
                             className="w-8 h-8 rounded-lg text-muted-foreground hover:text-foreground"
                           >
@@ -227,6 +438,7 @@ export default function RoadmapPage() {
                           <Button
                             variant="ghost"
                             size="icon"
+                            aria-label={t('roadmap.delete_title')}
                             onClick={(e) => handleDelete(epic.id, e)}
                             className="w-8 h-8 rounded-lg text-muted-foreground hover:text-rose-500"
                           >
@@ -245,7 +457,6 @@ export default function RoadmapPage() {
                   </div>
                 </div>
 
-                {/* Sub-tasks Accordion */}
                 <AnimatePresence>
                   {isExpanded && (
                     <motion.div
@@ -254,52 +465,88 @@ export default function RoadmapPage() {
                       exit={{ height: 0, opacity: 0 }}
                       className="border-t border-border/40 bg-muted/10 overflow-hidden"
                     >
-                      <div className="p-4 space-y-2">
-                        <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-3">
-                          {t('roadmap.linked_tasks', { count: total })}
-                        </p>
-                        {epicTasks.length === 0 ? (
-                          <p className="text-xs text-muted-foreground py-2 italic">
-                            {t(
-                              'roadmap.no_linked_tasks_hint',
-                              'No tasks are linked to this Epic yet. Assign the Epic in the task details.'
-                            )}
+                      <div className="p-4 space-y-4">
+                        <section className="space-y-1.5">
+                          <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-2">
+                            {t('hierarchy.stories', { count: stories.length })}
                           </p>
-                        ) : (
-                          epicTasks.map((t) => {
-                            const isDone = t.status === 'done';
-                            return (
-                              <div
-                                key={t.id}
-                                className="flex items-center justify-between p-2.5 rounded-lg border border-border/40 bg-background/50 hover:bg-background/80 transition-colors"
+                          {stories.length === 0 && (
+                            <p className="text-[11px] text-muted-foreground italic">
+                              {t('hierarchy.no_stories')}
+                            </p>
+                          )}
+                          {stories.map((story) => renderStory(story, id))}
+                        </section>
+
+                        <section className="space-y-1.5">
+                          <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-2">
+                            {t('hierarchy.loose_tasks', { count: loose.length })}
+                          </p>
+                          {loose.length === 0 && (
+                            <p className="text-[11px] text-muted-foreground italic">
+                              {t('hierarchy.no_loose_tasks')}
+                            </p>
+                          )}
+                          {loose.map((task) => (
+                            <TaskLine
+                              key={task.id}
+                              task={task}
+                              onOpen={setOpenTask}
+                              onUnlink={
+                                canEdit && epic
+                                  ? (x) =>
+                                      moveMutation.mutate({
+                                        taskId: x.id,
+                                        data: { epic_id: null },
+                                      })
+                                  : undefined
+                              }
+                              unlinkTitle={t('hierarchy.remove_from_epic')}
+                            >
+                              {tree.childrenOf(task.id).length > 0 && (
+                                <span className="text-[10px] font-mono text-muted-foreground">
+                                  {t('hierarchy.subtask_count', {
+                                    count: tree.childrenOf(task.id).length,
+                                  })}
+                                </span>
+                              )}
+                            </TaskLine>
+                          ))}
+                        </section>
+
+                        {(canCreate || (canEdit && epic)) && (
+                          <div className="flex flex-wrap gap-2 pt-1 border-t border-border/40">
+                            {canCreate && (
+                              <>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-8 text-[11px] mt-3"
+                                  onClick={() => setCreateCtx({ type: 'story', epicId })}
+                                >
+                                  <Plus className="w-3.5 h-3.5" /> {t('hierarchy.add_story')}
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-8 text-[11px] mt-3"
+                                  onClick={() => setCreateCtx({ type: 'task', epicId })}
+                                >
+                                  <Plus className="w-3.5 h-3.5" /> {t('hierarchy.add_task')}
+                                </Button>
+                              </>
+                            )}
+                            {canEdit && epic && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-8 text-[11px] mt-3"
+                                onClick={() => setLinkCtx({ epic })}
                               >
-                                <div className="flex items-center gap-2.5 min-w-0">
-                                  {isDone ? (
-                                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                                  ) : t.status === 'in_progress' ? (
-                                    <Clock className="w-4 h-4 text-[color:var(--color-ai)] shrink-0 animate-pulse-soft" />
-                                  ) : (
-                                    <Circle className="w-4 h-4 text-muted-foreground/50 shrink-0" />
-                                  )}
-                                  <span
-                                    className={`text-[12px] font-medium truncate ${isDone ? 'line-through text-muted-foreground/75' : 'text-foreground'}`}
-                                  >
-                                    {t.title}
-                                  </span>
-                                </div>
-                                <div className="flex items-center gap-3 shrink-0">
-                                  <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded-md bg-muted text-muted-foreground">
-                                    {t.status}
-                                  </span>
-                                  {t.deadline && (
-                                    <span className="text-[10px] text-muted-foreground">
-                                      {new Date(t.deadline).toLocaleDateString('vi-VN')}
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            );
-                          })
+                                <Link2 className="w-3.5 h-3.5" /> {t('hierarchy.link_existing')}
+                              </Button>
+                            )}
+                          </div>
                         )}
                       </div>
                     </motion.div>
@@ -326,6 +573,55 @@ export default function RoadmapPage() {
         )}
       </AnimatePresence>
 
+      <AnimatePresence>
+        {createCtx && (
+          <CreateTaskModal
+            key="roadmap-create-task"
+            projectId={projectId}
+            members={members}
+            defaultType={createCtx.type}
+            defaultEpicId={createCtx.epicId || undefined}
+            defaultParentId={createCtx.parentId}
+            onClose={() => setCreateCtx(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {linkCtx && (
+          <LinkTaskModal
+            key="roadmap-link-task"
+            target={linkCtx}
+            tasks={tasks}
+            childrenOf={tree.childrenOf}
+            isPending={moveMutation.isPending}
+            onPick={(task) => {
+              const data = linkCtx.story
+                ? { parent_task_id: linkCtx.story.id }
+                : { epic_id: linkCtx.epic.id };
+              moveMutation.mutate(
+                { taskId: task.id, data },
+                {
+                  onSuccess: () => toast.success(t('hierarchy.linked', { title: task.title })),
+                }
+              );
+            }}
+            onClose={() => setLinkCtx(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {openTask && (
+          <TaskDetailModal
+            key="roadmap-task-detail"
+            task={openTask}
+            projectId={projectId}
+            onClose={() => setOpenTask(null)}
+          />
+        )}
+      </AnimatePresence>
+
       <ConfirmDeleteDialog
         isOpen={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
@@ -341,6 +637,70 @@ export default function RoadmapPage() {
         isDeleting={deleteMutation.isPending}
       />
     </div>
+  );
+}
+
+/**
+ * Pick an existing task to put in an epic (top-level tasks of other epics or
+ * none) or under a story (non-story tasks without subtasks, same rule as the API).
+ */
+function LinkTaskModal({ target, tasks, childrenOf, isPending, onPick, onClose }) {
+  const { t } = useTranslation();
+  const [query, setQuery] = useState('');
+  const candidates = tasks.filter((task) => {
+    if (target.story) {
+      return (
+        task.id !== target.story.id &&
+        task.type !== 'story' &&
+        task.parent_task_id !== target.story.id &&
+        childrenOf(task.id).length === 0
+      );
+    }
+    return !task.parent_task_id && task.epic_id !== target.epic.id;
+  });
+  const q = query.trim().toLowerCase();
+  const shown = q ? candidates.filter((task) => task.title.toLowerCase().includes(q)) : candidates;
+
+  return (
+    <Modal
+      title={t('hierarchy.link_title', { name: target.story?.title || target.epic.name })}
+      onClose={onClose}
+      maxWidth="max-w-md"
+    >
+      <div className="p-5 flex flex-col gap-3">
+        <div className="relative">
+          <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <input
+            autoFocus
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={t('hierarchy.search_tasks')}
+            className="w-full bg-background border border-border rounded-lg pl-9 pr-3 py-2 text-[13px] focus:outline-none focus:border-[color:var(--color-ai)] focus:ring-1 focus:ring-[color:var(--color-ai)]"
+          />
+        </div>
+        <div className="max-h-80 overflow-y-auto space-y-1 scrollbar-thin">
+          {shown.length === 0 && (
+            <p className="text-[12px] text-muted-foreground italic text-center py-6">
+              {t('hierarchy.no_candidates')}
+            </p>
+          )}
+          {shown.map((task) => (
+            <button
+              key={task.id}
+              type="button"
+              disabled={isPending}
+              onClick={() => onPick(task)}
+              className="w-full flex items-center gap-2 p-2 rounded-lg border border-transparent hover:border-border hover:bg-muted/40 text-left disabled:opacity-50"
+            >
+              <StatusIcon status={task.status} />
+              <TaskTypeBadge type={task.type} />
+              <span className="text-[12px] text-foreground truncate flex-1">{task.title}</span>
+              <Link2 className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+            </button>
+          ))}
+        </div>
+      </div>
+    </Modal>
   );
 }
 
