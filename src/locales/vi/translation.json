@@ -178,7 +178,8 @@
     "error_no_target_sprint": "Cần chỉ định sprint đích cho các task chưa hoàn thành.",
     "error_invalid_target_sprint": "Sprint đích không tồn tại hoặc không còn khả dụng.",
     "error_not_completed": "Sprint chưa được hoàn thành.",
-    "error_cannot_delete_active": "Không thể xóa sprint đang hoạt động hoặc đã hoàn thành."
+    "error_cannot_delete_active": "Không thể xóa sprint đang hoạt động hoặc đã hoàn thành.",
+    "error_newer_sprint_started": "Chỉ có thể mở lại sprint được bắt đầu gần nhất."
   },
   "automation": {
     "invalid_trigger": "Loại trigger không hợp lệ.",
@@ -193,7 +194,8 @@
     "error": {
       "select_trigger_value": "Chọn giá trị trigger",
       "select_action_value": "Chọn giá trị action"
-    }
+    },
+    "duplicate_rule": "Đã có rule với cùng trigger, điều kiện và hành động."
   },
   "admin": {
     "profile_updated": "Đã cập nhật thông tin người dùng",
