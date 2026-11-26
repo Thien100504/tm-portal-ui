@@ -37,7 +37,8 @@
     "unknown_user": "User",
     "joined": "Joined",
     "error_occurred": "An error occurred",
-    "clear": "Clear"
+    "clear": "Clear",
+    "version_tooltip": "UI {{ui}} · API {{api}}"
   },
   "sidebar": {
     "dashboard": "Dashboard",

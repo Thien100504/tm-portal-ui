@@ -4,6 +4,9 @@ WORKDIR /app
 COPY package*.json .npmrc ./
 RUN npm ci
 COPY . .
+# Release tag or sha-<commit>, passed by CI; shown in the top bar's tooltip
+ARG APP_VERSION=dev
+ENV VITE_APP_VERSION=${APP_VERSION}
 RUN npm run build
 
 # Stage 2: Serve with Nginx (also proxies /api and /ws to the api service)
