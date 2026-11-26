@@ -148,7 +148,8 @@
     "remove_member_confirm": "{{name}} will be removed from the project and cannot access tasks anymore.",
     "member_add_failed": "Could not add the member",
     "member_updated": "Role updated",
-    "workspace_suggestions": "Workspace suggestions"
+    "workspace_suggestions": "Workspace suggestions",
+    "workspace_required": "Choose a workspace before creating a project."
   },
   "user": {
     "not_found": "User not found."
@@ -986,7 +987,9 @@
       "workspace_admin": "Full workspace administration",
       "workspace_member_manage": "Manage workspace members"
     },
-    "system_role_readonly": "This role cannot be modified."
+    "system_role_readonly": "This role cannot be modified.",
+    "empty_title": "You don't have a workspace yet",
+    "empty_desc": "Create a workspace to start managing projects, or wait for an invitation to join one."
   },
   "server": {
     "notification_unavailable": "Notification service is currently unavailable. Please try again later.",

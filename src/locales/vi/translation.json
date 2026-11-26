@@ -148,7 +148,8 @@
     "remove_member_confirm": "{{name}} sẽ bị xóa khỏi project và không thể truy cập task nữa.",
     "member_add_failed": "Không thể thêm thành viên",
     "member_updated": "Đã cập nhật vai trò",
-    "workspace_suggestions": "Gợi ý từ Workspace"
+    "workspace_suggestions": "Gợi ý từ Workspace",
+    "workspace_required": "Cần chọn workspace trước khi tạo dự án."
   },
   "user": {
     "not_found": "Không tìm thấy người dùng."
@@ -986,7 +987,9 @@
       "workspace_admin": "Toàn quyền quản trị Workspace",
       "workspace_member_manage": "Quản lý thành viên Workspace"
     },
-    "system_role_readonly": "Vai trò hệ thống này không thể chỉnh sửa."
+    "system_role_readonly": "Vai trò hệ thống này không thể chỉnh sửa.",
+    "empty_title": "Bạn chưa có workspace nào",
+    "empty_desc": "Tạo một workspace để bắt đầu quản lý dự án, hoặc chờ lời mời tham gia workspace khác."
   },
   "server": {
     "notification_unavailable": "Dịch vụ thông báo hiện không khả dụng. Vui lòng thử lại sau.",
