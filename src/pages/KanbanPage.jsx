@@ -59,6 +59,7 @@ const TaskCard = React.memo(function TaskCard({
   isSelected,
   onToggleSelect,
   isGlass,
+  canEdit = true,
 }) {
   const { t } = useTranslation();
 
@@ -82,7 +83,7 @@ const TaskCard = React.memo(function TaskCard({
   const isOrphaned = isSubtask && (!parentTask || parentTask.status !== task.status);
 
   const handleClick = (e) => {
-    if (e.ctrlKey || e.metaKey) {
+    if ((e.ctrlKey || e.metaKey) && canEdit) {
       e.preventDefault();
       e.stopPropagation();
       onToggleSelect?.();
@@ -92,7 +93,7 @@ const TaskCard = React.memo(function TaskCard({
   };
 
   return (
-    <Draggable draggableId={task.id} index={index}>
+    <Draggable draggableId={task.id} index={index} isDragDisabled={!canEdit}>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
@@ -1052,6 +1053,7 @@ export default function KanbanPage() {
                                 isSelected={selectedIds.has(task.id)}
                                 onToggleSelect={() => toggleSelect(task.id)}
                                 isGlass={isGlass}
+                                canEdit={can('task.update')}
                               />
                             ))}
                             {provided.placeholder}
@@ -1130,10 +1132,15 @@ export default function KanbanPage() {
                   rawData: t,
                 }))}
                 onEventClick={handleOpenTask}
-                onTaskCreate={(date) => {
-                  setInitialDeadline(format(date, 'yyyy-MM-dd'));
-                  setAddingIn('todo');
-                }}
+                canEdit={can('task.update')}
+                onTaskCreate={
+                  can('task.create')
+                    ? (date) => {
+                        setInitialDeadline(format(date, 'yyyy-MM-dd'));
+                        setAddingIn('todo');
+                      }
+                    : undefined
+                }
                 onTaskUpdateDeadline={(taskId, date) => {
                   updateDeadlineMutation.mutate({
                     taskId,

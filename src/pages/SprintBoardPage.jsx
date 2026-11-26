@@ -87,6 +87,8 @@ function TaskRow({
   const assignee = membersMap?.[task.assignee_id];
   const assigneeName = assignee?.full_name || assignee?.email;
   const isOverdue = task.deadline && new Date(task.deadline) < new Date() && task.status !== 'done';
+  // cached per project, so every row shares one request
+  const canEdit = useProjectPermissions(task.project_id).can('task.update');
 
   const _handleClick = (e) => {
     if (e.ctrlKey || e.metaKey) {
@@ -99,13 +101,13 @@ function TaskRow({
   };
 
   return (
-    <Draggable draggableId={task.id} index={index}>
+    <Draggable draggableId={task.id} index={index} isDragDisabled={!canEdit}>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
           onClick={(e) => {
-            if (e.ctrlKey || e.metaKey) {
+            if ((e.ctrlKey || e.metaKey) && canEdit) {
               e.preventDefault();
               onToggleSelect?.();
             } else if (!snapshot.isDragging) {

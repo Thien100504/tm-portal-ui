@@ -641,12 +641,13 @@ export default function TaskDetailModal({ task, projectId, onClose }) {
                   </div>
                   <button
                     type="button"
+                    disabled={!can('task.update')}
                     onClick={() => {
                       if (isEditing)
                         setDraftTask({ ...draftTask, auto_start: !draftTask.auto_start });
                       else updateTaskMutation.mutate({ auto_start: !taskDetail?.auto_start });
                     }}
-                    className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[color:var(--color-ai)] focus:ring-offset-2 ${
+                    className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[color:var(--color-ai)] focus:ring-offset-2 ${
                       (isEditing ? draftTask.auto_start : taskDetail?.auto_start)
                         ? 'bg-[color:var(--color-success)]'
                         : 'bg-muted-foreground/30'
@@ -1115,26 +1116,28 @@ export default function TaskDetailModal({ task, projectId, onClose }) {
                   </div>
                 )}
 
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (newSubtask.trim()) addSubtaskMutation.mutate(newSubtask.trim());
-                  }}
-                  className="mt-4 flex items-center gap-2"
-                >
-                  <div className="flex-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Plus className="w-3.5 h-3.5 text-muted-foreground" />
+                {can('task.create') && (
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (newSubtask.trim()) addSubtaskMutation.mutate(newSubtask.trim());
+                    }}
+                    className="mt-4 flex items-center gap-2"
+                  >
+                    <div className="flex-1 relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Plus className="w-3.5 h-3.5 text-muted-foreground" />
+                      </div>
+                      <input
+                        value={newSubtask}
+                        onChange={(e) => setNewSubtask(e.target.value)}
+                        placeholder={t('taskDetail.add_subtask')}
+                        className="w-full bg-background border border-border rounded-lg pl-9 pr-3 py-2 text-[12px] focus:outline-none focus:border-[color:var(--color-ai)] focus:ring-1 focus:ring-[color:var(--color-ai)] shadow-sm"
+                        disabled={addSubtaskMutation.isPending}
+                      />
                     </div>
-                    <input
-                      value={newSubtask}
-                      onChange={(e) => setNewSubtask(e.target.value)}
-                      placeholder={t('taskDetail.add_subtask')}
-                      className="w-full bg-background border border-border rounded-lg pl-9 pr-3 py-2 text-[12px] focus:outline-none focus:border-[color:var(--color-ai)] focus:ring-1 focus:ring-[color:var(--color-ai)] shadow-sm"
-                      disabled={addSubtaskMutation.isPending}
-                    />
-                  </div>
-                </form>
+                  </form>
+                )}
               </motion.div>
             )}
 
