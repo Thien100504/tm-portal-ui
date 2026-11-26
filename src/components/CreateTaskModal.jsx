@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Loader2, User as UserIcon, Flag } from 'lucide-react';
+import { Loader2, User as UserIcon, Flag, Shapes } from 'lucide-react';
 import DatePicker from '@/components/ui/DatePicker';
 import { useTranslation } from 'react-i18next';
 import taskService from '@/services/taskService';
@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/Button';
 import { toast } from 'sonner';
 import { useActiveWorkspace } from '@/hooks/useActiveWorkspace';
 import { getApiError } from '@/lib/apiError';
+import { TASK_TYPES } from '@/lib/taskTypes';
 
 export default function CreateTaskModal({
   projectId,
@@ -25,6 +26,7 @@ export default function CreateTaskModal({
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    type: 'task',
     priority: 'medium',
     assignee_id: '',
     deadline: initialDeadline || '',
@@ -39,6 +41,8 @@ export default function CreateTaskModal({
     { value: 'review', label: t('kanban.columns.review') },
     { value: 'done', label: t('kanban.columns.done') },
   ];
+
+  const TYPE_OPTIONS = TASK_TYPES.map((value) => ({ value, label: t(`taskType.${value}`) }));
 
   const PRIORITY_OPTIONS = [
     { value: 'high', label: t('taskDetail.priority_high') },
@@ -78,6 +82,7 @@ export default function CreateTaskModal({
       project_id: projectId,
       title: formData.title.trim(),
       description: formData.description.trim() || undefined,
+      type: formData.type,
       priority: formData.priority,
       status: formData.status,
     };
@@ -157,6 +162,17 @@ export default function CreateTaskModal({
               />
             </div>
           )}
+
+          <div>
+            <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mb-1.5">
+              <Shapes className="w-3 h-3" /> {t('taskType.label')}
+            </label>
+            <CustomSelect
+              options={TYPE_OPTIONS}
+              value={formData.type}
+              onChange={(val) => setFormData({ ...formData, type: val })}
+            />
+          </div>
 
           <div>
             <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 mb-1.5">

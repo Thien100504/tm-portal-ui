@@ -165,7 +165,8 @@
     "error_dependencies_not_done": "Vướng Dependency: Các task liên quan chưa hoàn thành. Chỉ PM mới có thể bỏ qua điều kiện này.",
     "error_self_dependency": "Task không thể phụ thuộc vào chính nó.",
     "error_circular_dependency": "Lỗi vòng lặp: Task này đã tạo thành một vòng lặp phụ thuộc (A→B→A).",
-    "error_assignee_not_member": "Người được giao không thuộc dự án này."
+    "error_assignee_not_member": "Người được giao không thuộc dự án này.",
+    "story_cannot_be_subtask": "User story không thể là công việc con."
   },
   "sprint": {
     "error_end_before_start": "Ngày kết thúc phải sau ngày bắt đầu",
@@ -1177,5 +1178,11 @@
   },
   "taskList": {
     "hidden_subtasks": "{{count}} subtask ẩn"
+  },
+  "taskType": {
+    "label": "Loại",
+    "story": "User story",
+    "task": "Công việc",
+    "bug": "Lỗi"
   }
 }

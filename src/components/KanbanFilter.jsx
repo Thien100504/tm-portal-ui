@@ -12,6 +12,8 @@ import {
   Goal,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import TaskTypeBadge from '@/components/ui/TaskTypeBadge';
+import { TASK_TYPES } from '@/lib/taskTypes';
 
 export default function KanbanFilter({ filters, setFilters, members, sprints = [] }) {
   const { t } = useTranslation();
@@ -49,6 +51,14 @@ export default function KanbanFilter({ filters, setFilters, members, sprints = [
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
 
+  const toggleType = (type) => {
+    const current = filters.types || [];
+    setFilters({
+      ...filters,
+      types: current.includes(type) ? current.filter((x) => x !== type) : [...current, type],
+    });
+  };
+
   const togglePriority = (priority) => {
     const current = filters.priorities || [];
     if (current.includes(priority)) {
@@ -74,13 +84,21 @@ export default function KanbanFilter({ filters, setFilters, members, sprints = [
 
   const activeFilterCount =
     (filters.search ? 1 : 0) +
+    (filters.types?.length || 0) +
     (filters.priorities?.length || 0) +
     (filters.assignees?.length || 0) +
     (filters.isOverdue ? 1 : 0) +
     (filters.sprint ? 1 : 0);
 
   const clearAll = () => {
-    setFilters({ search: '', priorities: [], assignees: [], isOverdue: false, sprint: null });
+    setFilters({
+      search: '',
+      types: [],
+      priorities: [],
+      assignees: [],
+      isOverdue: false,
+      sprint: null,
+    });
   };
 
   return (
@@ -152,6 +170,32 @@ export default function KanbanFilter({ filters, setFilters, members, sprints = [
                       <X className="w-3.5 h-3.5" />
                     </button>
                   )}
+                </div>
+              </div>
+
+              {/* Types */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
+                  {t('taskType.label')}
+                </label>
+                <div className="flex flex-wrap gap-1.5">
+                  {TASK_TYPES.map((type) => {
+                    const isActive = (filters.types || []).includes(type);
+                    return (
+                      <button
+                        key={type}
+                        onClick={() => toggleType(type)}
+                        className={`flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium transition-all border ${
+                          isActive
+                            ? 'bg-[color:var(--color-ai)]/10 text-[color:var(--color-ai)] border-current ring-1 ring-current'
+                            : 'bg-muted/50 text-muted-foreground border-transparent hover:bg-muted'
+                        }`}
+                      >
+                        <TaskTypeBadge type={type} />
+                        {t(`taskType.${type}`)}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
