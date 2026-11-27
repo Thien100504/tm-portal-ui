@@ -247,7 +247,7 @@ function SessionList({ sessions, isLoading, onOpen, onNew }) {
 
 // ─── Chat view ───────────────────────────────────────────────────────────────
 
-function ChatView({ session, workspaceId, projectId, onCreated, onBack }) {
+function ChatView({ session, workspaceId, projectId, onCreated, onBack, onReplyingChange }) {
   const { t, i18n } = useTranslation();
   const qc = useQueryClient();
   const [sessionId, setSessionId] = useState(session?.id || null);
@@ -281,6 +281,12 @@ function ChatView({ session, workspaceId, projectId, onCreated, onBack }) {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // the sidebar's rainbow edge speeds up while the assistant replies
+  useEffect(() => {
+    onReplyingChange(streaming);
+    return () => onReplyingChange(false);
+  }, [streaming, onReplyingChange]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -476,6 +482,7 @@ export default function AssistantSidebar() {
   // null = the list; { session } = a chat (session null while drafting a new one)
   const [chat, setChat] = useState(null);
   const [chatKey, setChatKey] = useState(0);
+  const [replying, setReplying] = useState(false);
 
   // Entering another project's pages switches the assistant to that project
   const lastRouteProject = useRef(routeProject);
@@ -533,52 +540,58 @@ export default function AssistantSidebar() {
       />
       <aside
         aria-label={t('chatbot.title')}
-        className="fixed inset-y-0 right-0 z-50 w-full sm:w-[400px] lg:static lg:z-auto lg:w-[380px] shrink-0 flex flex-col border-l border-border bg-card/95 backdrop-blur-md"
+        data-ai-active={replying}
+        className="ai-rainbow fixed inset-y-0 right-0 z-50 w-full sm:w-[400px] lg:relative lg:z-auto lg:w-[380px] shrink-0 flex flex-col"
       >
-        <div className="flex items-center gap-2 px-3 py-2.5 border-b border-border">
-          <div className="w-7 h-7 rounded-full bg-[color:var(--color-ai)]/15 flex items-center justify-center shrink-0">
-            <Bot className="w-4 h-4 text-[color:var(--color-ai)]" />
+        <div className="relative flex flex-col flex-1 min-h-0 bg-card/95 backdrop-blur-md">
+          <div className="flex items-center gap-2 px-3 py-2.5 border-b border-border">
+            <div className="w-7 h-7 rounded-full bg-[color:var(--color-ai)]/15 flex items-center justify-center shrink-0">
+              <Bot className="w-4 h-4 text-[color:var(--color-ai)]" />
+            </div>
+            <p className="text-[13px] font-semibold text-foreground shrink-0">
+              {t('chatbot.title')}
+            </p>
+            <div className="flex-1 min-w-0">
+              <CustomSelect
+                options={scopeOptions}
+                value={scope}
+                onChange={(value) => {
+                  setScope(value);
+                  setChat(null);
+                }}
+                className="text-[11px]"
+              />
+            </div>
+            <Button
+              size="icon"
+              variant="ghost"
+              className="w-7 h-7 shrink-0"
+              onClick={() => setOpen(false)}
+              aria-label={t('assistant.close')}
+            >
+              <X className="w-4 h-4" />
+            </Button>
           </div>
-          <p className="text-[13px] font-semibold text-foreground shrink-0">{t('chatbot.title')}</p>
-          <div className="flex-1 min-w-0">
-            <CustomSelect
-              options={scopeOptions}
-              value={scope}
-              onChange={(value) => {
-                setScope(value);
-                setChat(null);
-              }}
-              className="text-[11px]"
-            />
-          </div>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="w-7 h-7 shrink-0"
-            onClick={() => setOpen(false)}
-            aria-label={t('assistant.close')}
-          >
-            <X className="w-4 h-4" />
-          </Button>
-        </div>
 
-        {chat ? (
-          <ChatView
-            key={chatKey}
-            session={chat.session}
-            workspaceId={activeWorkspaceId}
-            projectId={projectId}
-            onCreated={onCreated}
-            onBack={() => setChat(null)}
-          />
-        ) : (
-          <SessionList
-            sessions={sessions}
-            isLoading={isLoading}
-            onOpen={openChat}
-            onNew={() => openChat(null)}
-          />
-        )}
+          {chat ? (
+            <ChatView
+              key={chatKey}
+              session={chat.session}
+              workspaceId={activeWorkspaceId}
+              projectId={projectId}
+              onCreated={onCreated}
+              onBack={() => setChat(null)}
+              onReplyingChange={setReplying}
+            />
+          ) : (
+            <SessionList
+              sessions={sessions}
+              isLoading={isLoading}
+              onOpen={openChat}
+              onNew={() => openChat(null)}
+            />
+          )}
+        </div>
       </aside>
     </>
   );

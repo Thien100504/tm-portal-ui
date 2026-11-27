@@ -352,7 +352,7 @@ function AssistantToggle() {
         aria-pressed={open}
         className={`w-8 h-8 rounded-lg shadow-sm transition-colors ${
           open
-            ? 'text-[color:var(--color-ai)] bg-[color:var(--color-ai)]/10'
+            ? 'ai-rainbow ai-rainbow-sm relative text-[color:var(--color-ai)] bg-[color:var(--color-ai)]/10'
             : 'text-muted-foreground hover:text-foreground hover:bg-background'
         }`}
       >

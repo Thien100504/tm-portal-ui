@@ -902,3 +902,97 @@ select.select-styled {
 @page {
   margin: 0;
 }
+
+/* ─── AI rainbow edge ──────────────────────────────────────────────────────────
+   A thin seven-colour ring that slowly turns around AI surfaces, with a soft
+   glow behind it. data-ai-active="true" (the assistant is replying) makes it
+   turn faster and glow brighter. */
+@property --ai-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.ai-rainbow {
+  --ai-ring: 1.5px;
+  --ai-speed: 8s;
+  --ai-glow: 0.28;
+  --ai-spectrum: conic-gradient(
+    from var(--ai-angle),
+    #ff3b30,
+    #ff9500,
+    #ffcc00,
+    #34c759,
+    #00c7be,
+    #007aff,
+    #5856d6,
+    #af52de,
+    #ff3b30
+  );
+  /* the element sets its own position (relative, fixed...): the ring is placed against it */
+  isolation: isolate;
+}
+
+.ai-rainbow[data-ai-active='true'] {
+  --ai-speed: 2.4s;
+  --ai-glow: 0.55;
+}
+
+.dark .ai-rainbow {
+  --ai-glow: 0.4;
+}
+
+.dark .ai-rainbow[data-ai-active='true'] {
+  --ai-glow: 0.7;
+}
+
+/* the ring: the spectrum masked down to the border */
+.ai-rainbow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: var(--ai-ring);
+  border-radius: inherit;
+  background: var(--ai-spectrum);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: ai-spin var(--ai-speed) linear infinite;
+}
+
+/* the glow: the same spectrum, blurred, behind the panel */
+.ai-rainbow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--ai-spectrum);
+  filter: blur(18px);
+  opacity: var(--ai-glow);
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+  animation: ai-spin var(--ai-speed) linear infinite;
+}
+
+@keyframes ai-spin {
+  to {
+    --ai-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-rainbow::before,
+  .ai-rainbow::after {
+    animation: none;
+  }
+}
+
+/* small controls (e.g. the topbar button): thinner glow */
+.ai-rainbow-sm::after {
+  filter: blur(6px);
+}
