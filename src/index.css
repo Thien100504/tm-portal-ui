@@ -939,9 +939,30 @@ select.select-styled {
 .ai-rainbow {
   --ai-ring: 1.5px;
   --ai-speed: 8s;
-  --ai-glow-opacity: 0.35;
-  --ai-glow-size: 26px;
-  --ai-glow-blur: 14px;
+  --ai-glow-opacity: 0.22;
+  --ai-glow-size: 10px;
+  --ai-glow-blur: 6px;
+  /* the element sets its own position (relative, fixed...): the ring is placed against it */
+  isolation: isolate;
+}
+
+.ai-rainbow[data-ai-active='true'] {
+  --ai-speed: 2.4s;
+  --ai-glow-opacity: 0.4;
+}
+
+.dark .ai-rainbow {
+  --ai-glow-opacity: 0.3;
+}
+
+.dark .ai-rainbow[data-ai-active='true'] {
+  --ai-glow-opacity: 0.5;
+}
+
+/* Declared on the pseudo-elements, where --ai-angle is animated: declared on the
+   element, the gradient would be resolved there once and never turn */
+.ai-rainbow::before,
+.ai-rainbow::after {
   --ai-spectrum: conic-gradient(
     from var(--ai-angle),
     #ff3b30,
@@ -954,21 +975,6 @@ select.select-styled {
     #af52de,
     #ff3b30
   );
-  /* the element sets its own position (relative, fixed...): the ring is placed against it */
-  isolation: isolate;
-}
-
-.ai-rainbow[data-ai-active='true'] {
-  --ai-speed: 2.4s;
-  --ai-glow-opacity: 0.55;
-}
-
-.dark .ai-rainbow {
-  --ai-glow-opacity: 0.4;
-}
-
-.dark .ai-rainbow[data-ai-active='true'] {
-  --ai-glow-opacity: 0.7;
 }
 
 /* the ring: the spectrum masked down to the border */
@@ -1026,6 +1032,6 @@ select.select-styled {
 
 /* small controls (e.g. the topbar button): thinner glow */
 .ai-rainbow-sm {
-  --ai-glow-size: 8px;
-  --ai-glow-blur: 4px;
+  --ai-glow-size: 5px;
+  --ai-glow-blur: 3px;
 }
