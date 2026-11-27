@@ -1199,7 +1199,8 @@
       "project_created": "Đã tạo dự án: {{name}}",
       "project_create_failed": "Không tạo được dự án"
     },
-    "error_action_expired": "Yêu cầu xoá này đã hết hạn hoặc đã được dùng."
+    "error_action_expired": "Yêu cầu xoá này đã hết hạn hoặc đã được dùng.",
+    "error_rate_limited": "Dịch vụ AI tạm hết hạn mức sử dụng. Vui lòng thử lại sau."
   },
   "taskList": {
     "hidden_subtasks": "{{count}} subtask ẩn"

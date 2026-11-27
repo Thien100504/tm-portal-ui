@@ -1199,7 +1199,8 @@
       "project_created": "Created project: {{name}}",
       "project_create_failed": "Could not create the project"
     },
-    "error_action_expired": "This delete request has expired or was already used."
+    "error_action_expired": "This delete request has expired or was already used.",
+    "error_rate_limited": "The AI service has reached its usage limit for now. Please try again later."
   },
   "taskList": {
     "hidden_subtasks": "{{count}} hidden subtask(s)"
