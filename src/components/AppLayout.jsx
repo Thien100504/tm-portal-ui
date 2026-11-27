@@ -18,6 +18,7 @@ import {
   X,
   ChevronRight,
   Flame,
+  Bot,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
@@ -38,7 +39,8 @@ import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { vi as viLocale, enUS as enLocale } from 'date-fns/locale';
 import GlobalPomodoroManager from '@/components/pomodoro/GlobalPomodoroManager';
-import ChatBot from '@/components/ChatBot';
+import AssistantSidebar from '@/components/assistant/AssistantSidebar';
+import { useAssistantStore } from '@/store/assistantStore';
 import usePomodoroStore from '@/store/usePomodoroStore';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -319,6 +321,47 @@ function PomodoroQuickToggle() {
   );
 }
 
+// ─── Assistant toggle ────────────────────────────────────────────────────────
+
+function AssistantToggle() {
+  const { t } = useTranslation();
+  const { settings } = useActiveWorkspace();
+  const open = useAssistantStore((s) => s.open);
+  const toggle = useAssistantStore((s) => s.toggle);
+
+  // Ctrl/⌘ + J opens and closes the assistant from anywhere
+  useEffect(() => {
+    const onKey = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'j') {
+        e.preventDefault();
+        toggle();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [toggle]);
+
+  if (settings.enable_ai === false) return null;
+  return (
+    <Tooltip content={t('assistant.toggle_hint')} position="bottom">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={toggle}
+        aria-label={t('assistant.toggle')}
+        aria-pressed={open}
+        className={`w-8 h-8 rounded-lg shadow-sm transition-colors ${
+          open
+            ? 'text-[color:var(--color-ai)] bg-[color:var(--color-ai)]/10'
+            : 'text-muted-foreground hover:text-foreground hover:bg-background'
+        }`}
+      >
+        <Bot className="w-4 h-4" />
+      </Button>
+    </Tooltip>
+  );
+}
+
 // ─── TopBar ──────────────────────────────────────────────────────────────────
 
 function TopBar({ onMenuClick }) {
@@ -482,6 +525,9 @@ function TopBar({ onMenuClick }) {
         <div className="flex items-center gap-2">
           {/* Pomodoro Quick Toggle */}
           <PomodoroQuickToggle />
+
+          {/* AI assistant sidebar */}
+          <AssistantToggle />
 
           {/* Language toggle */}
           <Tooltip content="Change Language" position="bottom">
@@ -688,9 +734,9 @@ export default function AppLayout() {
             <div id="modal-root" className="absolute inset-0 pointer-events-none z-[100]"></div>
           </div>
         </div>
+        <AssistantSidebar />
       </div>
       <GlobalPomodoroManager />
-      <ChatBot />
     </MouseGlowBackground>
   );
 }
