@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { AnimatePresence, motion } from 'framer-motion';
 import { differenceInCalendarDays } from 'date-fns';
 import {
   ArrowLeft,
@@ -28,8 +29,12 @@ import { renderMarkers } from '@/lib/chatMarkers';
 import chatService from '@/services/chatService';
 import projectService from '@/services/projectService';
 import { useAssistantStore } from '@/store/assistantStore';
+import { useTheme } from '@/contexts/useTheme';
 
 const WORKSPACE = 'workspace';
+const PANEL_WIDTH = 380; // lg and up
+const GLASS_GAP = 14; // the Glass theme floats the panel 14px off the edge
+const EASE = [0.32, 0.72, 0, 1];
 const TITLE_LENGTH = 60;
 
 function routeProjectId(pathname) {
@@ -512,6 +517,7 @@ export default function AssistantSidebar() {
   const open = useAssistantStore((s) => s.open);
   const setOpen = useAssistantStore((s) => s.setOpen);
   const { activeWorkspaceId, settings } = useActiveWorkspace();
+  const { style: themeStyle, motion: motionOn } = useTheme();
   const routeProject = routeProjectId(pathname);
 
   const [scope, setScope] = useState(routeProject || WORKSPACE);
@@ -566,81 +572,110 @@ export default function AssistantSidebar() {
     setChat({ session });
   }, []);
 
-  if (!open || settings.enable_ai === false) return null;
+  const show = open && settings.enable_ai !== false;
+  const transition = motionOn ? { duration: 0.32, ease: EASE } : { duration: 0 };
+  // On large screens the page narrows smoothly: this spacer grows to the panel's
+  // width while the panel (absolutely placed over it) slides in
+  const reserve = PANEL_WIDTH + (themeStyle === 'glass' ? GLASS_GAP : 0);
 
   return (
-    <>
-      {/* below lg the sidebar floats over the page */}
-      <div
-        className="fixed inset-0 z-40 bg-background/60 backdrop-blur-sm lg:hidden"
-        onClick={() => setOpen(false)}
-      />
-      <aside
-        aria-label={t('chatbot.title')}
-        data-ai-active={replying}
-        data-app-assistant
-        data-chatbot
-        className={`${configured ? 'ai-rainbow' : 'border-l border-border'} fixed inset-y-0 right-0 z-50 w-full sm:w-[400px] lg:relative lg:inset-auto lg:z-auto lg:w-[380px] shrink-0 flex flex-col`}
-      >
-        <div
-          data-app-assistant-panel
-          className="relative flex flex-col flex-1 min-h-0 bg-card/95 backdrop-blur-md"
+    <AnimatePresence initial={false}>
+      {show && (
+        <motion.div
+          key="assistant-space"
+          aria-hidden
+          className="hidden lg:block shrink-0"
+          initial={{ width: 0 }}
+          animate={{ width: reserve }}
+          exit={{ width: 0 }}
+          transition={transition}
+        />
+      )}
+      {show && (
+        // below lg the sidebar floats over the page
+        <motion.div
+          key="assistant-backdrop"
+          className="fixed inset-0 z-40 bg-background/60 backdrop-blur-sm lg:hidden"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={transition}
+          onClick={() => setOpen(false)}
+        />
+      )}
+      {show && (
+        <motion.aside
+          key="assistant-panel"
+          initial={{ x: 48, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: 48, opacity: 0 }}
+          transition={transition}
+          aria-label={t('chatbot.title')}
+          data-ai-active={replying}
+          data-app-assistant
+          data-chatbot
+          className={`${configured ? 'ai-rainbow' : 'border-l border-border'} fixed inset-y-0 right-0 z-50 w-full sm:w-[400px] lg:absolute lg:z-10 lg:w-[380px] flex flex-col`}
         >
-          <div className="flex items-center gap-2 px-3 py-2.5 border-b border-border">
-            <div className="w-7 h-7 rounded-full bg-[color:var(--color-ai)]/15 flex items-center justify-center shrink-0">
-              {configured ? (
-                <Bot className="w-4 h-4 text-[color:var(--color-ai)]" />
-              ) : (
-                <BotOff className="w-4 h-4 text-muted-foreground" />
-              )}
+          <div
+            data-app-assistant-panel
+            className="relative flex flex-col flex-1 min-h-0 bg-card/95 backdrop-blur-md"
+          >
+            <div className="flex items-center gap-2 px-3 py-2.5 border-b border-border">
+              <div className="w-7 h-7 rounded-full bg-[color:var(--color-ai)]/15 flex items-center justify-center shrink-0">
+                {configured ? (
+                  <Bot className="w-4 h-4 text-[color:var(--color-ai)]" />
+                ) : (
+                  <BotOff className="w-4 h-4 text-muted-foreground" />
+                )}
+              </div>
+              <p className="text-[13px] font-semibold text-foreground shrink-0">
+                {t('chatbot.title')}
+              </p>
+              <div className="flex-1 min-w-0">
+                <CustomSelect
+                  options={scopeOptions}
+                  value={scope}
+                  onChange={(value) => {
+                    setScope(value);
+                    setChat(null);
+                  }}
+                  className="text-[11px]"
+                />
+              </div>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="w-7 h-7 shrink-0"
+                onClick={() => setOpen(false)}
+                aria-label={t('assistant.close')}
+              >
+                <X className="w-4 h-4" />
+              </Button>
             </div>
-            <p className="text-[13px] font-semibold text-foreground shrink-0">
-              {t('chatbot.title')}
-            </p>
-            <div className="flex-1 min-w-0">
-              <CustomSelect
-                options={scopeOptions}
-                value={scope}
-                onChange={(value) => {
-                  setScope(value);
-                  setChat(null);
-                }}
-                className="text-[11px]"
-              />
-            </div>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="w-7 h-7 shrink-0"
-              onClick={() => setOpen(false)}
-              aria-label={t('assistant.close')}
-            >
-              <X className="w-4 h-4" />
-            </Button>
-          </div>
 
-          {chat ? (
-            <ChatView
-              key={chatKey}
-              session={chat.session}
-              workspaceId={activeWorkspaceId}
-              projectId={projectId}
-              onCreated={onCreated}
-              onBack={() => setChat(null)}
-              onReplyingChange={setReplying}
-              configured={configured}
-            />
-          ) : (
-            <SessionList
-              sessions={sessions}
-              isLoading={isLoading}
-              onOpen={openChat}
-              onNew={() => openChat(null)}
-              configured={configured}
-            />
-          )}
-        </div>
-      </aside>
-    </>
+            {chat ? (
+              <ChatView
+                key={chatKey}
+                session={chat.session}
+                workspaceId={activeWorkspaceId}
+                projectId={projectId}
+                onCreated={onCreated}
+                onBack={() => setChat(null)}
+                onReplyingChange={setReplying}
+                configured={configured}
+              />
+            ) : (
+              <SessionList
+                sessions={sessions}
+                isLoading={isLoading}
+                onOpen={openChat}
+                onNew={() => openChat(null)}
+                configured={configured}
+              />
+            )}
+          </div>
+        </motion.aside>
+      )}
+    </AnimatePresence>
   );
 }

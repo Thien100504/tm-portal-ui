@@ -702,7 +702,9 @@ export default function AppLayout() {
     <MouseGlowBackground fullScreen>
       <div
         data-app-shell
-        className="flex h-screen w-full text-foreground overflow-hidden relative z-10"
+        // clip, not hidden: the assistant's shadow reaches past the edge, and a hidden
+        // overflow can still be scrolled by the browser (focusing a dialog shifted the app)
+        className="flex h-screen w-full text-foreground overflow-clip relative z-10"
       >
         {/* Mobile Sidebar Overlay */}
         {mobileMenuOpen && (
@@ -726,7 +728,7 @@ export default function AppLayout() {
         <div className="flex min-w-0 flex-1 flex-col relative z-10">
           <TopBar onMenuClick={() => setMobileMenuOpen(true)} />
           {/* the assistant sits under the topbar, so its toggle button never moves */}
-          <div className="flex flex-1 min-h-0">
+          <div className="relative flex flex-1 min-h-0">
             <div
               id="app-main-area"
               className="relative flex-1 min-w-0 flex flex-col overflow-hidden"
