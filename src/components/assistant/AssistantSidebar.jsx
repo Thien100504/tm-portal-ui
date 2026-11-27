@@ -26,6 +26,7 @@ import { useActiveWorkspace } from '@/hooks/useActiveWorkspace';
 import { useAiStatus } from '@/hooks/useAiStatus';
 import { getApiError } from '@/lib/apiError';
 import { renderMarkers } from '@/lib/chatMarkers';
+import ChatMarkdown from './ChatMarkdown';
 import chatService from '@/services/chatService';
 import projectService from '@/services/projectService';
 import { useAssistantStore } from '@/store/assistantStore';
@@ -450,13 +451,19 @@ function ChatView({
                 </div>
               )}
               <div
-                className={`max-w-[85%] rounded-xl px-3 py-2 text-[12px] leading-relaxed break-words whitespace-pre-wrap ${
+                className={`max-w-[85%] rounded-xl px-3 py-2 text-[12px] leading-relaxed break-words ${
                   msg.role === 'user'
-                    ? 'bg-[color:var(--color-ai)] text-white rounded-tr-none'
+                    ? 'bg-[color:var(--color-ai)] text-white rounded-tr-none whitespace-pre-wrap'
                     : 'bg-muted/60 text-foreground rounded-tl-none'
                 }`}
               >
-                {msg.content || (streaming && msg.role === 'assistant' ? '▋' : '')}
+                {msg.role === 'user' ? (
+                  msg.content
+                ) : msg.content ? (
+                  <ChatMarkdown text={msg.content} />
+                ) : streaming ? (
+                  '▋'
+                ) : null}
               </div>
             </div>
           ))
