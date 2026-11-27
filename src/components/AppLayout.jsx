@@ -716,25 +716,31 @@ export default function AppLayout() {
 
         <div className="flex min-w-0 flex-1 flex-col relative z-10">
           <TopBar onMenuClick={() => setMobileMenuOpen(true)} />
-          <div id="app-main-area" className="relative flex-1 flex flex-col overflow-hidden">
-            <ReactLenis
-              as="main"
-              options={{ smoothWheel: true, duration: 1.2 }}
-              className="flex-1 overflow-x-hidden overflow-y-auto px-4 py-4 md:px-6 relative"
+          {/* the assistant sits under the topbar, so its toggle button never moves */}
+          <div className="flex flex-1 min-h-0">
+            <div
+              id="app-main-area"
+              className="relative flex-1 min-w-0 flex flex-col overflow-hidden"
             >
-              <div className="mx-auto w-full max-w-[1400px]">
-                <div
-                  key={location.pathname}
-                  className={motionEnabled ? 'animate-fade-up w-full' : 'w-full'}
-                >
-                  {outlet}
+              <ReactLenis
+                as="main"
+                options={{ smoothWheel: true, duration: 1.2 }}
+                className="flex-1 overflow-x-hidden overflow-y-auto px-4 py-4 md:px-6 relative"
+              >
+                <div className="mx-auto w-full max-w-[1400px]">
+                  <div
+                    key={location.pathname}
+                    className={motionEnabled ? 'animate-fade-up w-full' : 'w-full'}
+                  >
+                    {outlet}
+                  </div>
                 </div>
-              </div>
-            </ReactLenis>
-            <div id="modal-root" className="absolute inset-0 pointer-events-none z-[100]"></div>
+              </ReactLenis>
+              <div id="modal-root" className="absolute inset-0 pointer-events-none z-[100]"></div>
+            </div>
+            <AssistantSidebar />
           </div>
         </div>
-        <AssistantSidebar />
       </div>
       <GlobalPomodoroManager />
     </MouseGlowBackground>

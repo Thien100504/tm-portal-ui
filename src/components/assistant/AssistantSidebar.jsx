@@ -543,7 +543,7 @@ export default function AssistantSidebar() {
         data-ai-active={replying}
         data-app-assistant
         data-chatbot
-        className="ai-rainbow fixed inset-y-0 right-0 z-50 w-full sm:w-[400px] lg:relative lg:z-auto lg:w-[380px] shrink-0 flex flex-col"
+        className="ai-rainbow fixed inset-y-0 right-0 z-50 w-full sm:w-[400px] lg:relative lg:inset-auto lg:z-auto lg:w-[380px] shrink-0 flex flex-col"
       >
         <div
           data-app-assistant-panel

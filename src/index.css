@@ -656,10 +656,9 @@
   border-radius: 22px;
 }
 
-/* Floating AI assistant — the same detached pane as the left sidebar, on the right */
+/* Floating AI assistant — the same detached pane as the main area, under the topbar */
 .theme-glass [data-app-assistant] {
   margin: 14px 14px 14px 0;
-  height: calc(100vh - 28px);
   border-radius: 22px;
 }
 .theme-glass [data-app-assistant-panel] {
