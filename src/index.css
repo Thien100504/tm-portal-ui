@@ -939,7 +939,9 @@ select.select-styled {
 .ai-rainbow {
   --ai-ring: 1.5px;
   --ai-speed: 8s;
-  --ai-glow: 0.28;
+  --ai-glow-opacity: 0.35;
+  --ai-glow-size: 26px;
+  --ai-glow-blur: 14px;
   --ai-spectrum: conic-gradient(
     from var(--ai-angle),
     #ff3b30,
@@ -958,15 +960,15 @@ select.select-styled {
 
 .ai-rainbow[data-ai-active='true'] {
   --ai-speed: 2.4s;
-  --ai-glow: 0.55;
+  --ai-glow-opacity: 0.55;
 }
 
 .dark .ai-rainbow {
-  --ai-glow: 0.4;
+  --ai-glow-opacity: 0.4;
 }
 
 .dark .ai-rainbow[data-ai-active='true'] {
-  --ai-glow: 0.7;
+  --ai-glow-opacity: 0.7;
 }
 
 /* the ring: the spectrum masked down to the border */
@@ -987,16 +989,23 @@ select.select-styled {
   animation: ai-spin var(--ai-speed) linear infinite;
 }
 
-/* the glow: the same spectrum, blurred, behind the panel */
+/* the glow: the same spectrum, blurred, in a band just outside the edge only
+   (a see-through glass panel would otherwise be tinted all over) */
 .ai-rainbow::after {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: calc(-1 * var(--ai-glow-size));
   z-index: -1;
-  border-radius: inherit;
+  padding: var(--ai-glow-size);
+  border-radius: calc(var(--ai-glow-size) + 22px);
   background: var(--ai-spectrum);
-  filter: blur(18px);
-  opacity: var(--ai-glow);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  filter: blur(var(--ai-glow-blur));
+  opacity: var(--ai-glow-opacity);
   pointer-events: none;
   transition: opacity 0.6s ease;
   animation: ai-spin var(--ai-speed) linear infinite;
@@ -1016,6 +1025,7 @@ select.select-styled {
 }
 
 /* small controls (e.g. the topbar button): thinner glow */
-.ai-rainbow-sm::after {
-  filter: blur(6px);
+.ai-rainbow-sm {
+  --ai-glow-size: 8px;
+  --ai-glow-blur: 4px;
 }
