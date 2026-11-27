@@ -372,6 +372,10 @@ function ChatView({
           show(text.trimStart());
         }
         qc.invalidateQueries({ queryKey: ['chatSessions'] });
+        // the assistant may have created or changed projects, tasks or sprints
+        ['projects', 'tasks', 'sprints', 'epics'].forEach((key) =>
+          qc.invalidateQueries({ queryKey: [key] })
+        );
         // stale for next time, but no refetch now: that would replace what is on
         // screen and drop an error reply, which the server does not store
         qc.invalidateQueries({ queryKey: ['chatMessages', id], refetchType: 'none' });
