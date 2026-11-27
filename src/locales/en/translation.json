@@ -1185,6 +1185,7 @@
       "task_created": "Created task: {{title}}",
       "task_create_failed": "Could not create the task",
       "task_updated": "Updated task: {{title}}",
+      "task_update_failed": "Could not update the task",
       "task_restored": "Restored task: {{title}}",
       "tasks_deleted_one": "Deleted {{count}} task",
       "tasks_deleted_other": "Deleted {{count}} tasks",
