@@ -1195,7 +1195,9 @@
       "rule_enabled": "Đã bật rule: {{name}}",
       "rule_disabled": "Đã tắt rule: {{name}}",
       "rule_deleted": "Đã xóa rule: {{name}}",
-      "delete_pending": "Đang chờ bạn xác nhận xóa"
+      "delete_pending": "Đang chờ bạn xác nhận xóa",
+      "project_created": "Đã tạo dự án: {{name}}",
+      "project_create_failed": "Không tạo được dự án"
     }
   },
   "taskList": {
