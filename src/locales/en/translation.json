@@ -1174,7 +1174,28 @@
   "chatbot": {
     "connection_error": "_(Connection error, please try again.)_",
     "placeholder": "Ask about project, tasks, progress...",
-    "greeting": "Hello! I'm the AI assistant for this project. How can I help?"
+    "greeting": "Hello! I'm the AI assistant for this project. How can I help?",
+    "title": "AI Assistant",
+    "conversation": "Conversation",
+    "new_conversation": "New conversation",
+    "new_chat": "New chat",
+    "error_not_configured": "The AI assistant is not configured yet (missing API key).",
+    "error_session_not_found": "This conversation was not found in this project.",
+    "toast": {
+      "task_created": "Created task: {{title}}",
+      "task_create_failed": "Could not create the task",
+      "task_updated": "Updated task: {{title}}",
+      "task_restored": "Restored task: {{title}}",
+      "tasks_deleted_one": "Deleted {{count}} task",
+      "tasks_deleted_other": "Deleted {{count}} tasks",
+      "sprint_created": "Created sprint: {{name}}",
+      "sprint_started": "Started sprint: {{name}}",
+      "sprint_completed": "Completed sprint: {{name}}",
+      "rule_enabled": "Enabled rule: {{name}}",
+      "rule_disabled": "Disabled rule: {{name}}",
+      "rule_deleted": "Deleted rule: {{name}}",
+      "delete_pending": "Waiting for you to confirm the deletion"
+    }
   },
   "taskList": {
     "hidden_subtasks": "{{count}} hidden subtask(s)"
