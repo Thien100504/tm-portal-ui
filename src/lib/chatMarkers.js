@@ -15,6 +15,24 @@ function toastText(t, raw) {
   }
 }
 
+// [confirm]{"token","kind","titles"}[/confirm] -> a confirmation card (server-made only)
+const CONFIRM_MARKER = /\[confirm\]([\s\S]*?)\[\/confirm\]/g;
+
+/** Pull confirmation cards out of the reply: { text, confirms }. */
+export function extractConfirms(text) {
+  const confirms = [];
+  const rest = text.replace(CONFIRM_MARKER, (_, raw) => {
+    try {
+      const card = JSON.parse(raw);
+      if (card?.token) confirms.push(card);
+    } catch {
+      // malformed: drop it rather than show raw markup
+    }
+    return '';
+  });
+  return { text: rest, confirms };
+}
+
 /** Show toasts and translate errors found in the reply; return the text left to display. */
 export function renderMarkers(t, text) {
   return text

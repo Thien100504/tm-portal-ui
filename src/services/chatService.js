@@ -27,6 +27,12 @@ const chatService = {
     return res.data;
   },
 
+  /** Confirm or cancel a delete the assistant asked for (the only way it happens). */
+  async resolveAction(sessionId, token, { confirm, lang }) {
+    const res = await api.post(`/chat/sessions/${sessionId}/actions/${token}`, { confirm, lang });
+    return res.data;
+  },
+
   async renameSession(sessionId, title) {
     const res = await api.patch(`/chat/sessions/${sessionId}`, { title });
     return res.data;

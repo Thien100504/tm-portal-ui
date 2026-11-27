@@ -1198,7 +1198,8 @@
       "delete_pending": "Waiting for you to confirm the deletion",
       "project_created": "Created project: {{name}}",
       "project_create_failed": "Could not create the project"
-    }
+    },
+    "error_action_expired": "This delete request has expired or was already used."
   },
   "taskList": {
     "hidden_subtasks": "{{count}} hidden subtask(s)"
@@ -1240,6 +1241,17 @@
     "not_configured_title": "The AI assistant is not set up yet",
     "not_configured_desc": "The server has no AI API key (NVIDIA_API_KEY or OPENAI_API_KEY). You can still read past conversations; ask an administrator to add a key to chat.",
     "not_configured_hint": "AI assistant: not set up (no API key)",
-    "not_configured_placeholder": "The AI assistant is not set up"
+    "not_configured_placeholder": "The AI assistant is not set up",
+    "confirm": {
+      "delete_tasks_one": "Delete {{count}} task?",
+      "delete_tasks_other": "Delete {{count}} tasks?",
+      "delete_rule": "Delete the rule \"{{name}}\"?",
+      "hint": "Nothing is deleted until you press Delete.",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "done": "Deleted",
+      "cancelled": "Cancelled",
+      "expired": "This request has expired. Ask the assistant again."
+    }
   }
 }

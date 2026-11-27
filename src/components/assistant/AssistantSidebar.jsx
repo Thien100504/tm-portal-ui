@@ -25,8 +25,9 @@ import { DropdownMenu } from '@/components/ui/DropdownMenu';
 import { useActiveWorkspace } from '@/hooks/useActiveWorkspace';
 import { useAiStatus } from '@/hooks/useAiStatus';
 import { getApiError } from '@/lib/apiError';
-import { renderMarkers } from '@/lib/chatMarkers';
+import { extractConfirms, renderMarkers } from '@/lib/chatMarkers';
 import ChatMarkdown from './ChatMarkdown';
+import ConfirmCard from './ConfirmCard';
 import chatService from '@/services/chatService';
 import projectService from '@/services/projectService';
 import { useAssistantStore } from '@/store/assistantStore';
@@ -342,9 +343,11 @@ function ChatView({
         { id: crypto.randomUUID(), role: 'user', content },
         { id: assistantId, role: 'assistant', content: '' },
       ]);
-      const show = (value) =>
+      const show = (value, actions) =>
         setMessages((prev) =>
-          prev.map((m) => (m.id === assistantId ? { ...m, content: value } : m))
+          prev.map((m) =>
+            m.id === assistantId ? { ...m, content: value, ...(actions ? { actions } : {}) } : m
+          )
         );
 
       try {
@@ -366,11 +369,16 @@ function ChatView({
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
         let text = '';
+        const actions = [];
         for (;;) {
           const { value, done } = await reader.read();
           if (done) break;
-          text = renderMarkers(t, text + decoder.decode(value, { stream: true }));
-          show(text.trimStart());
+          const parsed = extractConfirms(
+            renderMarkers(t, text + decoder.decode(value, { stream: true }))
+          );
+          text = parsed.text;
+          actions.push(...parsed.confirms);
+          show(text.trimStart(), actions.length ? [...actions] : undefined);
         }
         qc.invalidateQueries({ queryKey: ['chatSessions'] });
         // the assistant may have created or changed projects, tasks or sprints
@@ -461,9 +469,12 @@ function ChatView({
                   msg.content
                 ) : msg.content ? (
                   <ChatMarkdown text={msg.content} />
-                ) : streaming ? (
+                ) : streaming && !msg.actions ? (
                   '▋'
                 ) : null}
+                {msg.actions?.map((action) => (
+                  <ConfirmCard key={action.token} action={action} sessionId={sessionId} />
+                ))}
               </div>
             </div>
           ))

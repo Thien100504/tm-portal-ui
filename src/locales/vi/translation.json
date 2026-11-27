@@ -1198,7 +1198,8 @@
       "delete_pending": "Đang chờ bạn xác nhận xóa",
       "project_created": "Đã tạo dự án: {{name}}",
       "project_create_failed": "Không tạo được dự án"
-    }
+    },
+    "error_action_expired": "Yêu cầu xoá này đã hết hạn hoặc đã được dùng."
   },
   "taskList": {
     "hidden_subtasks": "{{count}} subtask ẩn"
@@ -1240,6 +1241,17 @@
     "not_configured_title": "Trợ lý AI chưa được cấu hình",
     "not_configured_desc": "Server chưa có API key cho AI (NVIDIA_API_KEY hoặc OPENAI_API_KEY). Bạn vẫn xem lại được các cuộc trò chuyện cũ; nhờ quản trị viên thêm key để trò chuyện.",
     "not_configured_hint": "Trợ lý AI: chưa cấu hình (thiếu API key)",
-    "not_configured_placeholder": "Trợ lý AI chưa được cấu hình"
+    "not_configured_placeholder": "Trợ lý AI chưa được cấu hình",
+    "confirm": {
+      "delete_tasks_one": "Xoá {{count}} task?",
+      "delete_tasks_other": "Xoá {{count}} task?",
+      "delete_rule": "Xoá rule \"{{name}}\"?",
+      "hint": "Chưa có gì bị xoá cho tới khi bạn bấm Xoá.",
+      "delete": "Xoá",
+      "cancel": "Huỷ",
+      "done": "Đã xoá",
+      "cancelled": "Đã huỷ",
+      "expired": "Yêu cầu này đã hết hạn. Hãy nhờ trợ lý lại."
+    }
   }
 }
