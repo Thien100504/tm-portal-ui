@@ -1195,7 +1195,9 @@
       "rule_enabled": "Enabled rule: {{name}}",
       "rule_disabled": "Disabled rule: {{name}}",
       "rule_deleted": "Deleted rule: {{name}}",
-      "delete_pending": "Waiting for you to confirm the deletion"
+      "delete_pending": "Waiting for you to confirm the deletion",
+      "project_created": "Created project: {{name}}",
+      "project_create_failed": "Could not create the project"
     }
   },
   "taskList": {
