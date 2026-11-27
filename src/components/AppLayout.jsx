@@ -502,7 +502,7 @@ function TopBar({ onMenuClick }) {
                   i18n.changeLanguage(newLang);
                 }
               }}
-              className="w-8 h-8 rounded-lg text-[11px] font-bold text-muted-foreground hover:text-foreground hover:bg-background shadow-sm uppercase transition-colors"
+              className="w-8 h-8 rounded-lg text-[11px] font-bold leading-none [text-box:trim-both_cap_alphabetic] text-muted-foreground hover:text-foreground hover:bg-background shadow-sm uppercase transition-colors"
               aria-label="Change language"
             >
               {i18n.language === 'vi' ? 'VI' : 'EN'}
