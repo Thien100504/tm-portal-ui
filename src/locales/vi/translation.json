@@ -1233,6 +1233,10 @@
     "suggest_ws_mine": "Hiện tôi đang được giao những việc gì?",
     "suggest_project_progress": "Tóm tắt tiến độ dự án này",
     "suggest_project_overdue": "Task nào trong dự án đang quá hạn?",
-    "suggest_project_create": "Tạo task: Review release notes"
+    "suggest_project_create": "Tạo task: Review release notes",
+    "not_configured_title": "Trợ lý AI chưa được cấu hình",
+    "not_configured_desc": "Server chưa có API key cho AI (NVIDIA_API_KEY hoặc OPENAI_API_KEY). Bạn vẫn xem lại được các cuộc trò chuyện cũ; nhờ quản trị viên thêm key để trò chuyện.",
+    "not_configured_hint": "Trợ lý AI: chưa cấu hình (thiếu API key)",
+    "not_configured_placeholder": "Trợ lý AI chưa được cấu hình"
   }
 }

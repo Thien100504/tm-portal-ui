@@ -5,6 +5,12 @@ const API_BASE = '/api/v1';
 
 // Assistant sidebar sessions: one project, or the whole workspace (projectId empty)
 const chatService = {
+  /** { configured: false } when the server has no AI key, so the assistant cannot answer */
+  async getStatus() {
+    const res = await api.get('/chat/status');
+    return res.data;
+  },
+
   async listSessions({ workspaceId, projectId }) {
     const res = await api.get('/chat/sessions', {
       params: { workspace_id: workspaceId, ...(projectId ? { project_id: projectId } : {}) },

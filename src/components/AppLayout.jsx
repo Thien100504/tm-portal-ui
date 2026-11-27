@@ -19,6 +19,7 @@ import {
   ChevronRight,
   Flame,
   Bot,
+  BotOff,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
@@ -41,6 +42,7 @@ import { vi as viLocale, enUS as enLocale } from 'date-fns/locale';
 import GlobalPomodoroManager from '@/components/pomodoro/GlobalPomodoroManager';
 import AssistantSidebar from '@/components/assistant/AssistantSidebar';
 import { useAssistantStore } from '@/store/assistantStore';
+import { useAiStatus } from '@/hooks/useAiStatus';
 import usePomodoroStore from '@/store/usePomodoroStore';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -328,6 +330,7 @@ function AssistantToggle() {
   const { settings } = useActiveWorkspace();
   const open = useAssistantStore((s) => s.open);
   const toggle = useAssistantStore((s) => s.toggle);
+  const { configured } = useAiStatus(settings.enable_ai !== false);
 
   // Ctrl/⌘ + J opens and closes the assistant from anywhere
   useEffect(() => {
@@ -343,7 +346,10 @@ function AssistantToggle() {
 
   if (settings.enable_ai === false) return null;
   return (
-    <Tooltip content={t('assistant.toggle_hint')} position="bottom">
+    <Tooltip
+      content={configured ? t('assistant.toggle_hint') : t('assistant.not_configured_hint')}
+      position="bottom"
+    >
       <Button
         variant="ghost"
         size="icon"
@@ -351,12 +357,15 @@ function AssistantToggle() {
         aria-label={t('assistant.toggle')}
         aria-pressed={open}
         className={`w-8 h-8 rounded-lg shadow-sm transition-colors ${
-          open
-            ? 'ai-rainbow ai-rainbow-sm relative text-[color:var(--color-ai)] bg-[color:var(--color-ai)]/10'
-            : 'text-muted-foreground hover:text-foreground hover:bg-background'
+          !configured
+            ? `text-muted-foreground/60 hover:text-muted-foreground ${open ? 'bg-muted' : 'hover:bg-background'}`
+            : open
+              ? 'ai-rainbow ai-rainbow-sm relative text-[color:var(--color-ai)] bg-[color:var(--color-ai)]/10'
+              : 'text-muted-foreground hover:text-foreground hover:bg-background'
         }`}
       >
-        <Bot className="w-4 h-4" />
+        {/* no AI key on the server: a crossed-out bot and no rainbow */}
+        {configured ? <Bot className="w-4 h-4" /> : <BotOff className="w-4 h-4" />}
       </Button>
     </Tooltip>
   );

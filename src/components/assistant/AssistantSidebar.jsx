@@ -6,6 +6,7 @@ import { differenceInCalendarDays } from 'date-fns';
 import {
   ArrowLeft,
   Bot,
+  BotOff,
   Check,
   Loader2,
   MessageSquarePlus,
@@ -21,6 +22,7 @@ import { Button } from '@/components/ui/Button';
 import CustomSelect from '@/components/ui/CustomSelect';
 import { DropdownMenu } from '@/components/ui/DropdownMenu';
 import { useActiveWorkspace } from '@/hooks/useActiveWorkspace';
+import { useAiStatus } from '@/hooks/useAiStatus';
 import { getApiError } from '@/lib/apiError';
 import { renderMarkers } from '@/lib/chatMarkers';
 import chatService from '@/services/chatService';
@@ -41,6 +43,25 @@ function ageGroup(dateStr) {
   if (days === 1) return 'yesterday';
   if (days < 7) return 'week';
   return 'older';
+}
+
+// ─── Not configured ──────────────────────────────────────────────────────────
+
+/** Shown while the server has no AI key: chats can be read, not continued. */
+function NotConfiguredNotice() {
+  const { t } = useTranslation();
+  return (
+    <div
+      role="status"
+      className="mx-3 mt-3 flex gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2.5 text-[11px]"
+    >
+      <BotOff className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+      <div>
+        <p className="font-semibold text-foreground">{t('assistant.not_configured_title')}</p>
+        <p className="text-muted-foreground mt-0.5">{t('assistant.not_configured_desc')}</p>
+      </div>
+    </div>
+  );
 }
 
 // ─── Session list ────────────────────────────────────────────────────────────
@@ -183,7 +204,7 @@ function SessionRow({ session, onOpen }) {
   );
 }
 
-function SessionList({ sessions, isLoading, onOpen, onNew }) {
+function SessionList({ sessions, isLoading, onOpen, onNew, configured }) {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
 
@@ -197,10 +218,12 @@ function SessionList({ sessions, isLoading, onOpen, onNew }) {
 
   return (
     <div className="flex flex-col min-h-0 flex-1">
+      {!configured && <NotConfiguredNotice />}
       <div className="p-3 flex flex-col gap-2 border-b border-border">
         <Button
           size="sm"
           onClick={onNew}
+          disabled={!configured}
           className="w-full bg-[color:var(--color-ai)] hover:bg-[color:var(--color-ai)]/90 text-white"
         >
           <MessageSquarePlus className="w-3.5 h-3.5" /> {t('chatbot.new_conversation')}
@@ -247,7 +270,15 @@ function SessionList({ sessions, isLoading, onOpen, onNew }) {
 
 // ─── Chat view ───────────────────────────────────────────────────────────────
 
-function ChatView({ session, workspaceId, projectId, onCreated, onBack, onReplyingChange }) {
+function ChatView({
+  session,
+  workspaceId,
+  projectId,
+  onCreated,
+  onBack,
+  onReplyingChange,
+  configured,
+}) {
   const { t, i18n } = useTranslation();
   const qc = useQueryClient();
   const [sessionId, setSessionId] = useState(session?.id || null);
@@ -369,6 +400,7 @@ function ChatView({ session, workspaceId, projectId, onCreated, onBack, onReplyi
           {session?.title || t('chatbot.new_conversation')}
         </p>
       </div>
+      {!configured && <NotConfiguredNotice />}
 
       <div className="flex-1 overflow-y-auto scrollbar-thin px-3 py-3 space-y-3">
         {isLoading ? (
@@ -384,7 +416,7 @@ function ChatView({ session, workspaceId, projectId, onCreated, onBack, onReplyi
               {projectId ? t('chatbot.greeting') : t('assistant.greeting_workspace')}
             </p>
             <div className="flex flex-col gap-1.5 w-full">
-              {suggestions.map((key) => (
+              {(configured ? suggestions : []).map((key) => (
                 <button
                   key={key}
                   onClick={() => send(t(`assistant.${key}`))}
@@ -434,18 +466,22 @@ function ChatView({ session, workspaceId, projectId, onCreated, onBack, onReplyi
               }
             }}
             placeholder={
-              projectId ? t('chatbot.placeholder') : t('assistant.placeholder_workspace')
+              !configured
+                ? t('assistant.not_configured_placeholder')
+                : projectId
+                  ? t('chatbot.placeholder')
+                  : t('assistant.placeholder_workspace')
             }
             aria-label={t('assistant.message')}
             rows={1}
-            disabled={streaming}
+            disabled={streaming || !configured}
             className="flex-1 resize-none bg-muted/40 border border-border rounded-xl px-3 py-2 text-[12px] outline-none focus:border-[color:var(--color-ai)] transition-colors disabled:opacity-50 max-h-32 overflow-y-auto"
             style={{ minHeight: 36 }}
           />
           <Button
             size="icon"
             onClick={() => send()}
-            disabled={!input.trim() || streaming}
+            disabled={!input.trim() || streaming || !configured}
             aria-label={t('assistant.send')}
             className="w-9 h-9 rounded-xl bg-[color:var(--color-ai)] hover:bg-[color:var(--color-ai)]/90 shrink-0"
           >
@@ -502,6 +538,7 @@ export default function AssistantSidebar() {
 
   const projectId = scope === WORKSPACE ? null : scope;
   const enabled = open && !!activeWorkspaceId && settings.enable_ai !== false;
+  const { configured } = useAiStatus(enabled);
 
   const { data: projects = [] } = useQuery({
     queryKey: ['projects', activeWorkspaceId],
@@ -543,7 +580,7 @@ export default function AssistantSidebar() {
         data-ai-active={replying}
         data-app-assistant
         data-chatbot
-        className="ai-rainbow fixed inset-y-0 right-0 z-50 w-full sm:w-[400px] lg:relative lg:inset-auto lg:z-auto lg:w-[380px] shrink-0 flex flex-col"
+        className={`${configured ? 'ai-rainbow' : 'border-l border-border'} fixed inset-y-0 right-0 z-50 w-full sm:w-[400px] lg:relative lg:inset-auto lg:z-auto lg:w-[380px] shrink-0 flex flex-col`}
       >
         <div
           data-app-assistant-panel
@@ -551,7 +588,11 @@ export default function AssistantSidebar() {
         >
           <div className="flex items-center gap-2 px-3 py-2.5 border-b border-border">
             <div className="w-7 h-7 rounded-full bg-[color:var(--color-ai)]/15 flex items-center justify-center shrink-0">
-              <Bot className="w-4 h-4 text-[color:var(--color-ai)]" />
+              {configured ? (
+                <Bot className="w-4 h-4 text-[color:var(--color-ai)]" />
+              ) : (
+                <BotOff className="w-4 h-4 text-muted-foreground" />
+              )}
             </div>
             <p className="text-[13px] font-semibold text-foreground shrink-0">
               {t('chatbot.title')}
@@ -587,6 +628,7 @@ export default function AssistantSidebar() {
               onCreated={onCreated}
               onBack={() => setChat(null)}
               onReplyingChange={setReplying}
+              configured={configured}
             />
           ) : (
             <SessionList
@@ -594,6 +636,7 @@ export default function AssistantSidebar() {
               isLoading={isLoading}
               onOpen={openChat}
               onNew={() => openChat(null)}
+              configured={configured}
             />
           )}
         </div>
