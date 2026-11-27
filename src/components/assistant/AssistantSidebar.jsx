@@ -372,7 +372,9 @@ function ChatView({
           show(text.trimStart());
         }
         qc.invalidateQueries({ queryKey: ['chatSessions'] });
-        qc.invalidateQueries({ queryKey: ['chatMessages', id] });
+        // stale for next time, but no refetch now: that would replace what is on
+        // screen and drop an error reply, which the server does not store
+        qc.invalidateQueries({ queryKey: ['chatMessages', id], refetchType: 'none' });
       } catch (err) {
         if (err.name !== 'AbortError') {
           show(getApiError(err, t('chatbot.connection_error')));
