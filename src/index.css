@@ -658,6 +658,7 @@
 
 /* Floating AI assistant — the same detached pane as the main area, under the topbar */
 .theme-glass [data-app-assistant] {
+  --ai-radius: 22px;
   margin: 14px 14px 14px 0;
   border-radius: 22px;
 }
@@ -938,24 +939,26 @@ select.select-styled {
 .ai-rainbow {
   --ai-ring: 1.5px;
   --ai-speed: 8s;
-  --ai-glow-opacity: 0.22;
-  --ai-glow-size: 10px;
-  --ai-glow-blur: 6px;
+  --ai-radius: 0px;
+  --ai-shadow-blur: 18px;
+  --ai-shadow-opacity: 0.45;
+  /* room around the element for the blurred colours to fade out in */
+  --ai-shadow-room: 60px;
   /* the element sets its own position (relative, fixed...): the ring is placed against it */
   isolation: isolate;
 }
 
 .ai-rainbow[data-ai-active='true'] {
   --ai-speed: 2.4s;
-  --ai-glow-opacity: 0.4;
+  --ai-shadow-opacity: 0.7;
 }
 
 .dark .ai-rainbow {
-  --ai-glow-opacity: 0.3;
+  --ai-shadow-opacity: 0.55;
 }
 
 .dark .ai-rainbow[data-ai-active='true'] {
-  --ai-glow-opacity: 0.5;
+  --ai-shadow-opacity: 0.85;
 }
 
 /* Declared on the pseudo-elements, where --ai-angle is animated: declared on the
@@ -994,23 +997,25 @@ select.select-styled {
   animation: ai-spin var(--ai-speed) linear infinite;
 }
 
-/* the glow: the same spectrum, blurred, in a band just outside the edge only
-   (a see-through glass panel would otherwise be tinted all over) */
+/* the shadow: like a box-shadow, but in the spectrum. The colours are painted
+   only where the element is (content-box), blurred so they fade out past the
+   edge, then the part under the element is masked away so a see-through
+   glass panel is not tinted all over. */
 .ai-rainbow::after {
   content: '';
   position: absolute;
-  inset: calc(-1 * var(--ai-glow-size));
+  inset: calc(-1 * var(--ai-shadow-room));
   z-index: -1;
-  padding: var(--ai-glow-size);
-  border-radius: calc(var(--ai-glow-size) + 22px);
-  background: var(--ai-spectrum);
+  padding: var(--ai-shadow-room);
+  border-radius: calc(var(--ai-shadow-room) + var(--ai-radius));
+  background: var(--ai-spectrum) content-box;
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  filter: blur(var(--ai-glow-blur));
-  opacity: var(--ai-glow-opacity);
+  filter: blur(var(--ai-shadow-blur));
+  opacity: var(--ai-shadow-opacity);
   pointer-events: none;
   transition: opacity 0.6s ease;
   animation: ai-spin var(--ai-speed) linear infinite;
