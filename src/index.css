@@ -1029,10 +1029,13 @@ select.select-styled {
   }
 }
 
-/* small controls (e.g. the topbar button): thinner glow */
+/* small controls (e.g. the topbar button): a bold moving ring, no glow */
 .ai-rainbow-sm {
-  --ai-glow-size: 5px;
-  --ai-glow-blur: 3px;
+  --ai-ring: 2px;
+  --ai-speed: 3s;
+}
+.ai-rainbow-sm::after {
+  display: none;
 }
 
 /* Sketch: flat, hand-drawn look — a bolder ring and no soft glow */
