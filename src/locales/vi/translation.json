@@ -1185,6 +1185,7 @@
       "task_created": "Đã tạo task: {{title}}",
       "task_create_failed": "Không tạo được task",
       "task_updated": "Đã cập nhật task: {{title}}",
+      "task_update_failed": "Không cập nhật được task",
       "task_restored": "Đã khôi phục task: {{title}}",
       "tasks_deleted_one": "Đã xóa {{count}} task",
       "tasks_deleted_other": "Đã xóa {{count}} task",
