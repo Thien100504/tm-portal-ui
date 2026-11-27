@@ -655,6 +655,29 @@
   margin: 14px;
   border-radius: 22px;
 }
+
+/* Floating AI assistant — the same detached pane as the left sidebar, on the right */
+.theme-glass [data-app-assistant] {
+  margin: 14px 14px 14px 0;
+  height: calc(100vh - 28px);
+  border-radius: 22px;
+}
+.theme-glass [data-app-assistant-panel] {
+  border-radius: inherit;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--card) calc(var(--glass-op-sidebar) + 4%), transparent),
+    color-mix(in oklab, var(--card) var(--glass-op-sidebar), transparent)
+  ) !important;
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) !important;
+  box-shadow:
+    inset 0 1px 0 0 color-mix(in oklab, white calc(var(--glass-highlight) + 4%), transparent),
+    inset 0 -1px 0 0 color-mix(in oklab, black 14%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, white 6%, transparent),
+    0 2px 4px -2px color-mix(in oklab, black 30%, transparent),
+    0 18px 50px -18px color-mix(in oklab, black 55%, transparent) !important;
+}
 .theme-glass [data-app-topbar] {
   margin: 14px 14px 0 14px;
   border-radius: 22px;

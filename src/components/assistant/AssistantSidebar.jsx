@@ -541,9 +541,14 @@ export default function AssistantSidebar() {
       <aside
         aria-label={t('chatbot.title')}
         data-ai-active={replying}
+        data-app-assistant
+        data-chatbot
         className="ai-rainbow fixed inset-y-0 right-0 z-50 w-full sm:w-[400px] lg:relative lg:z-auto lg:w-[380px] shrink-0 flex flex-col"
       >
-        <div className="relative flex flex-col flex-1 min-h-0 bg-card/95 backdrop-blur-md">
+        <div
+          data-app-assistant-panel
+          className="relative flex flex-col flex-1 min-h-0 bg-card/95 backdrop-blur-md"
+        >
           <div className="flex items-center gap-2 px-3 py-2.5 border-b border-border">
             <div className="w-7 h-7 rounded-full bg-[color:var(--color-ai)]/15 flex items-center justify-center shrink-0">
               <Bot className="w-4 h-4 text-[color:var(--color-ai)]" />
