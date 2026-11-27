@@ -1039,5 +1039,8 @@ select.select-styled {
 /* Sketch: flat, hand-drawn look — a bolder ring and no soft glow */
 .theme-sketch .ai-rainbow {
   --ai-ring: 2.5px;
-  --ai-glow-opacity: 0;
+}
+/* hidden outright: the replying / dark rules set the glow opacity too */
+.theme-sketch .ai-rainbow::after {
+  display: none;
 }
