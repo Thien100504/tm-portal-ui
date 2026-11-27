@@ -1035,3 +1035,9 @@ select.select-styled {
   --ai-glow-size: 5px;
   --ai-glow-blur: 3px;
 }
+
+/* Sketch: flat, hand-drawn look — a bolder ring and no soft glow */
+.theme-sketch .ai-rainbow {
+  --ai-ring: 2.5px;
+  --ai-glow-opacity: 0;
+}
