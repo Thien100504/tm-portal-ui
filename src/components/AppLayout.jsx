@@ -18,6 +18,8 @@ import {
   X,
   ChevronRight,
   Flame,
+  Bot,
+  BotOff,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
@@ -25,6 +27,7 @@ import { useTheme } from '@/contexts/useTheme';
 import { useAuth } from '@/hooks/useAuth';
 import projectService from '@/services/projectService';
 import notificationService from '@/services/notificationService';
+import systemService from '@/services/systemService';
 import { DropdownMenu } from '@/components/ui/DropdownMenu';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { Badge } from '@/components/ui/Badge';
@@ -38,7 +41,9 @@ import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { vi as viLocale, enUS as enLocale } from 'date-fns/locale';
 import GlobalPomodoroManager from '@/components/pomodoro/GlobalPomodoroManager';
-import ChatBot from '@/components/ChatBot';
+import AssistantSidebar from '@/components/assistant/AssistantSidebar';
+import { useAssistantStore } from '@/store/assistantStore';
+import { useAiStatus } from '@/hooks/useAiStatus';
 import usePomodoroStore from '@/store/usePomodoroStore';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -319,6 +324,54 @@ function PomodoroQuickToggle() {
   );
 }
 
+// ─── Assistant toggle ────────────────────────────────────────────────────────
+
+function AssistantToggle() {
+  const { t } = useTranslation();
+  const { settings } = useActiveWorkspace();
+  const open = useAssistantStore((s) => s.open);
+  const toggle = useAssistantStore((s) => s.toggle);
+  const { configured } = useAiStatus(settings.enable_ai !== false);
+
+  // Ctrl/⌘ + J opens and closes the assistant from anywhere
+  useEffect(() => {
+    const onKey = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'j') {
+        e.preventDefault();
+        toggle();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [toggle]);
+
+  if (settings.enable_ai === false) return null;
+  return (
+    <Tooltip
+      content={configured ? t('assistant.toggle_hint') : t('assistant.not_configured_hint')}
+      position="bottom"
+    >
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={toggle}
+        aria-label={t('assistant.toggle')}
+        aria-pressed={open}
+        className={`w-8 h-8 rounded-lg shadow-sm transition-colors ${
+          !configured
+            ? `text-muted-foreground/60 hover:text-muted-foreground ${open ? 'bg-muted' : 'hover:bg-background'}`
+            : open
+              ? 'ai-rainbow ai-rainbow-sm relative text-[color:var(--color-ai)] bg-[color:var(--color-ai)]/10'
+              : 'text-muted-foreground hover:text-foreground hover:bg-background'
+        }`}
+      >
+        {/* no AI key on the server: a crossed-out bot and no rainbow */}
+        {configured ? <Bot className="w-4 h-4" /> : <BotOff className="w-4 h-4" />}
+      </Button>
+    </Tooltip>
+  );
+}
+
 // ─── TopBar ──────────────────────────────────────────────────────────────────
 
 function TopBar({ onMenuClick }) {
@@ -327,6 +380,16 @@ function TopBar({ onMenuClick }) {
   useAuth();
   const { t, i18n } = useTranslation();
   const { activeWorkspace } = useActiveWorkspace();
+
+  const { data: apiVersion } = useQuery({
+    queryKey: ['api-version'],
+    queryFn: systemService.getApiVersion,
+    staleTime: 5 * 60_000,
+  });
+  const versionTooltip = t('common.version_tooltip', {
+    ui: import.meta.env.VITE_APP_VERSION || 'dev',
+    api: apiVersion || '…',
+  });
 
   const pathname = location.pathname;
   const projectId = pathname.match(/\/projects\/([a-f0-9-]+)/i)?.[1];
@@ -432,12 +495,14 @@ function TopBar({ onMenuClick }) {
       </div>
 
       <div className="flex items-center gap-3">
-        {/* Live indicator */}
-        <div className="hidden items-center gap-1.5 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 text-[10px] font-medium text-emerald-500 md:flex">
-          <Wifi className="w-3 h-3" />
-          <span className="font-mono uppercase tracking-wider">Live</span>
-          <span className="w-1.5 h-1.5 animate-pulse-soft rounded-full bg-emerald-500" />
-        </div>
+        {/* Live indicator (hover: running versions) */}
+        <Tooltip content={versionTooltip} position="bottom">
+          <div className="hidden cursor-default items-center gap-1.5 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 text-[10px] font-medium text-emerald-500 md:flex">
+            <Wifi className="w-3 h-3" />
+            <span className="font-mono uppercase tracking-wider">Live</span>
+            <span className="w-1.5 h-1.5 animate-pulse-soft rounded-full bg-emerald-500" />
+          </div>
+        </Tooltip>
 
         {/* Project Members AvatarStack */}
         {projectId && members.length > 0 && (
@@ -483,6 +548,9 @@ function TopBar({ onMenuClick }) {
           {/* Pomodoro Quick Toggle */}
           <PomodoroQuickToggle />
 
+          {/* AI assistant sidebar */}
+          <AssistantToggle />
+
           {/* Language toggle */}
           <Tooltip content="Change Language" position="bottom">
             <Button
@@ -505,7 +573,11 @@ function TopBar({ onMenuClick }) {
               className="w-8 h-8 rounded-lg text-[11px] font-bold text-muted-foreground hover:text-foreground hover:bg-background shadow-sm uppercase transition-colors"
               aria-label="Change language"
             >
-              {i18n.language === 'vi' ? 'VI' : 'EN'}
+              {/* capitals only: trim the line box to cap height so VI / EN sit centred
+                  (text-box has no effect on the flex button itself) */}
+              <span className="block leading-none [text-box:trim-both_cap_alphabetic]">
+                {i18n.language === 'vi' ? 'VI' : 'EN'}
+              </span>
             </Button>
           </Tooltip>
 
@@ -647,7 +719,9 @@ export default function AppLayout() {
     <MouseGlowBackground fullScreen>
       <div
         data-app-shell
-        className="flex h-screen w-full text-foreground overflow-hidden relative z-10"
+        // clip, not hidden: the assistant's shadow reaches past the edge, and a hidden
+        // overflow can still be scrolled by the browser (focusing a dialog shifted the app)
+        className="flex h-screen w-full text-foreground overflow-clip relative z-10"
       >
         {/* Mobile Sidebar Overlay */}
         {mobileMenuOpen && (
@@ -670,27 +744,33 @@ export default function AppLayout() {
 
         <div className="flex min-w-0 flex-1 flex-col relative z-10">
           <TopBar onMenuClick={() => setMobileMenuOpen(true)} />
-          <div id="app-main-area" className="relative flex-1 flex flex-col overflow-hidden">
-            <ReactLenis
-              as="main"
-              options={{ smoothWheel: true, duration: 1.2 }}
-              className="flex-1 overflow-x-hidden overflow-y-auto px-4 py-4 md:px-6 relative"
+          {/* the assistant sits under the topbar, so its toggle button never moves */}
+          <div className="relative flex flex-1 min-h-0">
+            <div
+              id="app-main-area"
+              className="relative flex-1 min-w-0 flex flex-col overflow-hidden"
             >
-              <div className="mx-auto w-full max-w-[1400px]">
-                <div
-                  key={location.pathname}
-                  className={motionEnabled ? 'animate-fade-up w-full' : 'w-full'}
-                >
-                  {outlet}
+              <ReactLenis
+                as="main"
+                options={{ smoothWheel: true, duration: 1.2 }}
+                className="flex-1 overflow-x-hidden overflow-y-auto px-4 py-4 md:px-6 relative"
+              >
+                <div className="mx-auto w-full max-w-[1400px]">
+                  <div
+                    key={location.pathname}
+                    className={motionEnabled ? 'animate-fade-up w-full' : 'w-full'}
+                  >
+                    {outlet}
+                  </div>
                 </div>
-              </div>
-            </ReactLenis>
-            <div id="modal-root" className="absolute inset-0 pointer-events-none z-[100]"></div>
+              </ReactLenis>
+              <div id="modal-root" className="absolute inset-0 pointer-events-none z-[100]"></div>
+            </div>
+            <AssistantSidebar />
           </div>
         </div>
       </div>
       <GlobalPomodoroManager />
-      <ChatBot />
     </MouseGlowBackground>
   );
 }

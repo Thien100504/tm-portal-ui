@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import DatePicker from '@/components/ui/DatePicker';
 import PriorityBadge from '@/components/ui/PriorityBadge';
+import TaskTypeBadge from '@/components/ui/TaskTypeBadge';
+import EpicChip from '@/components/ui/EpicChip';
+import { TASK_TYPES } from '@/lib/taskTypes';
 import { createPortal } from 'react-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -11,6 +14,9 @@ import {
   Clock,
   User as UserIcon,
   Flag,
+  Shapes,
+  Layers,
+  BookOpen,
   CheckSquare,
   MessageSquare,
   Loader2,
@@ -35,6 +41,7 @@ import { Badge } from '@/components/ui/Badge';
 import { ConfirmDeleteDialog } from '@/components/ui/ConfirmDeleteDialog';
 import { useActiveWorkspace } from '@/hooks/useActiveWorkspace';
 import { useProjectPermissions } from '@/hooks/useProjectPermissions';
+import { useTaskHierarchy } from '@/hooks/useTaskHierarchy';
 import { getApiError } from '@/lib/apiError';
 
 // Removed hardcoded constants here, moved inside component to use translations
@@ -48,6 +55,7 @@ export default function TaskDetailModal({ task, projectId, onClose }) {
   const qc = useQueryClient();
   const { settings } = useActiveWorkspace();
   const { can } = useProjectPermissions(projectId);
+  const { epicsById, tasksById, epicOptions, storyOptionsFor } = useTaskHierarchy(projectId);
   const [comment, setComment] = useState('');
   const [newSubtask, setNewSubtask] = useState('');
   const [activeTab, setActiveTab] = useState('details');
@@ -115,6 +123,12 @@ export default function TaskDetailModal({ task, projectId, onClose }) {
     initialData: task,
     refetchInterval: 3000,
   });
+
+  // Editing the epic/story: a task under a story follows the story's epic;
+  // stories and tasks that have subtasks stay top-level (same rules as the API)
+  const editParent = draftTask.parent_task_id ? tasksById[draftTask.parent_task_id] : null;
+  const hasSubtasks = Object.values(tasksById).some((st) => st.parent_task_id === task.id);
+  const canMoveUnderStory = draftTask.type !== 'story' && !hasSubtasks;
 
   const { data: comments = [] } = useQuery({
     queryKey: ['comments', task.id],
@@ -194,6 +208,7 @@ export default function TaskDetailModal({ task, projectId, onClose }) {
     setDraftTask({
       title: taskDetail?.title || '',
       description: taskDetail?.description || '',
+      type: taskDetail?.type || 'task',
       priority: taskDetail?.priority || 'medium',
       deadline: taskDetail?.deadline ? new Date(taskDetail.deadline).toISOString() : null,
       assignee_id: taskDetail?.assignee_id || null,
@@ -201,6 +216,8 @@ export default function TaskDetailModal({ task, projectId, onClose }) {
       story_points: taskDetail?.story_points || null,
       auto_start: taskDetail?.auto_start || false,
       status: taskDetail?.status || 'todo',
+      epic_id: taskDetail?.epic_id || '',
+      parent_task_id: taskDetail?.parent_task_id || '',
     });
     setIsEditing(true);
   };
@@ -209,7 +226,13 @@ export default function TaskDetailModal({ task, projectId, onClose }) {
     if (draftTask.status !== taskDetail.status) {
       updateStatusMutation.mutate({ status: draftTask.status });
     }
-    const { status: _status, ...restDraft } = draftTask;
+    const { status: _status, epic_id, parent_task_id, ...restDraft } = draftTask;
+    // Only send hierarchy fields that changed; a moved task follows its new story's epic
+    if ((parent_task_id || null) !== (taskDetail?.parent_task_id || null)) {
+      restDraft.parent_task_id = parent_task_id || null;
+    } else if (!parent_task_id && (epic_id || null) !== (taskDetail?.epic_id || null)) {
+      restDraft.epic_id = epic_id || null;
+    }
     updateTaskMutation.mutate(restDraft);
     setIsEditing(false);
   };
@@ -637,12 +660,13 @@ export default function TaskDetailModal({ task, projectId, onClose }) {
                   </div>
                   <button
                     type="button"
+                    disabled={!can('task.update')}
                     onClick={() => {
                       if (isEditing)
                         setDraftTask({ ...draftTask, auto_start: !draftTask.auto_start });
                       else updateTaskMutation.mutate({ auto_start: !taskDetail?.auto_start });
                     }}
-                    className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[color:var(--color-ai)] focus:ring-offset-2 ${
+                    className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[color:var(--color-ai)] focus:ring-offset-2 ${
                       (isEditing ? draftTask.auto_start : taskDetail?.auto_start)
                         ? 'bg-[color:var(--color-success)]'
                         : 'bg-muted-foreground/30'
@@ -660,6 +684,71 @@ export default function TaskDetailModal({ task, projectId, onClose }) {
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-muted/30 border border-border/60 rounded-lg p-3 min-w-0">
+                    <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-1.5">
+                      <Layers className="w-3.5 h-3.5" /> {t('hierarchy.epic')}
+                    </div>
+                    {isEditing && !editParent ? (
+                      <CustomSelect
+                        options={epicOptions}
+                        value={draftTask.epic_id || ''}
+                        onChange={(val) => setDraftTask({ ...draftTask, epic_id: val })}
+                      />
+                    ) : (
+                      <EpicChip
+                        epic={epicsById[isEditing ? editParent?.epic_id : taskDetail?.epic_id]}
+                      />
+                    )}
+                    {isEditing && editParent && (
+                      <p className="text-[10px] text-muted-foreground mt-1">
+                        {t('hierarchy.follows_story')}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="bg-muted/30 border border-border/60 rounded-lg p-3 min-w-0">
+                    <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-1.5">
+                      <BookOpen className="w-3.5 h-3.5" /> {t('hierarchy.story')}
+                    </div>
+                    {isEditing && canMoveUnderStory ? (
+                      <CustomSelect
+                        options={storyOptionsFor(taskDetail)}
+                        value={draftTask.parent_task_id || ''}
+                        onChange={(val) => setDraftTask({ ...draftTask, parent_task_id: val })}
+                      />
+                    ) : (
+                      <p className="text-[12px] text-foreground truncate">
+                        {tasksById[taskDetail?.parent_task_id]?.title || '—'}
+                      </p>
+                    )}
+                    {isEditing && !canMoveUnderStory && (
+                      <p className="text-[10px] text-muted-foreground mt-1">
+                        {draftTask.type === 'story'
+                          ? t('hierarchy.story_is_top_level')
+                          : t('hierarchy.has_subtasks')}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-muted/30 border border-border/60 rounded-lg p-3">
+                    <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-1.5">
+                      <Shapes className="w-3.5 h-3.5" /> {t('taskType.label')}
+                    </div>
+                    {isEditing ? (
+                      <CustomSelect
+                        options={TASK_TYPES.filter(
+                          (type) => type !== 'story' || !draftTask.parent_task_id
+                        ).map((value) => ({ value, label: t(`taskType.${value}`) }))}
+                        value={draftTask.type || 'task'}
+                        onChange={(val) => setDraftTask({ ...draftTask, type: val })}
+                      />
+                    ) : (
+                      <TaskTypeBadge type={taskDetail?.type} showLabel />
+                    )}
+                  </div>
+
                   <div className="bg-muted/30 border border-border/60 rounded-lg p-3">
                     <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-1.5">
                       <Flag className="w-3.5 h-3.5" /> {t('taskDetail.priority')}
@@ -1094,26 +1183,28 @@ export default function TaskDetailModal({ task, projectId, onClose }) {
                   </div>
                 )}
 
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (newSubtask.trim()) addSubtaskMutation.mutate(newSubtask.trim());
-                  }}
-                  className="mt-4 flex items-center gap-2"
-                >
-                  <div className="flex-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Plus className="w-3.5 h-3.5 text-muted-foreground" />
+                {can('task.create') && (
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (newSubtask.trim()) addSubtaskMutation.mutate(newSubtask.trim());
+                    }}
+                    className="mt-4 flex items-center gap-2"
+                  >
+                    <div className="flex-1 relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Plus className="w-3.5 h-3.5 text-muted-foreground" />
+                      </div>
+                      <input
+                        value={newSubtask}
+                        onChange={(e) => setNewSubtask(e.target.value)}
+                        placeholder={t('taskDetail.add_subtask')}
+                        className="w-full bg-background border border-border rounded-lg pl-9 pr-3 py-2 text-[12px] focus:outline-none focus:border-[color:var(--color-ai)] focus:ring-1 focus:ring-[color:var(--color-ai)] shadow-sm"
+                        disabled={addSubtaskMutation.isPending}
+                      />
                     </div>
-                    <input
-                      value={newSubtask}
-                      onChange={(e) => setNewSubtask(e.target.value)}
-                      placeholder={t('taskDetail.add_subtask')}
-                      className="w-full bg-background border border-border rounded-lg pl-9 pr-3 py-2 text-[12px] focus:outline-none focus:border-[color:var(--color-ai)] focus:ring-1 focus:ring-[color:var(--color-ai)] shadow-sm"
-                      disabled={addSubtaskMutation.isPending}
-                    />
-                  </div>
-                </form>
+                  </form>
+                )}
               </motion.div>
             )}
 

@@ -37,7 +37,8 @@
     "unknown_user": "User",
     "joined": "Joined",
     "error_occurred": "An error occurred",
-    "clear": "Clear"
+    "clear": "Clear",
+    "version_tooltip": "UI {{ui}} · API {{api}}"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -148,7 +149,8 @@
     "remove_member_confirm": "{{name}} will be removed from the project and cannot access tasks anymore.",
     "member_add_failed": "Could not add the member",
     "member_updated": "Role updated",
-    "workspace_suggestions": "Workspace suggestions"
+    "workspace_suggestions": "Workspace suggestions",
+    "workspace_required": "Choose a workspace before creating a project."
   },
   "user": {
     "not_found": "User not found."
@@ -164,7 +166,10 @@
     "error_dependencies_not_done": "Blocked by dependencies: dependent tasks are not yet done. Only a PM can override.",
     "error_self_dependency": "A task cannot depend on itself.",
     "error_circular_dependency": "Circular dependency detected (A → B → A).",
-    "error_assignee_not_member": "The assignee is not a member of this project."
+    "error_assignee_not_member": "The assignee is not a member of this project.",
+    "story_cannot_be_subtask": "A story cannot be a subtask.",
+    "has_subtasks": "This task has subtasks, so it cannot be moved under another task.",
+    "cannot_parent_itself": "A task cannot be its own parent."
   },
   "sprint": {
     "error_end_before_start": "The end date must be after the start date",
@@ -176,7 +181,8 @@
     "error_no_target_sprint": "A target sprint must be specified for incomplete tasks.",
     "error_invalid_target_sprint": "Target sprint not found or is no longer available.",
     "error_not_completed": "Sprint has not been completed yet.",
-    "error_cannot_delete_active": "Cannot delete an active or completed sprint."
+    "error_cannot_delete_active": "Cannot delete an active or completed sprint.",
+    "error_newer_sprint_started": "Only the most recently started sprint can be reopened."
   },
   "automation": {
     "invalid_trigger": "Invalid automation trigger type.",
@@ -191,7 +197,8 @@
     "error": {
       "select_trigger_value": "Select a trigger value",
       "select_action_value": "Select an action value"
-    }
+    },
+    "duplicate_rule": "A rule with the same trigger, conditions and action already exists."
   },
   "admin": {
     "profile_updated": "User profile updated",
@@ -986,7 +993,10 @@
       "workspace_admin": "Full workspace administration",
       "workspace_member_manage": "Manage workspace members"
     },
-    "system_role_readonly": "This role cannot be modified."
+    "system_role_readonly": "This role cannot be modified.",
+    "empty_title": "You don't have a workspace yet",
+    "empty_desc": "Create a workspace to start managing projects, or wait for an invitation to join one.",
+    "own_admin_locked": "You can't remove full workspace administration from your own role. Ask the workspace owner or another admin."
   },
   "server": {
     "notification_unavailable": "Notification service is currently unavailable. Please try again later.",
@@ -1170,9 +1180,128 @@
   "chatbot": {
     "connection_error": "_(Connection error, please try again.)_",
     "placeholder": "Ask about project, tasks, progress...",
-    "greeting": "Hello! I'm the AI assistant for this project. How can I help?"
+    "greeting": "Hello! I'm the AI assistant for this project. How can I help?",
+    "title": "AI Assistant",
+    "conversation": "Conversation",
+    "new_conversation": "New conversation",
+    "new_chat": "New chat",
+    "error_not_configured": "The AI assistant is not configured yet (missing API key).",
+    "error_session_not_found": "This conversation was not found in this project.",
+    "toast": {
+      "task_created": "Created task: {{title}}",
+      "task_create_failed": "Could not create the task",
+      "task_updated": "Updated task: {{title}}",
+      "task_update_failed": "Could not update the task",
+      "task_restored": "Restored task: {{title}}",
+      "tasks_deleted_one": "Deleted {{count}} task",
+      "tasks_deleted_other": "Deleted {{count}} tasks",
+      "sprint_created": "Created sprint: {{name}}",
+      "sprint_started": "Started sprint: {{name}}",
+      "sprint_completed": "Completed sprint: {{name}}",
+      "rule_enabled": "Enabled rule: {{name}}",
+      "rule_disabled": "Disabled rule: {{name}}",
+      "rule_deleted": "Deleted rule: {{name}}",
+      "delete_pending": "Waiting for you to confirm the deletion",
+      "project_created": "Created project: {{name}}",
+      "project_create_failed": "Could not create the project"
+    },
+    "error_action_expired": "This delete request has expired or was already used.",
+    "error_rate_limited": "The AI service has reached its usage limit for now. Please try again later."
   },
   "taskList": {
     "hidden_subtasks": "{{count}} hidden subtask(s)"
+  },
+  "taskType": {
+    "label": "Type",
+    "story": "Story",
+    "task": "Task",
+    "bug": "Bug"
+  },
+  "assistant": {
+    "toggle": "AI assistant",
+    "toggle_hint": "AI assistant (Ctrl+J)",
+    "close": "Close the assistant",
+    "back": "Back to conversations",
+    "scope_workspace": "Whole workspace",
+    "search": "Search conversations",
+    "no_match": "No conversation matches.",
+    "empty": "No conversations yet. Start one to ask about your work.",
+    "group_today": "Today",
+    "group_yesterday": "Yesterday",
+    "group_week": "Previous 7 days",
+    "group_older": "Older",
+    "actions": "Actions for {{title}}",
+    "rename": "Rename",
+    "delete_confirm": "Delete \"{{title}}\"?",
+    "deleted": "Conversation deleted",
+    "message": "Message to the assistant",
+    "send": "Send",
+    "enter_hint": "Enter to send · Shift+Enter for a new line",
+    "placeholder_workspace": "Ask about any project in this workspace...",
+    "greeting_workspace": "Hi! I can see every project you can open in this workspace. Ask me about deadlines, progress or who is working on what.",
+    "suggest_ws_overdue": "Which tasks are overdue across the workspace?",
+    "suggest_ws_behind": "Which project is furthest behind?",
+    "suggest_ws_mine": "What is assigned to me right now?",
+    "suggest_project_progress": "Summarise this project's progress",
+    "suggest_project_overdue": "Which tasks in this project are overdue?",
+    "suggest_project_create": "Create a task: Review the release notes",
+    "not_configured_title": "The AI assistant is not set up yet",
+    "not_configured_desc": "The server has no AI API key (NVIDIA_API_KEY or OPENAI_API_KEY). You can still read past conversations; ask an administrator to add a key to chat.",
+    "not_configured_hint": "AI assistant: not set up (no API key)",
+    "not_configured_placeholder": "The AI assistant is not set up",
+    "confirm": {
+      "delete_tasks_one": "Delete {{count}} task?",
+      "delete_tasks_other": "Delete {{count}} tasks?",
+      "delete_rule": "Delete the rule \"{{name}}\"?",
+      "hint": "Nothing is deleted until you press Delete.",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "done": "Deleted",
+      "cancelled": "Cancelled",
+      "expired": "This request has expired. Ask the assistant again."
+    }
+  },
+  "hierarchy": {
+    "add_story": "Story",
+    "add_task": "Task",
+    "counts": "{{stories}} stories · {{tasks}} other tasks",
+    "epic": "Epic",
+    "follows_story": "Follows the story's epic",
+    "has_subtasks": "Has subtasks, so it stays top-level",
+    "link_existing": "Add existing",
+    "link_title": "Add to \"{{name}}\"",
+    "linked": "Added \"{{title}}\"",
+    "loose_tasks_one": "{{count}} task outside stories",
+    "loose_tasks_other": "{{count}} tasks outside stories",
+    "no_candidates": "No task can be added here",
+    "no_epic": "No epic",
+    "no_epic_desc": "Stories and tasks not in any epic",
+    "no_epic_group": "Not in an epic",
+    "no_loose_tasks": "Every task here belongs to a story",
+    "no_stories": "No stories yet",
+    "no_story": "Not in a story",
+    "remove_from_epic": "Remove from epic",
+    "remove_from_story": "Remove from story",
+    "search_tasks": "Search tasks...",
+    "stories_one": "{{count}} story",
+    "stories_other": "{{count}} stories",
+    "story": "Story",
+    "story_empty": "No tasks in this story yet",
+    "story_is_top_level": "A story cannot sit under another task",
+    "subtask_count_one": "{{count}} subtask",
+    "subtask_count_other": "{{count}} subtasks",
+    "subtitle": "Epics, their stories and the tasks under each story",
+    "toggle_story": "Show or hide the story's tasks"
+  },
+  "rbac": {
+    "cannot_remove_own_admin": "You can't remove full workspace administration from the role you hold.",
+    "cannot_delete_own_role": "You can't delete the role you hold.",
+    "admin_required": "You need workspace admin rights to change roles.",
+    "cannot_delete_system_role": "System roles can't be deleted.",
+    "cannot_modify_system_role": "System roles can't be changed.",
+    "missing_scope": "Choose a workspace or project for this permission check.",
+    "permission_denied": "You don't have permission to do this.",
+    "role_not_found": "Role not found.",
+    "some_permissions_invalid": "Some of the selected permissions don't exist."
   }
 }
