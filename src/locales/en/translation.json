@@ -178,7 +178,8 @@
     "error_no_target_sprint": "A target sprint must be specified for incomplete tasks.",
     "error_invalid_target_sprint": "Target sprint not found or is no longer available.",
     "error_not_completed": "Sprint has not been completed yet.",
-    "error_cannot_delete_active": "Cannot delete an active or completed sprint."
+    "error_cannot_delete_active": "Cannot delete an active or completed sprint.",
+    "error_newer_sprint_started": "Only the most recently started sprint can be reopened."
   },
   "automation": {
     "invalid_trigger": "Invalid automation trigger type.",
@@ -193,7 +194,8 @@
     "error": {
       "select_trigger_value": "Select a trigger value",
       "select_action_value": "Select an action value"
-    }
+    },
+    "duplicate_rule": "A rule with the same trigger, conditions and action already exists."
   },
   "admin": {
     "profile_updated": "User profile updated",
