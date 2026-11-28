@@ -8,9 +8,33 @@ import { DropdownMenu } from '@/components/ui/DropdownMenu';
 import { useAuthStore } from '@/store/authStore';
 import api from '@/lib/axios';
 import { toast } from 'sonner';
+import { getApiError } from '@/lib/apiError';
 
 const API_BASE = '/api/v1';
 const MAX_MESSAGES = 50; // CB-6: cap the number of messages to avoid unbounded memory
+
+// Markers in the reply stream: [toast:kind]{"key","params"}[/toast] and [error:<i18n key>]
+const TOAST_MARKER = /\[toast:(success|error|warning|info)\]([\s\S]*?)\[\/toast\]/g;
+const ERROR_MARKER = /\[error:([\w.]+)\]/g;
+
+function toastText(t, raw) {
+  try {
+    const { key, params } = JSON.parse(raw);
+    return t(key, params);
+  } catch {
+    return raw.trim(); // older servers sent plain text
+  }
+}
+
+/** Show toasts and translate errors found in the reply; return the text left to display. */
+function renderMarkers(t, text) {
+  return text
+    .replace(TOAST_MARKER, (_, kind, raw) => {
+      toast[kind](toastText(t, raw));
+      return '';
+    })
+    .replace(ERROR_MARKER, (_, key) => `\n\n${t(key)}`);
+}
 
 export default function ChatBot() {
   const { t, i18n } = useTranslation();
@@ -98,7 +122,7 @@ export default function ChatBot() {
     if (!projectId) return;
     try {
       const res = await api.post(`/projects/${projectId}/chat/sessions`, {
-        title: 'New Conversation',
+        title: t('chatbot.new_conversation'),
       });
       const newSession = res.data;
       setSessions([newSession, ...sessions]);
@@ -164,7 +188,12 @@ export default function ChatBot() {
         }
       );
 
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) {
+        // e.g. 503 chatbot.error_not_configured, 404 chatbot.error_session_not_found
+        const err = new Error(`HTTP ${res.status}`);
+        err.response = { data: await res.json().catch(() => null) };
+        throw err;
+      }
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -176,16 +205,7 @@ export default function ChatBot() {
         done = streamDone;
         if (value) {
           const chunk = decoder.decode(value, { stream: true });
-          assistantText += chunk;
-
-          const toastMatch = assistantText.match(/\[toast:(success|error)\]([\s\S]*?)\[\/toast\]/);
-          if (toastMatch) {
-            const type = toastMatch[1];
-            const msg = toastMatch[2].trim();
-            if (type === 'success') toast.success(msg);
-            else toast.error(msg);
-            assistantText = assistantText.replace(toastMatch[0], '');
-          }
+          assistantText = renderMarkers(t, assistantText + chunk);
 
           setMessages((prev) =>
             prev.map((m) =>
@@ -201,7 +221,10 @@ export default function ChatBot() {
             m.id === assistantId
               ? {
                   ...m,
-                  content: t('chatbot.connection_error', '_(Connection error, please try again.)_'),
+                  content: getApiError(
+                    err,
+                    t('chatbot.connection_error', '_(Connection error, please try again.)_')
+                  ),
                 }
               : m
           )
@@ -211,7 +234,7 @@ export default function ChatBot() {
       setStreaming(false);
       abortRef.current = null;
     }
-  }, [input, messages, streaming, projectId, lang, accessToken, currentSessionId, sessions]);
+  }, [input, messages, streaming, projectId, lang, accessToken, currentSessionId, sessions, t]);
 
   const handleKey = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -273,7 +296,7 @@ export default function ChatBot() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[12px] font-semibold text-foreground leading-none">
-                  AI Assistant
+                  {t('chatbot.title')}
                 </p>
                 {/* Session Selector */}
                 {sessions.length > 0 ? (
@@ -282,7 +305,8 @@ export default function ChatBot() {
                     trigger={
                       <button className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground mt-0.5 transition-colors max-w-full">
                         <span className="truncate">
-                          {sessions.find((s) => s.id === currentSessionId)?.title || 'Conversation'}
+                          {sessions.find((s) => s.id === currentSessionId)?.title ||
+                            t('chatbot.conversation')}
                         </span>
                         <ChevronDown className="w-3 h-3 shrink-0" />
                       </button>
@@ -306,14 +330,16 @@ export default function ChatBot() {
                     }
                   />
                 ) : (
-                  <p className="text-[10px] text-muted-foreground mt-0.5">New Conversation</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">
+                    {t('chatbot.new_conversation')}
+                  </p>
                 )}
               </div>
 
               <button
                 onClick={createNewSession}
                 className="text-muted-foreground/50 hover:text-[color:var(--color-ai)] transition-colors p-1"
-                title="New Chat"
+                title={t('chatbot.new_chat')}
               >
                 <Plus className="w-4 h-4" />
               </button>

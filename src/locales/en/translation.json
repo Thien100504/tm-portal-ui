@@ -180,7 +180,8 @@
     "error_no_target_sprint": "A target sprint must be specified for incomplete tasks.",
     "error_invalid_target_sprint": "Target sprint not found or is no longer available.",
     "error_not_completed": "Sprint has not been completed yet.",
-    "error_cannot_delete_active": "Cannot delete an active or completed sprint."
+    "error_cannot_delete_active": "Cannot delete an active or completed sprint.",
+    "error_newer_sprint_started": "Only the most recently started sprint can be reopened."
   },
   "automation": {
     "invalid_trigger": "Invalid automation trigger type.",
@@ -195,7 +196,8 @@
     "error": {
       "select_trigger_value": "Select a trigger value",
       "select_action_value": "Select an action value"
-    }
+    },
+    "duplicate_rule": "A rule with the same trigger, conditions and action already exists."
   },
   "admin": {
     "profile_updated": "User profile updated",
@@ -992,7 +994,8 @@
     },
     "system_role_readonly": "This role cannot be modified.",
     "empty_title": "You don't have a workspace yet",
-    "empty_desc": "Create a workspace to start managing projects, or wait for an invitation to join one."
+    "empty_desc": "Create a workspace to start managing projects, or wait for an invitation to join one.",
+    "own_admin_locked": "You can't remove full workspace administration from your own role. Ask the workspace owner or another admin."
   },
   "server": {
     "notification_unavailable": "Notification service is currently unavailable. Please try again later.",
@@ -1176,7 +1179,31 @@
   "chatbot": {
     "connection_error": "_(Connection error, please try again.)_",
     "placeholder": "Ask about project, tasks, progress...",
-    "greeting": "Hello! I'm the AI assistant for this project. How can I help?"
+    "greeting": "Hello! I'm the AI assistant for this project. How can I help?",
+    "title": "AI Assistant",
+    "conversation": "Conversation",
+    "new_conversation": "New conversation",
+    "new_chat": "New chat",
+    "error_not_configured": "The AI assistant is not configured yet (missing API key).",
+    "error_session_not_found": "This conversation was not found in this project.",
+    "toast": {
+      "task_created": "Created task: {{title}}",
+      "task_create_failed": "Could not create the task",
+      "task_updated": "Updated task: {{title}}",
+      "task_update_failed": "Could not update the task",
+      "task_restored": "Restored task: {{title}}",
+      "tasks_deleted_one": "Deleted {{count}} task",
+      "tasks_deleted_other": "Deleted {{count}} tasks",
+      "sprint_created": "Created sprint: {{name}}",
+      "sprint_started": "Started sprint: {{name}}",
+      "sprint_completed": "Completed sprint: {{name}}",
+      "rule_enabled": "Enabled rule: {{name}}",
+      "rule_disabled": "Disabled rule: {{name}}",
+      "rule_deleted": "Deleted rule: {{name}}",
+      "delete_pending": "Waiting for you to confirm the deletion",
+      "project_created": "Created project: {{name}}",
+      "project_create_failed": "Could not create the project"
+    }
   },
   "taskList": {
     "hidden_subtasks": "{{count}} hidden subtask(s)"
@@ -1218,5 +1245,16 @@
     "subtask_count_other": "{{count}} subtasks",
     "subtitle": "Epics, their stories and the tasks under each story",
     "toggle_story": "Show or hide the story's tasks"
+  },
+  "rbac": {
+    "cannot_remove_own_admin": "You can't remove full workspace administration from the role you hold.",
+    "cannot_delete_own_role": "You can't delete the role you hold.",
+    "admin_required": "You need workspace admin rights to change roles.",
+    "cannot_delete_system_role": "System roles can't be deleted.",
+    "cannot_modify_system_role": "System roles can't be changed.",
+    "missing_scope": "Choose a workspace or project for this permission check.",
+    "permission_denied": "You don't have permission to do this.",
+    "role_not_found": "Role not found.",
+    "some_permissions_invalid": "Some of the selected permissions don't exist."
   }
 }

@@ -505,7 +505,11 @@ function TopBar({ onMenuClick }) {
               className="w-8 h-8 rounded-lg text-[11px] font-bold text-muted-foreground hover:text-foreground hover:bg-background shadow-sm uppercase transition-colors"
               aria-label="Change language"
             >
-              {i18n.language === 'vi' ? 'VI' : 'EN'}
+              {/* capitals only: trim the line box to cap height so VI / EN sit centred
+                  (text-box has no effect on the flex button itself) */}
+              <span className="block leading-none [text-box:trim-both_cap_alphabetic]">
+                {i18n.language === 'vi' ? 'VI' : 'EN'}
+              </span>
             </Button>
           </Tooltip>
 

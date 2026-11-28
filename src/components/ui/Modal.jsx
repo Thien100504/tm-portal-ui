@@ -2,8 +2,21 @@ import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { createPortal } from 'react-dom';
 
-export function Modal({ onClose, title, icon, subtitle, maxWidth = 'max-w-md', footer, children }) {
-  const container = document.getElementById('app-main-area') || document.body;
+/**
+ * Dialogs open over the content area by default. fullPage covers and blurs the
+ * whole window instead (topbar and sidebars too), for app-wide actions like logout.
+ */
+export function Modal({
+  onClose,
+  title,
+  icon,
+  subtitle,
+  maxWidth = 'max-w-md',
+  footer,
+  children,
+  fullPage = false,
+}) {
+  const container = (!fullPage && document.getElementById('app-main-area')) || document.body;
   const isPortalMain = container.id === 'app-main-area';
 
   return createPortal(
