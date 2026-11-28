@@ -1177,7 +1177,31 @@
   "chatbot": {
     "connection_error": "_(Lỗi kết nối, vui lòng thử lại.)_",
     "placeholder": "Hỏi về dự án, task, tiến độ...",
-    "greeting": "Xin chào! Tôi là trợ lý AI của dự án này. Bạn cần giúp gì?"
+    "greeting": "Xin chào! Tôi là trợ lý AI của dự án này. Bạn cần giúp gì?",
+    "title": "Trợ lý AI",
+    "conversation": "Cuộc trò chuyện",
+    "new_conversation": "Cuộc trò chuyện mới",
+    "new_chat": "Trò chuyện mới",
+    "error_not_configured": "Trợ lý AI chưa được cấu hình (thiếu API key).",
+    "error_session_not_found": "Không tìm thấy cuộc trò chuyện này trong dự án.",
+    "toast": {
+      "task_created": "Đã tạo task: {{title}}",
+      "task_create_failed": "Không tạo được task",
+      "task_updated": "Đã cập nhật task: {{title}}",
+      "task_update_failed": "Không cập nhật được task",
+      "task_restored": "Đã khôi phục task: {{title}}",
+      "tasks_deleted_one": "Đã xóa {{count}} task",
+      "tasks_deleted_other": "Đã xóa {{count}} task",
+      "sprint_created": "Đã tạo sprint: {{name}}",
+      "sprint_started": "Đã bắt đầu sprint: {{name}}",
+      "sprint_completed": "Đã kết thúc sprint: {{name}}",
+      "rule_enabled": "Đã bật rule: {{name}}",
+      "rule_disabled": "Đã tắt rule: {{name}}",
+      "rule_deleted": "Đã xóa rule: {{name}}",
+      "delete_pending": "Đang chờ bạn xác nhận xóa",
+      "project_created": "Đã tạo dự án: {{name}}",
+      "project_create_failed": "Không tạo được dự án"
+    }
   },
   "taskList": {
     "hidden_subtasks": "{{count}} subtask ẩn"
