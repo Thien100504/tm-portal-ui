@@ -42,6 +42,8 @@ import EndSprintModal from '@/components/EndSprintModal';
 import BurndownChartModal from '@/components/BurndownChartModal';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { useProjectPermissions } from '@/hooks/useProjectPermissions';
+import { useTaskHierarchy } from '@/hooks/useTaskHierarchy';
+import EpicChip from '@/components/ui/EpicChip';
 import { toast } from 'sonner';
 import { getApiError } from '@/lib/apiError';
 import { Button } from '@/components/ui/Button';
@@ -60,6 +62,7 @@ const TaskCard = React.memo(function TaskCard({
   onToggleSelect,
   isGlass,
   canEdit = true,
+  epic,
 }) {
   const { t } = useTranslation();
 
@@ -133,10 +136,16 @@ const TaskCard = React.memo(function TaskCard({
               }`}
           >
             {/* Parent Task Context for Orphaned Subtasks */}
-            {isOrphaned && parentTask && (
-              <div className="text-[10px] font-medium text-muted-foreground mb-1.5 truncate flex items-center gap-1">
-                <span className="w-1 h-1 rounded-full bg-muted-foreground/40" />
-                {parentTask.title}
+            {/* Where the task sits: epic, and the story when it is not shown right above */}
+            {(epic || (isOrphaned && parentTask)) && (
+              <div className="flex items-center gap-1.5 mb-1.5 min-w-0">
+                {epic && (!isSubtask || isOrphaned) && <EpicChip epic={epic} size="sm" />}
+                {isOrphaned && parentTask && (
+                  <span className="text-[10px] font-medium text-muted-foreground truncate flex items-center gap-1 min-w-0">
+                    <span className="w-1 h-1 rounded-full bg-muted-foreground/40 shrink-0" />
+                    <span className="truncate">{parentTask.title}</span>
+                  </span>
+                )}
               </div>
             )}
 
@@ -303,6 +312,7 @@ export default function KanbanPage() {
 
   const qc = useQueryClient();
   const { can } = useProjectPermissions(projectId);
+  const { epicsById } = useTaskHierarchy(projectId);
   const { themeStyle } = useTheme();
   const isGlass = themeStyle === 'glass';
   const [addingIn, setAddingIn] = useState(null);
@@ -1054,6 +1064,7 @@ export default function KanbanPage() {
                                 onToggleSelect={() => toggleSelect(task.id)}
                                 isGlass={isGlass}
                                 canEdit={can('task.update')}
+                                epic={epicsById[task.epic_id]}
                               />
                             ))}
                             {provided.placeholder}
