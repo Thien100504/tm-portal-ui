@@ -37,7 +37,8 @@
     "unknown_user": "Người dùng",
     "joined": "Ngày tham gia",
     "error_occurred": "Đã xảy ra lỗi",
-    "clear": "Xóa"
+    "clear": "Xóa",
+    "version_tooltip": "UI {{ui}} · API {{api}}"
   },
   "sidebar": {
     "dashboard": "Tổng quan",
