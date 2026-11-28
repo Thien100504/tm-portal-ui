@@ -87,6 +87,8 @@ function TaskRow({
   const assignee = membersMap?.[task.assignee_id];
   const assigneeName = assignee?.full_name || assignee?.email;
   const isOverdue = task.deadline && new Date(task.deadline) < new Date() && task.status !== 'done';
+  // cached per project, so every row shares one request
+  const canEdit = useProjectPermissions(task.project_id).can('task.update');
 
   const _handleClick = (e) => {
     if (e.ctrlKey || e.metaKey) {
@@ -99,13 +101,13 @@ function TaskRow({
   };
 
   return (
-    <Draggable draggableId={task.id} index={index}>
+    <Draggable draggableId={task.id} index={index} isDragDisabled={!canEdit}>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
           onClick={(e) => {
-            if (e.ctrlKey || e.metaKey) {
+            if ((e.ctrlKey || e.metaKey) && canEdit) {
               e.preventDefault();
               onToggleSelect?.();
             } else if (!snapshot.isDragging) {
@@ -561,6 +563,11 @@ export default function SprintBoardPage() {
     },
   });
 
+  // Only the most recently started sprint can be reopened (the API enforces it too)
+  const latestStartedSprintId = sprints
+    .filter((s) => s.started_at && ['active', 'completed'].includes(s.status))
+    .reduce((latest, s) => (!latest || s.started_at > latest.started_at ? s : latest), null)?.id;
+
   const reopenSprintMutation = useMutation({
     mutationFn: (sprintId) => sprintService.reopenSprint(sprintId),
     onSuccess: () => {
@@ -817,17 +824,19 @@ export default function SprintBoardPage() {
                               <Square className="w-3 h-3" /> {t('sprintBoard.actions.end')}
                             </Button>
                           )}
-                          {can('sprint.manage') && sprint.status === 'completed' && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => reopenSprintMutation.mutate(sprint.id)}
-                              disabled={reopenSprintMutation.isPending}
-                              className="h-7 text-xs hover:text-[color:var(--color-warning)] hover:bg-[color:var(--color-warning)]/10 hover:border-[color:var(--color-warning)]/30"
-                            >
-                              <Play className="w-3 h-3" /> {t('sprintBoard.actions.reopen')}
-                            </Button>
-                          )}
+                          {can('sprint.manage') &&
+                            sprint.status === 'completed' &&
+                            sprint.id === latestStartedSprintId && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => reopenSprintMutation.mutate(sprint.id)}
+                                disabled={reopenSprintMutation.isPending}
+                                className="h-7 text-xs hover:text-[color:var(--color-warning)] hover:bg-[color:var(--color-warning)]/10 hover:border-[color:var(--color-warning)]/30"
+                              >
+                                <Play className="w-3 h-3" /> {t('sprintBoard.actions.reopen')}
+                              </Button>
+                            )}
                         </div>
                       </div>
 

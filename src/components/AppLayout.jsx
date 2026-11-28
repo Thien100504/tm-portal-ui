@@ -27,6 +27,7 @@ import { useTheme } from '@/contexts/useTheme';
 import { useAuth } from '@/hooks/useAuth';
 import projectService from '@/services/projectService';
 import notificationService from '@/services/notificationService';
+import systemService from '@/services/systemService';
 import { DropdownMenu } from '@/components/ui/DropdownMenu';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { Badge } from '@/components/ui/Badge';
@@ -380,6 +381,16 @@ function TopBar({ onMenuClick }) {
   const { t, i18n } = useTranslation();
   const { activeWorkspace } = useActiveWorkspace();
 
+  const { data: apiVersion } = useQuery({
+    queryKey: ['api-version'],
+    queryFn: systemService.getApiVersion,
+    staleTime: 5 * 60_000,
+  });
+  const versionTooltip = t('common.version_tooltip', {
+    ui: import.meta.env.VITE_APP_VERSION || 'dev',
+    api: apiVersion || '…',
+  });
+
   const pathname = location.pathname;
   const projectId = pathname.match(/\/projects\/([a-f0-9-]+)/i)?.[1];
 
@@ -484,12 +495,14 @@ function TopBar({ onMenuClick }) {
       </div>
 
       <div className="flex items-center gap-3">
-        {/* Live indicator */}
-        <div className="hidden items-center gap-1.5 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 text-[10px] font-medium text-emerald-500 md:flex">
-          <Wifi className="w-3 h-3" />
-          <span className="font-mono uppercase tracking-wider">Live</span>
-          <span className="w-1.5 h-1.5 animate-pulse-soft rounded-full bg-emerald-500" />
-        </div>
+        {/* Live indicator (hover: running versions) */}
+        <Tooltip content={versionTooltip} position="bottom">
+          <div className="hidden cursor-default items-center gap-1.5 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 text-[10px] font-medium text-emerald-500 md:flex">
+            <Wifi className="w-3 h-3" />
+            <span className="font-mono uppercase tracking-wider">Live</span>
+            <span className="w-1.5 h-1.5 animate-pulse-soft rounded-full bg-emerald-500" />
+          </div>
+        </Tooltip>
 
         {/* Project Members AvatarStack */}
         {projectId && members.length > 0 && (
@@ -560,7 +573,11 @@ function TopBar({ onMenuClick }) {
               className="w-8 h-8 rounded-lg text-[11px] font-bold text-muted-foreground hover:text-foreground hover:bg-background shadow-sm uppercase transition-colors"
               aria-label="Change language"
             >
-              {i18n.language === 'vi' ? 'VI' : 'EN'}
+              {/* capitals only: trim the line box to cap height so VI / EN sit centred
+                  (text-box has no effect on the flex button itself) */}
+              <span className="block leading-none [text-box:trim-both_cap_alphabetic]">
+                {i18n.language === 'vi' ? 'VI' : 'EN'}
+              </span>
             </Button>
           </Tooltip>
 

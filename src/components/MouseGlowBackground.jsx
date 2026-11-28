@@ -24,7 +24,7 @@ export default function MouseGlowBackground({ children, fullScreen = false }) {
 
   return (
     <div
-      className={`relative w-full bg-background overflow-hidden text-foreground ${fullScreen ? 'h-screen' : 'min-h-screen'}`}
+      className={`relative w-full bg-background overflow-clip text-foreground ${fullScreen ? 'h-screen' : 'min-h-screen'}`}
     >
       {/* Background base */}
       <AnimatePresence>

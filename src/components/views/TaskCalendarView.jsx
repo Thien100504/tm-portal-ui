@@ -63,6 +63,7 @@ export default function TaskCalendarView({
   onEventClick,
   onTaskCreate,
   onTaskUpdateDeadline,
+  canEdit = true,
 }) {
   const { t, i18n } = useTranslation();
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -125,7 +126,12 @@ export default function TaskCalendarView({
       : PRIORITY_COLORS[event.priority || 'medium'];
 
     return (
-      <Draggable key={event.id} draggableId={event.id.toString()} index={index}>
+      <Draggable
+        key={event.id}
+        draggableId={event.id.toString()}
+        index={index}
+        isDragDisabled={!canEdit}
+      >
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}

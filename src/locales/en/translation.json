@@ -37,7 +37,8 @@
     "unknown_user": "User",
     "joined": "Joined",
     "error_occurred": "An error occurred",
-    "clear": "Clear"
+    "clear": "Clear",
+    "version_tooltip": "UI {{ui}} · API {{api}}"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -166,7 +167,9 @@
     "error_self_dependency": "A task cannot depend on itself.",
     "error_circular_dependency": "Circular dependency detected (A → B → A).",
     "error_assignee_not_member": "The assignee is not a member of this project.",
-    "story_cannot_be_subtask": "A story cannot be a subtask."
+    "story_cannot_be_subtask": "A story cannot be a subtask.",
+    "has_subtasks": "This task has subtasks, so it cannot be moved under another task.",
+    "cannot_parent_itself": "A task cannot be its own parent."
   },
   "sprint": {
     "error_end_before_start": "The end date must be after the start date",
@@ -178,7 +181,8 @@
     "error_no_target_sprint": "A target sprint must be specified for incomplete tasks.",
     "error_invalid_target_sprint": "Target sprint not found or is no longer available.",
     "error_not_completed": "Sprint has not been completed yet.",
-    "error_cannot_delete_active": "Cannot delete an active or completed sprint."
+    "error_cannot_delete_active": "Cannot delete an active or completed sprint.",
+    "error_newer_sprint_started": "Only the most recently started sprint can be reopened."
   },
   "automation": {
     "invalid_trigger": "Invalid automation trigger type.",
@@ -193,7 +197,8 @@
     "error": {
       "select_trigger_value": "Select a trigger value",
       "select_action_value": "Select an action value"
-    }
+    },
+    "duplicate_rule": "A rule with the same trigger, conditions and action already exists."
   },
   "admin": {
     "profile_updated": "User profile updated",
@@ -990,7 +995,8 @@
     },
     "system_role_readonly": "This role cannot be modified.",
     "empty_title": "You don't have a workspace yet",
-    "empty_desc": "Create a workspace to start managing projects, or wait for an invitation to join one."
+    "empty_desc": "Create a workspace to start managing projects, or wait for an invitation to join one.",
+    "own_admin_locked": "You can't remove full workspace administration from your own role. Ask the workspace owner or another admin."
   },
   "server": {
     "notification_unavailable": "Notification service is currently unavailable. Please try again later.",
@@ -1254,5 +1260,48 @@
       "cancelled": "Cancelled",
       "expired": "This request has expired. Ask the assistant again."
     }
+  },
+  "hierarchy": {
+    "add_story": "Story",
+    "add_task": "Task",
+    "counts": "{{stories}} stories · {{tasks}} other tasks",
+    "epic": "Epic",
+    "follows_story": "Follows the story's epic",
+    "has_subtasks": "Has subtasks, so it stays top-level",
+    "link_existing": "Add existing",
+    "link_title": "Add to \"{{name}}\"",
+    "linked": "Added \"{{title}}\"",
+    "loose_tasks_one": "{{count}} task outside stories",
+    "loose_tasks_other": "{{count}} tasks outside stories",
+    "no_candidates": "No task can be added here",
+    "no_epic": "No epic",
+    "no_epic_desc": "Stories and tasks not in any epic",
+    "no_epic_group": "Not in an epic",
+    "no_loose_tasks": "Every task here belongs to a story",
+    "no_stories": "No stories yet",
+    "no_story": "Not in a story",
+    "remove_from_epic": "Remove from epic",
+    "remove_from_story": "Remove from story",
+    "search_tasks": "Search tasks...",
+    "stories_one": "{{count}} story",
+    "stories_other": "{{count}} stories",
+    "story": "Story",
+    "story_empty": "No tasks in this story yet",
+    "story_is_top_level": "A story cannot sit under another task",
+    "subtask_count_one": "{{count}} subtask",
+    "subtask_count_other": "{{count}} subtasks",
+    "subtitle": "Epics, their stories and the tasks under each story",
+    "toggle_story": "Show or hide the story's tasks"
+  },
+  "rbac": {
+    "cannot_remove_own_admin": "You can't remove full workspace administration from the role you hold.",
+    "cannot_delete_own_role": "You can't delete the role you hold.",
+    "admin_required": "You need workspace admin rights to change roles.",
+    "cannot_delete_system_role": "System roles can't be deleted.",
+    "cannot_modify_system_role": "System roles can't be changed.",
+    "missing_scope": "Choose a workspace or project for this permission check.",
+    "permission_denied": "You don't have permission to do this.",
+    "role_not_found": "Role not found.",
+    "some_permissions_invalid": "Some of the selected permissions don't exist."
   }
 }

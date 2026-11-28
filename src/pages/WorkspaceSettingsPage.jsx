@@ -112,6 +112,14 @@ export default function WorkspaceSettingsPage() {
   });
   const hasAccess = isOwner || user?.system_role === 'admin' || wsPerms.includes('workspace.admin');
 
+  // The role the current user holds here: they must not strip or delete it (self-lockout)
+  const { data: members = [] } = useQuery({
+    queryKey: ['workspace-members', activeWorkspaceId],
+    queryFn: () => workspaceService.getMembers(activeWorkspaceId),
+    enabled: !!activeWorkspaceId && !isOwner,
+  });
+  const myRoleId = isOwner ? null : members.find((m) => m.user_id === user?.id)?.role_id;
+
   const [activeTab, setActiveTab] = useState('members'); // 'members' | 'roles' | 'features'
   const [roleModal, setRoleModal] = useState({ open: false, mode: 'create', role: null });
   const [deleteRoleTarget, setDeleteRoleTarget] = useState(null);
@@ -153,6 +161,7 @@ export default function WorkspaceSettingsPage() {
     mutationFn: (roleId) => rbacService.deleteRole(roleId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['roles', 'workspace', activeWorkspaceId] });
+      queryClient.invalidateQueries({ queryKey: ['rbac'] });
       toast.success(t('workspace.role_deleted', { defaultValue: 'Role deleted' }));
     },
     onError: (err) => {
@@ -333,13 +342,15 @@ export default function WorkspaceSettingsPage() {
                             <Edit2 className="w-3 h-3" />{' '}
                             {t('common.edit', { defaultValue: 'Edit' })}
                           </button>
-                          <button
-                            onClick={() => handleDeleteRole(role.id)}
-                            className="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors"
-                          >
-                            <Trash2 className="w-3 h-3" />{' '}
-                            {t('common.delete', { defaultValue: 'Delete' })}
-                          </button>
+                          {role.id !== myRoleId && (
+                            <button
+                              onClick={() => handleDeleteRole(role.id)}
+                              className="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors"
+                            >
+                              <Trash2 className="w-3 h-3" />{' '}
+                              {t('common.delete', { defaultValue: 'Delete' })}
+                            </button>
+                          )}
                         </div>
                       )}
                     </div>
@@ -441,6 +452,7 @@ export default function WorkspaceSettingsPage() {
           role={roleModal.role}
           workspaceId={activeWorkspaceId}
           permissions={permissions}
+          lockAdminPermission={roleModal.mode === 'edit' && roleModal.role?.id === myRoleId}
           onClose={() => setRoleModal({ open: false, mode: 'create', role: null })}
         />
       )}
@@ -464,7 +476,7 @@ export default function WorkspaceSettingsPage() {
 }
 
 // ── Inline Role Create/Edit Modal ──────────────────────────────────────
-function RoleModal({ mode, role, workspaceId, permissions, onClose }) {
+function RoleModal({ mode, role, workspaceId, permissions, lockAdminPermission, onClose }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [name, setName] = useState(mode === 'edit' ? role?.name || '' : '');
@@ -484,6 +496,7 @@ function RoleModal({ mode, role, workspaceId, permissions, onClose }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['roles', 'workspace', workspaceId] });
+      queryClient.invalidateQueries({ queryKey: ['rbac'] });
       toast.success(t('workspace.role_created', { defaultValue: 'Role created' }));
       onClose();
     },
@@ -498,6 +511,8 @@ function RoleModal({ mode, role, workspaceId, permissions, onClose }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['roles', 'workspace', workspaceId] });
+      // the edited role may be the current user's own: refresh what they can do
+      queryClient.invalidateQueries({ queryKey: ['rbac'] });
       toast.success(t('workspace.role_updated', { defaultValue: 'Role updated' }));
       onClose();
     },
@@ -600,16 +615,19 @@ function RoleModal({ mode, role, workspaceId, permissions, onClose }) {
             <div className="space-y-1 max-h-[200px] overflow-y-auto scrollbar-thin pr-1">
               {permissions.map((perm) => {
                 const isSelected = selectedPermIds.includes(perm.id);
+                const locked = lockAdminPermission && perm.code === 'workspace.admin' && isSelected;
                 return (
                   <button
                     key={perm.id}
                     type="button"
+                    disabled={locked}
+                    title={locked ? t('workspace.own_admin_locked') : undefined}
                     onClick={() =>
                       setSelectedPermIds((prev) =>
                         isSelected ? prev.filter((id) => id !== perm.id) : [...prev, perm.id]
                       )
                     }
-                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted/40 transition-colors text-left group"
+                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted/40 transition-colors text-left group disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-transparent"
                   >
                     <div
                       className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 transition-colors ${
@@ -631,6 +649,11 @@ function RoleModal({ mode, role, workspaceId, permissions, onClose }) {
                 );
               })}
             </div>
+          )}
+          {lockAdminPermission && (
+            <p className="mt-2 text-[11px] text-muted-foreground">
+              {t('workspace.own_admin_locked')}
+            </p>
           )}
         </div>
       </form>
