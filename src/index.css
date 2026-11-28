@@ -655,6 +655,29 @@
   margin: 14px;
   border-radius: 22px;
 }
+
+/* Floating AI assistant — the same detached pane as the main area, under the topbar */
+.theme-glass [data-app-assistant] {
+  --ai-radius: 22px;
+  margin: 14px 14px 14px 0;
+  border-radius: 22px;
+}
+.theme-glass [data-app-assistant-panel] {
+  border-radius: inherit;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--card) calc(var(--glass-op-sidebar) + 4%), transparent),
+    color-mix(in oklab, var(--card) var(--glass-op-sidebar), transparent)
+  ) !important;
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) !important;
+  box-shadow:
+    inset 0 1px 0 0 color-mix(in oklab, white calc(var(--glass-highlight) + 4%), transparent),
+    inset 0 -1px 0 0 color-mix(in oklab, black 14%, transparent),
+    inset 0 0 0 1px color-mix(in oklab, white 6%, transparent),
+    0 2px 4px -2px color-mix(in oklab, black 30%, transparent),
+    0 18px 50px -18px color-mix(in oklab, black 55%, transparent) !important;
+}
 .theme-glass [data-app-topbar] {
   margin: 14px 14px 0 14px;
   border-radius: 22px;
@@ -901,4 +924,130 @@ select.select-styled {
 
 @page {
   margin: 0;
+}
+
+/* ─── AI rainbow edge ──────────────────────────────────────────────────────────
+   A thin seven-colour ring that slowly turns around AI surfaces, with a soft
+   glow behind it. data-ai-active="true" (the assistant is replying) makes it
+   turn faster and glow brighter. */
+@property --ai-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.ai-rainbow {
+  --ai-ring: 1.5px;
+  --ai-speed: 8s;
+  --ai-radius: 0px;
+  --ai-shadow-blur: 18px;
+  --ai-shadow-opacity: 0.45;
+  /* room around the element for the blurred colours to fade out in */
+  --ai-shadow-room: 60px;
+  /* the element sets its own position (relative, fixed...): the ring is placed against it */
+  isolation: isolate;
+}
+
+.ai-rainbow[data-ai-active='true'] {
+  --ai-speed: 2.4s;
+  --ai-shadow-opacity: 0.7;
+}
+
+.dark .ai-rainbow {
+  --ai-shadow-opacity: 0.55;
+}
+
+.dark .ai-rainbow[data-ai-active='true'] {
+  --ai-shadow-opacity: 0.85;
+}
+
+/* Declared on the pseudo-elements, where --ai-angle is animated: declared on the
+   element, the gradient would be resolved there once and never turn */
+.ai-rainbow::before,
+.ai-rainbow::after {
+  --ai-spectrum: conic-gradient(
+    from var(--ai-angle),
+    #ff3b30,
+    #ff9500,
+    #ffcc00,
+    #34c759,
+    #00c7be,
+    #007aff,
+    #5856d6,
+    #af52de,
+    #ff3b30
+  );
+}
+
+/* the ring: the spectrum masked down to the border */
+.ai-rainbow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: var(--ai-ring);
+  border-radius: inherit;
+  background: var(--ai-spectrum);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: ai-spin var(--ai-speed) linear infinite;
+}
+
+/* the shadow: like a box-shadow, but in the spectrum. The colours are painted
+   only where the element is (content-box), blurred so they fade out past the
+   edge, then the part under the element is masked away so a see-through
+   glass panel is not tinted all over. */
+.ai-rainbow::after {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--ai-shadow-room));
+  z-index: -1;
+  padding: var(--ai-shadow-room);
+  border-radius: calc(var(--ai-shadow-room) + var(--ai-radius));
+  background: var(--ai-spectrum) content-box;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  filter: blur(var(--ai-shadow-blur));
+  opacity: var(--ai-shadow-opacity);
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+  animation: ai-spin var(--ai-speed) linear infinite;
+}
+
+@keyframes ai-spin {
+  to {
+    --ai-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-rainbow::before,
+  .ai-rainbow::after {
+    animation: none;
+  }
+}
+
+/* small controls (e.g. the topbar button): a bold moving ring, no glow */
+.ai-rainbow-sm {
+  --ai-ring: 2px;
+  --ai-speed: 3s;
+}
+.ai-rainbow-sm::after {
+  display: none;
+}
+
+/* Sketch: flat, hand-drawn look — a bolder ring and no soft glow */
+.theme-sketch .ai-rainbow {
+  --ai-ring: 2.5px;
+}
+/* hidden outright: the replying / dark rules set the glow opacity too */
+.theme-sketch .ai-rainbow::after {
+  display: none;
 }

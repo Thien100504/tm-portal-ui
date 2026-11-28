@@ -1204,7 +1204,9 @@
       "delete_pending": "Đang chờ bạn xác nhận xóa",
       "project_created": "Đã tạo dự án: {{name}}",
       "project_create_failed": "Không tạo được dự án"
-    }
+    },
+    "error_action_expired": "Yêu cầu xoá này đã hết hạn hoặc đã được dùng.",
+    "error_rate_limited": "Dịch vụ AI tạm hết hạn mức sử dụng. Vui lòng thử lại sau."
   },
   "taskList": {
     "hidden_subtasks": "{{count}} subtask ẩn"
@@ -1214,6 +1216,50 @@
     "story": "User story",
     "task": "Công việc",
     "bug": "Lỗi"
+  },
+  "assistant": {
+    "toggle": "Trợ lý AI",
+    "toggle_hint": "Trợ lý AI (Ctrl+J)",
+    "close": "Đóng trợ lý",
+    "back": "Về danh sách cuộc trò chuyện",
+    "scope_workspace": "Cả workspace",
+    "search": "Tìm cuộc trò chuyện",
+    "no_match": "Không có cuộc trò chuyện nào khớp.",
+    "empty": "Chưa có cuộc trò chuyện nào. Bắt đầu một cuộc để hỏi về công việc.",
+    "group_today": "Hôm nay",
+    "group_yesterday": "Hôm qua",
+    "group_week": "7 ngày trước",
+    "group_older": "Cũ hơn",
+    "actions": "Thao tác với {{title}}",
+    "rename": "Đổi tên",
+    "delete_confirm": "Xóa \"{{title}}\"?",
+    "deleted": "Đã xóa cuộc trò chuyện",
+    "message": "Tin nhắn gửi trợ lý",
+    "send": "Gửi",
+    "enter_hint": "Enter để gửi · Shift+Enter để xuống dòng",
+    "placeholder_workspace": "Hỏi về bất kỳ dự án nào trong workspace...",
+    "greeting_workspace": "Xin chào! Tôi thấy được mọi dự án bạn mở được trong workspace này. Hãy hỏi về deadline, tiến độ hay ai đang làm việc gì.",
+    "suggest_ws_overdue": "Task nào đang quá hạn trong cả workspace?",
+    "suggest_ws_behind": "Dự án nào đang chậm nhất?",
+    "suggest_ws_mine": "Hiện tôi đang được giao những việc gì?",
+    "suggest_project_progress": "Tóm tắt tiến độ dự án này",
+    "suggest_project_overdue": "Task nào trong dự án đang quá hạn?",
+    "suggest_project_create": "Tạo task: Review release notes",
+    "not_configured_title": "Trợ lý AI chưa được cấu hình",
+    "not_configured_desc": "Server chưa có API key cho AI (NVIDIA_API_KEY hoặc OPENAI_API_KEY). Bạn vẫn xem lại được các cuộc trò chuyện cũ; nhờ quản trị viên thêm key để trò chuyện.",
+    "not_configured_hint": "Trợ lý AI: chưa cấu hình (thiếu API key)",
+    "not_configured_placeholder": "Trợ lý AI chưa được cấu hình",
+    "confirm": {
+      "delete_tasks_one": "Xoá {{count}} task?",
+      "delete_tasks_other": "Xoá {{count}} task?",
+      "delete_rule": "Xoá rule \"{{name}}\"?",
+      "hint": "Chưa có gì bị xoá cho tới khi bạn bấm Xoá.",
+      "delete": "Xoá",
+      "cancel": "Huỷ",
+      "done": "Đã xoá",
+      "cancelled": "Đã huỷ",
+      "expired": "Yêu cầu này đã hết hạn. Hãy nhờ trợ lý lại."
+    }
   },
   "hierarchy": {
     "add_story": "Story",
