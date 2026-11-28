@@ -828,6 +828,7 @@ export default function Sidebar({ onMobileClose, isMobile, projectId }) {
           title={t('auth.logout_confirm_title', { defaultValue: 'Confirm Logout' })}
           onClose={() => setShowLogoutConfirm(false)}
           maxWidth="max-w-sm"
+          fullPage
           footer={
             <div className="flex gap-2 w-full">
               <Button

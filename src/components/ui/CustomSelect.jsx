@@ -34,41 +34,35 @@ export default function CustomSelect({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Where the list goes: below the field, or above it when there is more room there
+  const measure = () => {
+    const rect = containerRef.current.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    const dropdownHeight = 220; // approximate max height
+    const upwards = spaceBelow < dropdownHeight && spaceAbove > spaceBelow;
+    return {
+      position: 'fixed',
+      top: upwards ? 'auto' : rect.bottom + 6,
+      bottom: upwards ? window.innerHeight - rect.top + 6 : 'auto',
+      left: rect.left,
+      width: rect.width,
+      zIndex: 99999,
+      transformOrigin: upwards ? 'bottom center' : 'top center',
+    };
+  };
+
+  // Measure before opening: rendered without position the list would land in
+  // the page flow for one frame, stretching the page and making it jump
+  const toggle = () => {
+    if (disabled) return;
+    if (!isOpen && containerRef.current) setDropdownStyle(measure());
+    setIsOpen(!isOpen);
+  };
+
   useEffect(() => {
     if (isOpen && containerRef.current) {
-      const updatePosition = () => {
-        const rect = containerRef.current.getBoundingClientRect();
-        // Determine if there is enough space below, if not, open above
-        const spaceBelow = window.innerHeight - rect.bottom;
-        const spaceAbove = rect.top;
-        const dropdownHeight = 220; // approximate max height
-
-        let top, bottom;
-        let transformOrigin = 'top center';
-
-        if (spaceBelow < dropdownHeight && spaceAbove > spaceBelow) {
-          // Open upwards
-          bottom = window.innerHeight - rect.top + 6;
-          top = 'auto';
-          transformOrigin = 'bottom center';
-        } else {
-          // Open downwards
-          top = rect.bottom + 6;
-          bottom = 'auto';
-        }
-
-        setDropdownStyle({
-          position: 'fixed',
-          top,
-          bottom,
-          left: rect.left,
-          width: rect.width,
-          zIndex: 99999,
-          transformOrigin,
-        });
-      };
-
-      updatePosition();
+      const updatePosition = () => setDropdownStyle(measure());
 
       window.addEventListener('scroll', updatePosition, true);
       window.addEventListener('resize', updatePosition);
@@ -86,7 +80,7 @@ export default function CustomSelect({
     <div className={`relative w-full ${className}`} ref={containerRef}>
       <button
         type="button"
-        onClick={() => !disabled && setIsOpen(!isOpen)}
+        onClick={toggle}
         disabled={disabled}
         className={`w-full flex items-center justify-between px-3 py-2 bg-background border rounded-lg text-[13px] transition-colors shadow-sm focus:outline-none ${
           disabled
@@ -112,7 +106,7 @@ export default function CustomSelect({
       {typeof document !== 'undefined' &&
         createPortal(
           <AnimatePresence>
-            {isOpen && (
+            {isOpen && dropdownStyle.position && (
               <motion.div
                 ref={dropdownRef}
                 initial={{ opacity: 0, y: dropdownStyle.top === 'auto' ? 10 : -10, scale: 0.95 }}
