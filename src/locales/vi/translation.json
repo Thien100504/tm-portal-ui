@@ -992,7 +992,8 @@
     },
     "system_role_readonly": "Vai trò hệ thống này không thể chỉnh sửa.",
     "empty_title": "Bạn chưa có workspace nào",
-    "empty_desc": "Tạo một workspace để bắt đầu quản lý dự án, hoặc chờ lời mời tham gia workspace khác."
+    "empty_desc": "Tạo một workspace để bắt đầu quản lý dự án, hoặc chờ lời mời tham gia workspace khác.",
+    "own_admin_locked": "Bạn không thể tự bỏ quyền quản trị toàn bộ workspace khỏi role của mình. Hãy nhờ chủ workspace hoặc admin khác."
   },
   "server": {
     "notification_unavailable": "Dịch vụ thông báo hiện không khả dụng. Vui lòng thử lại sau.",
@@ -1186,5 +1187,16 @@
     "story": "User story",
     "task": "Công việc",
     "bug": "Lỗi"
+  },
+  "rbac": {
+    "cannot_remove_own_admin": "Bạn không thể bỏ quyền quản trị toàn bộ workspace khỏi role mà mình đang giữ.",
+    "cannot_delete_own_role": "Bạn không thể xóa role mà mình đang giữ.",
+    "admin_required": "Bạn cần quyền quản trị workspace để thay đổi role.",
+    "cannot_delete_system_role": "Không thể xóa role hệ thống.",
+    "cannot_modify_system_role": "Không thể thay đổi role hệ thống.",
+    "missing_scope": "Cần chọn workspace hoặc dự án để kiểm tra quyền.",
+    "permission_denied": "Bạn không có quyền thực hiện thao tác này.",
+    "role_not_found": "Không tìm thấy role.",
+    "some_permissions_invalid": "Một số quyền được chọn không tồn tại."
   }
 }

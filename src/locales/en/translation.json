@@ -992,7 +992,8 @@
     },
     "system_role_readonly": "This role cannot be modified.",
     "empty_title": "You don't have a workspace yet",
-    "empty_desc": "Create a workspace to start managing projects, or wait for an invitation to join one."
+    "empty_desc": "Create a workspace to start managing projects, or wait for an invitation to join one.",
+    "own_admin_locked": "You can't remove full workspace administration from your own role. Ask the workspace owner or another admin."
   },
   "server": {
     "notification_unavailable": "Notification service is currently unavailable. Please try again later.",
@@ -1186,5 +1187,16 @@
     "story": "Story",
     "task": "Task",
     "bug": "Bug"
+  },
+  "rbac": {
+    "cannot_remove_own_admin": "You can't remove full workspace administration from the role you hold.",
+    "cannot_delete_own_role": "You can't delete the role you hold.",
+    "admin_required": "You need workspace admin rights to change roles.",
+    "cannot_delete_system_role": "System roles can't be deleted.",
+    "cannot_modify_system_role": "System roles can't be changed.",
+    "missing_scope": "Choose a workspace or project for this permission check.",
+    "permission_denied": "You don't have permission to do this.",
+    "role_not_found": "Role not found.",
+    "some_permissions_invalid": "Some of the selected permissions don't exist."
   }
 }
